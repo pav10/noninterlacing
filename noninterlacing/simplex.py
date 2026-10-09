@@ -521,13 +521,21 @@ def _max_min(self: SimplexLattice, j: int, time_limit: Optional[float] = None) -
     A = np.hstack([-self.Bf, np.ones((d, 1))])  # t - B k <= tf
     cons = LinearConstraint(A, -np.inf, tf)
     integrality = np.array([1] * n + [0])
-    lb = np.array([-np.inf] * n + [-float(j)])
-    ub = np.array([np.inf] * n + [float(j)])
-    opts = {"disp": False}
-    if time_limit is not None:
-        opts["time_limit"] = time_limit
-    with _Silence():
-        r = milp(c, constraints=[cons], integrality=integrality, bounds=Bounds(lb, ub), options=opts)
+    # finite box for k: x_r >= -j and sum x = j give |x - tf| <= |x| + |tf|
+    xmax = (d + 1) * j * math.sqrt(d) + float(np.linalg.norm(tf))
+    Rinv = np.linalg.inv(self.R)
+    kb = np.ceil(np.linalg.norm(Rinv, axis=1) * xmax) + 1
+    lb = np.concatenate([-kb, [-float(j)]])
+    ub = np.concatenate([kb, [float(j)]])
+    r = None
+    for presolve in (True, False):
+        opts = {"disp": False, "presolve": presolve}
+        if time_limit is not None:
+            opts["time_limit"] = time_limit
+        with _Silence():
+            r = milp(c, constraints=[cons], integrality=integrality, bounds=Bounds(lb, ub), options=opts)
+        if r.x is not None:
+            break
     if r.x is None:
         return MaxMinResult(j, math.nan, None, None, r.message, time.time() - start)
     k = [int(round(v)) for v in r.x[:n]]

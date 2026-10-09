@@ -59,9 +59,14 @@ def to_pari(p) -> "object":
 def from_pari(p) -> fmpq_poly:
     """PARI polynomial (or scalar, or polmod) with rational coefficients -> ``fmpq_poly``."""
     P = pari()
-    if P.type(p) == "t_POLMOD":
+    t = str(P.type(p))
+    if t == "t_POLMOD":
         p = P.lift(p)
-    if P.type(p) in ("t_INT", "t_FRAC"):
+        t = str(P.type(p))
+    if t == "t_VEC" and len(p) == 1:
+        p = p[0]
+        t = str(P.type(p))
+    if t in ("t_INT", "t_FRAC"):
         return fmpq_poly([fmpq(int(P.numerator(p)), int(P.denominator(p)))])
     out = []
     for c in P.Vecrev(p):

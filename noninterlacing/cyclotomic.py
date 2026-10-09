@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from functools import lru_cache
+import math
 from math import gcd
 from typing import Iterable, Optional
 
@@ -108,10 +109,23 @@ def phi_table(limit: int) -> list:
     return phi
 
 
+def _phi_inverse_bound(v: int) -> int:
+    """An ``N`` with ``phi(n) > v`` for all ``n > N`` (Rosser--Schoenfeld:
+    ``phi(n) > n / (e^gamma log log n + 3 / log log n)`` for ``n >= 3``)."""
+    eg = 1.7810724179901979
+    N = max(30, 2 * v)
+    while True:
+        ll = math.log(math.log(N))
+        if N / (eg * ll + 3 / ll) > v:
+            # the bound n / (...) is increasing for n >= N here, so N works
+            return N
+        N = int(N * 1.2) + 1
+
+
 def reachable_degrees(bound: int) -> set:
     """The set ``D cap [1, bound]`` of Prop. 5.4:
     ``{ 2^j phi(n)/2 : n has an admissible divisor, j >= 0 }``."""
-    nmax = 4 * bound * bound + 10  # phi(n) >= sqrt(n) for n > 6
+    nmax = _phi_inverse_bound(2 * bound)
     phi = phi_table(nmax)
     adm = [m for m in range(21, nmax + 1) if is_admissible(m)]
     has = bytearray(nmax + 1)
