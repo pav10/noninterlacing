@@ -277,10 +277,10 @@ class Order:
         if method == "auto":
             method = "dfs" if self.d <= 20 else "milp"
         if method == "milp":
-            mm = self.lattice.max_min(trace)
-            if mm.verified:
-                return self.element(mm.point)
-            if mm.exists is False:
+            fr = self.lattice.feasible(trace)
+            if fr.exists:
+                return self.element(fr.point)
+            if fr.exists is False:
                 return None
         res = self.lattice.enumerate(trace, mode="first")
         return self.element(res.points[0]) if res.points else None

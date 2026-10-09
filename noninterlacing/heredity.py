@@ -197,3 +197,56 @@ def composition_bound(base: PolyLike, inner: PolyLike) -> SubfieldBound:
     f = base(inner)
     O = Order.monogenic(f)
     return subfield_bound(O, base, fmpq_poly(inner))
+
+
+# ---------------------------------------------------------------------------
+# Upper bounds by lifting from subfields
+# ---------------------------------------------------------------------------
+
+@dataclass
+class LiftedWitness:
+    """A totally positive element of ``O^vee`` obtained from a subfield.
+
+    If ``nu in O_F^vee`` is totally positive and ``Tr_{K/F}(O) subset O_F``
+    (always true for ``O = O_K``), then ``nu in O^vee`` with
+    ``Tr_K(nu) = [K:F] Tr_F(nu)``; hence ``m(O) <= [K:F] m(O_F)``.  The
+    membership ``nu in O^vee`` is re-checked exactly for the given order.
+    """
+
+    subfield_degree: int
+    g: fmpz_poly
+    m_F: int
+    trace: int
+    element: fmpq_poly
+
+    def as_dict(self) -> dict:
+        return {"subfield_degree": self.subfield_degree, "subfield_poly": to_str(self.g, "y"),
+                "m(O_F)": self.m_F, "trace in K": self.trace, "element": to_str(self.element)}
+
+
+def in_codifferent(O: Order, mu) -> bool:
+    F = fmpq_poly(O.f)
+    mu = fmpq_poly(mu) % F
+    return all(O.trace((mu * w) % F).q == 1 for w in O.basis)
+
+
+def lifted_witnesses(O: Order, max_subfield_degree: Optional[int] = None) -> list:
+    """Witnesses for ``m(O) <= [K:F] m(O_F)`` from all proper subfields (PARI)."""
+    from .pari import subfields
+
+    F = fmpq_poly(O.f)
+    out = []
+    for g, h in subfields(O.f):
+        e = g.degree()
+        if e in (1, O.d) or (max_subfield_degree and e > max_subfield_degree):
+            continue
+        OF = Order.maximal(g)
+        mF = OF.min_trace()
+        nu = OF.find(mF)
+        mu = nu(fmpq_poly(h)) % F
+        if not in_codifferent(O, mu) or not O.roots.is_totally_positive(mu):
+            continue
+        tr = O.trace(mu)
+        out.append(LiftedWitness(e, g, mF, int(tr.p), mu))
+    out.sort(key=lambda w: w.trace)
+    return out

@@ -525,16 +525,18 @@ def _max_min(self: SimplexLattice, j: int, time_limit: Optional[float] = None) -
     xmax = (d + 1) * j * math.sqrt(d) + float(np.linalg.norm(tf))
     Rinv = np.linalg.inv(self.R)
     kb = np.ceil(np.linalg.norm(Rinv, axis=1) * xmax) + 1
-    lb = np.concatenate([-kb, [-float(j)]])
-    ub = np.concatenate([kb, [float(j)]])
+    attempts = [
+        (np.array([-np.inf] * n + [-float(j)]), np.array([np.inf] * n + [float(j)]), True),
+        (np.concatenate([-kb, [-float(j)]]), np.concatenate([kb, [float(j)]]), True),
+        (np.concatenate([-kb, [-float(j)]]), np.concatenate([kb, [float(j)]]), False),
+    ]
     r = None
-    for presolve in (True, False):
-        opts = {"disp": False, "presolve": presolve}
-        if time_limit is not None:
-            opts["time_limit"] = time_limit
+    for lb, ub, presolve in attempts:
+        opts = {"disp": False, "presolve": presolve,
+                "time_limit": 600.0 if time_limit is None else time_limit}
         with _Silence():
             r = milp(c, constraints=[cons], integrality=integrality, bounds=Bounds(lb, ub), options=opts)
-        if r.x is not None:
+        if r.x is not None and r.status == 0:
             break
     if r.x is None:
         return MaxMinResult(j, math.nan, None, None, r.message, time.time() - start)
@@ -550,3 +552,60 @@ def _max_min(self: SimplexLattice, j: int, time_limit: Optional[float] = None) -
 
 
 SimplexLattice.max_min = _max_min
+
+
+@dataclass
+class FeasibilityResult:
+    """Result of :meth:`SimplexLattice.feasible` (MILP feasibility at level ``j``)."""
+
+    level: int
+    status: str  # "point" (exactly verified), "empty", "boundary" or "unknown"
+    point: Optional[list]
+    seconds: float
+
+    @property
+    def exists(self) -> Optional[bool]:
+        return {"point": True, "empty": False}.get(self.status)
+
+
+def _feasible(self: SimplexLattice, j: int, time_limit: Optional[float] = 600.0) -> FeasibilityResult:
+    """Decide ``L cap Delta_j != {}`` with HiGHS (zero objective).
+
+    First the relaxed system ``x >= -tol`` is solved: infeasibility is a
+    floating-point proof that the level is empty.  A solution is verified
+    exactly; if it lies on the boundary (possible only for reducible ``f``)
+    the strict system ``x >= +tol`` is tried.
+    """
+    from scipy.optimize import Bounds, LinearConstraint, milp
+
+    start = time.time()
+    if j <= 0 or j % self.gcd:
+        return FeasibilityResult(j, "empty", None, 0.0)
+    if self.n == 0:
+        return FeasibilityResult(j, "point", [p * (j // self.gcd) for p in self.p1], 0.0)
+    s, a0 = self._level(j)
+    tf = self._tf_cache[j] if j in self._tf_cache else self.Q @ s + j / self.d
+    n = self.n
+    tol = 1e-9 * j
+    for lower in (-tol, tol):
+        cons = LinearConstraint(self.Bf, lower - tf, np.inf)
+        opts = {"disp": False}
+        if time_limit is not None:
+            opts["time_limit"] = time_limit
+        with _Silence():
+            r = milp(np.zeros(n), constraints=[cons], integrality=np.ones(n),
+                     bounds=Bounds(-np.inf, np.inf), options=opts)
+        if r.status == 2:  # infeasible
+            if lower < 0:
+                return FeasibilityResult(j, "empty", None, time.time() - start)
+            return FeasibilityResult(j, "boundary", None, time.time() - start)
+        if r.x is None:
+            return FeasibilityResult(j, "unknown", None, time.time() - start)
+        k = [int(round(v)) for v in r.x]
+        point = self.point_coords(a0, k)
+        if self.verify is None or self.verify(point):
+            return FeasibilityResult(j, "point", point, time.time() - start)
+    return FeasibilityResult(j, "boundary", None, time.time() - start)
+
+
+SimplexLattice.feasible = _feasible

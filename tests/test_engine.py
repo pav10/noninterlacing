@@ -103,3 +103,13 @@ def test_f_N_family():
         I = Interlacing(f)
         assert I.count(1) == 0
         assert I.find(2) is not None
+
+
+def test_feasibility_and_certificates():
+    I = Interlacing(real_cyclotomic(21))
+    assert I.lattice.feasible(1).exists is False
+    fr = I.lattice.feasible(2)
+    assert fr.exists and interlaces(I.f, I.coords_to_poly(fr.point))
+    cert = I.level_certificate()
+    assert cert["m"] == 2 and cert["empty_levels"] and interlaces(I.f, poly(cert["witness"]))
+    assert Interlacing(real_cyclotomic(28)).level_certificate()["m"] == 1

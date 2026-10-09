@@ -25,23 +25,17 @@ def main(out, nmax, maxdeg):
             continue
         t = time.time()
         I = Interlacing(real_cyclotomic(n))
-        margins = {}
-        j = 1
-        while True:
-            mm = I.margin(j)
-            margins[j] = mm.value
-            ex = mm.exists
-            if ex is None:  # MILP undecided: fall back to the complete search
-                ex = I.find(j, method="dfs") is not None
-            if ex:
-                break
-            j += 1
-        row = {"n": n, "degree": e, "m": j, "margins": margins,
+        cert = I.level_certificate()
+        mm = I.margin(1, time_limit=60)
+        row = {"n": n, "degree": e, "m": cert["m"], "empty_levels": cert["empty_levels"],
+               "witness_method": cert.get("witness_method"), "witness": cert["witness"],
+               "margin1": mm.value if mm.status == "optimal" else None,
                "admissible": is_admissible(n), "admissible_divisors": admissible_divisors(n),
                "seconds": round(time.time() - t, 2)}
+        print(n, e, cert["m"], row["admissible"], row["admissible_divisors"][:3], row["margin1"],
+              cert.get("witness_method"), row["seconds"], flush=True)
         rows.append(row)
         rows.sort(key=lambda r: r["n"])
-        print(n, e, j, row["admissible"], row["admissible_divisors"][:3], round(margins[1], 6), row["seconds"], flush=True)
         json.dump(rows, open(out, "w"), indent=1)
 
 

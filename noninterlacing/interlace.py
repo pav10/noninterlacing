@@ -40,7 +40,7 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import Iterable, Optional
 
-from flint import arb, fmpz_poly
+from flint import arb, fmpq_poly, fmpz_poly
 
 from .poly import PolyLike, chebyshev_C, poly, to_str
 from .realroots import RootData, interlaces, precision
@@ -148,10 +148,10 @@ class Interlacing:
         if method == "auto":
             method = "dfs" if self.d <= 20 else "milp"
         if method == "milp":
-            mm = self.lattice.max_min(level)
-            if mm.verified:
-                return self.coords_to_poly(mm.point)
-            if mm.exists is False:
+            fr = self.lattice.feasible(level, time_limit=kw.pop("time_limit", 600.0))
+            if fr.exists:
+                return self.coords_to_poly(fr.point)
+            if fr.exists is False:
                 return None
             method = "dfs"
         res = self.lattice.enumerate(level, mode="first", **kw)
@@ -178,6 +178,63 @@ class Interlacing:
         """The numerical semigroup ``S(f)`` of interlacing levels."""
         m = self.min_level(method)
         return NumericalSemigroup.from_oracle(lambda j: self.find(j, method=method) is not None, m)
+
+    def level_certificate(self, use_subfields: bool = True, time_limit: float = 600.0,
+                          max_level: Optional[int] = None) -> dict:
+        """Determine ``m(f)`` with certificates.
+
+        Lower bound: each level ``j < m`` is shown empty (complete DFS up to
+        degree 20, MILP infeasibility above).  Upper bound: an exactly verified
+        level-``m`` interlacer, found by DFS, by MILP feasibility, or by
+        lifting a totally positive codifferent element from a subfield (PARI;
+        ``m(Z[alpha]) <= [K:F] m(O_F)`` whenever the lift lies in
+        ``Z[alpha]^vee``, which is checked exactly).
+        """
+        out = {"f": to_str(self.f), "degree": self.d, "empty_levels": [], "witness": None}
+        lifted = []
+        if use_subfields:
+            try:
+                from .heredity import lifted_witnesses
+                from .orders import Order
+
+                lifted = lifted_witnesses(Order.monogenic(self.f))
+            except Exception:  # PARI missing or reducible f
+                lifted = []
+        cap = max_level or self.d
+        for j in range(1, cap + 1):
+            lift = next((w for w in lifted if w.trace == j), None)
+            if lift is not None:
+                g = (lift.element * fmpq_poly(self.roots.fprime)) % fmpq_poly(self.f)
+                g = fmpz_poly([int(c) for c in g.numer().coeffs()]) if g.denom() == 1 else None
+                if g is not None and interlaces(self.f, g):
+                    out.update(m=j, witness=to_str(g), witness_method=f"lift from degree-{lift.subfield_degree} subfield")
+                    return out
+            if self.d <= 20:
+                res = self.lattice.enumerate(j, mode="first", time_limit=time_limit)
+                if res.points:
+                    g = self.coords_to_poly(res.points[0])
+                    out.update(m=j, witness=to_str(g), witness_method="dfs")
+                    return out
+                if res.complete:
+                    out["empty_levels"].append((j, "dfs"))
+                    continue
+            fr = self.lattice.feasible(j, time_limit=time_limit)
+            if fr.exists:
+                g = self.coords_to_poly(fr.point)
+                out.update(m=j, witness=to_str(g), witness_method="milp")
+                return out
+            if fr.exists is False:
+                out["empty_levels"].append((j, "milp"))
+                continue
+            res = self.lattice.enumerate(j, mode="first", time_limit=time_limit)
+            if res.points:
+                g = self.coords_to_poly(res.points[0])
+                out.update(m=j, witness=to_str(g), witness_method="dfs")
+                return out
+            out.update(m=None, undecided_level=j)
+            return out
+        out.update(m=None, undecided_level=cap + 1)
+        return out
 
     def certificate(self, level: int = 1) -> dict:
         """A checkable witness: an interlacer, or the fact that none exists."""

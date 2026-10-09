@@ -88,3 +88,16 @@ def test_maximal_orders_and_subfields():
     assert rep.lower_bound == 2
     nonmono = Order.maximal(poly("x^3 - x^2 - 10*x + 8"))  # disc(poly) != disc(K)
     assert Order.monogenic(poly("x^3 - x^2 - 10*x + 8")).index_in(nonmono) == 2
+
+
+@needs_pari
+def test_lifted_witnesses_bound_m():
+    from noninterlacing.heredity import in_codifferent, lifted_witnesses
+
+    O = Order.monogenic(real_cyclotomic(77))  # degree 30, m = 2
+    ws = lifted_witnesses(O)
+    w = ws[0]
+    assert w.trace == 2 and w.subfield_degree == 15
+    assert in_codifferent(O, w.element) and O.roots.is_totally_positive(w.element)
+    cert = Interlacing(real_cyclotomic(77)).level_certificate()
+    assert cert["m"] == 2 and cert["empty_levels"] == [(1, "milp")]

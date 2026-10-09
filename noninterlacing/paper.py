@@ -263,19 +263,13 @@ def _divisor(c: Check, full: bool):
     out = {}
     for n in (84, 63, 99, 147, 189):
         I = Interlacing(real_cyclotomic(n))
-        mm = I.margin(1)
-        g2 = I.find(2)
-        if I.d <= 20:
-            r = I.enumerate(1, mode="count")
-            direct = f"complete search: I_1 = {r.count} ({r.nodes} nodes)"
-            ni = r.count == 0
-        else:
-            direct = f"MILP margin {mm.value:.6f}"
-            ni = mm.exists is False
-        out[n] = {"degree": I.d, "noninterlacing": ni, "margin": mm.value,
-                  "trace2": to_str(g2) if g2 is not None else None}
-        c.evidence.append(f"n = {n} (degree {I.d}): {direct}; exact trace-2 interlacer found, so m = 2")
-        if not ni or g2 is None:
+        cert = I.level_certificate()
+        out[n] = {"degree": I.d, "m": cert["m"], "empty_levels": cert["empty_levels"],
+                  "witness_method": cert.get("witness_method")}
+        how = ", ".join(f"level {j} empty ({m})" for j, m in cert["empty_levels"])
+        c.evidence.append(f"n = {n} (degree {I.d}): {how}; exact level-{cert['m']} interlacer "
+                          f"({cert.get('witness_method')}), so m = {cert['m']}")
+        if cert["m"] != 2:
             c.status = "refuted"
     if _have_pari():
         from .heredity import heredity_report
@@ -562,15 +556,22 @@ def _cyclo(c: Check, full: bool):
         c.evidence.append("run scripts/cyclotomic_levels.py first")
         return
     rows = json.load(open(path))
-    adm_bad = [r["n"] for r in rows if r["admissible"] and r["m"] < 2]
-    extra = [(r["n"], r["degree"], r["admissible_divisors"][:2]) for r in rows if not r["admissible"] and r["m"] >= 2]
-    m3 = [(r["n"], r["degree"]) for r in rows if r["m"] >= 3]
+    adm_bad = [r["n"] for r in rows if r["admissible"] and r["m"] == 1]
+    extra = [(r["n"], r["degree"], r["admissible_divisors"][:2]) for r in rows
+             if not r["admissible"] and (r["m"] or 0) >= 2]
+    m3 = [(r["n"], r["degree"]) for r in rows if (r["m"] or 0) >= 3]
+    undecided = [r["n"] for r in rows if r["m"] is None]
+    c.data["undecided"] = undecided
     c.data = {"rows": len(rows), "admissible_with_m1": adm_bad, "nonadmissible_with_m_ge_2": extra, "m_ge_3": m3,
               "max_conductor": max(r["n"] for r in rows), "max_degree": max(r["degree"] for r in rows)}
     c.evidence.append(f"{len(rows)} fields F_n, n <= {c.data['max_conductor']}, degree <= {c.data['max_degree']}")
     c.evidence.append(f"admissible conductors with m = 1: {adm_bad or 'none'} (Theorem 2.4 confirmed on this range)")
     c.evidence.append(f"non-admissible conductors with m >= 2: {extra}")
-    c.evidence.append(f"fields with m >= 3: {m3 or 'none'}")
+    c.evidence.append(f"fields with m >= 3: {m3 or 'none'}; undecided: {undecided or 'none'}")
+    methods = {}
+    for r in rows:
+        methods[r.get("witness_method") or "?"] = methods.get(r.get("witness_method") or "?", 0) + 1
+    c.evidence.append(f"witness methods: {methods}")
     if adm_bad:
         c.status = "refuted"
 
