@@ -1,0 +1,1074 @@
+[
+ {
+  "n": 5,
+  "degree": 2,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x",
+  "margin1": 0.276393202250021,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.12
+ },
+ {
+  "n": 7,
+  "degree": 3,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^2 + x - 1",
+  "margin1": 0.10757434232607613,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.01
+ },
+ {
+  "n": 8,
+  "degree": 2,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x",
+  "margin1": 0.5,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.01
+ },
+ {
+  "n": 9,
+  "degree": 3,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^2 - 1",
+  "margin1": 0.3333333333333333,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.01
+ },
+ {
+  "n": 11,
+  "degree": 5,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^4 + x^3 - 2*x^2 - x",
+  "margin1": 0.028862994030694367,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.02
+ },
+ {
+  "n": 12,
+  "degree": 2,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x",
+  "margin1": 0.5,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.01
+ },
+ {
+  "n": 13,
+  "degree": 6,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^5 + x^4 - 3*x^3 - 2*x^2 + 2*x",
+  "margin1": 0.017622149899506168,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.05
+ },
+ {
+  "n": 15,
+  "degree": 4,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^3 - x^2 - x",
+  "margin1": 0.07429470986861736,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.02
+ },
+ {
+  "n": 16,
+  "degree": 4,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^3 - 2*x",
+  "margin1": 0.25,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.01
+ },
+ {
+  "n": 17,
+  "degree": 8,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^7 + x^6 - 5*x^5 - 4*x^4 + 7*x^3 + 4*x^2 - 2*x - 1",
+  "margin1": 0.007944443599487552,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.06
+ },
+ {
+  "n": 19,
+  "degree": 9,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^8 + x^7 - 6*x^6 - 5*x^5 + 11*x^4 + 7*x^3 - 6*x^2 - 2*x",
+  "margin1": 0.0057034482420384724,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.05
+ },
+ {
+  "n": 20,
+  "degree": 4,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^3 - 2*x",
+  "margin1": 0.1381966011250105,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.01
+ },
+ {
+  "n": 21,
+  "degree": 6,
+  "m": 2,
+  "empty_levels": [
+   [
+    1,
+    "dfs"
+   ]
+  ],
+  "witness_method": "lift from degree-3 subfield",
+  "witness": "2*x^5 - 2*x^4 - 8*x^3 + 6*x^2 + 7*x - 3",
+  "margin1": -0.010697202674653516,
+  "admissible": true,
+  "admissible_divisors": [
+   21
+  ],
+  "seconds": 0.03
+ },
+ {
+  "n": 23,
+  "degree": 11,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^10 + x^9 - 8*x^8 - 7*x^7 + 22*x^6 + 16*x^5 - 24*x^4 - 13*x^3 + 9*x^2 + 3*x - 1",
+  "margin1": 0.0032245837088870355,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.08
+ },
+ {
+  "n": 24,
+  "degree": 4,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^3 - 2*x",
+  "margin1": 0.25,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.01
+ },
+ {
+  "n": 25,
+  "degree": 10,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^9 - 8*x^7 + 21*x^5 + x^4 - 20*x^3 - 3*x^2 + 5*x + 1",
+  "margin1": 0.055278640450004204,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.05
+ },
+ {
+  "n": 27,
+  "degree": 9,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^8 - 7*x^6 + 15*x^4 - 10*x^2 + 1",
+  "margin1": 0.1111111111111111,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.02
+ },
+ {
+  "n": 28,
+  "degree": 6,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^5 - 5*x^3 + 5*x",
+  "margin1": 0.05378717116303808,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.03
+ },
+ {
+  "n": 29,
+  "degree": 14,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^13 + x^12 - 11*x^11 - 10*x^10 + 46*x^9 + 37*x^8 - 91*x^7 - 62*x^6 + 86*x^5 + 46*x^4 - 34*x^3 - 12*x^2 + 4*x",
+  "margin1": 0.001612375468269884,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.15
+ },
+ {
+  "n": 31,
+  "degree": 15,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^14 + x^13 - 12*x^12 - 11*x^11 + 56*x^10 + 46*x^9 - 128*x^8 - 91*x^7 + 148*x^6 + 86*x^5 - 80*x^4 - 34*x^3 + 16*x^2 + 4*x - 1",
+  "margin1": 0.0013206489514519682,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.2
+ },
+ {
+  "n": 32,
+  "degree": 8,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^7 - 6*x^5 + 10*x^3 - 4*x",
+  "margin1": 0.125,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.01
+ },
+ {
+  "n": 33,
+  "degree": 10,
+  "m": 2,
+  "empty_levels": [
+   [
+    1,
+    "dfs"
+   ]
+  ],
+  "witness_method": "lift from degree-5 subfield",
+  "witness": "2*x^9 - 2*x^8 - 16*x^7 + 16*x^6 + 40*x^5 - 39*x^4 - 33*x^3 + 29*x^2 + 7*x - 4",
+  "margin1": -0.013944786756733621,
+  "admissible": true,
+  "admissible_divisors": [
+   33
+  ],
+  "seconds": 0.07
+ },
+ {
+  "n": 35,
+  "degree": 12,
+  "m": 2,
+  "empty_levels": [
+   [
+    1,
+    "dfs"
+   ]
+  ],
+  "witness_method": "lift from degree-6 subfield",
+  "witness": "2*x^11 - 2*x^10 - 19*x^9 + 17*x^8 + 64*x^7 - 49*x^6 - 91*x^5 + 56*x^4 + 49*x^3 - 22*x^2 - 6*x + 1",
+  "margin1": -0.027623073010616214,
+  "admissible": true,
+  "admissible_divisors": [
+   35
+  ],
+  "seconds": 0.23
+ },
+ {
+  "n": 36,
+  "degree": 6,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^5 - 4*x^3 + 3*x",
+  "margin1": 0.16666666666666666,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.01
+ },
+ {
+  "n": 37,
+  "degree": 18,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^17 + x^16 - 15*x^15 - 14*x^14 + 92*x^13 + 79*x^12 - 297*x^11 - 230*x^10 + 541*x^9 + 367*x^8 - 553*x^7 - 314*x^6 + 296*x^5 + 130*x^4 - 70*x^3 - 20*x^2 + 5*x",
+  "margin1": 0.0007775183595833264,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 1.21
+ },
+ {
+  "n": 39,
+  "degree": 12,
+  "m": 2,
+  "empty_levels": [
+   [
+    1,
+    "dfs"
+   ]
+  ],
+  "witness_method": "lift from degree-6 subfield",
+  "witness": "2*x^11 - 2*x^10 - 20*x^9 + 20*x^8 + 70*x^7 - 70*x^6 - 100*x^5 + 101*x^4 + 49*x^3 - 53*x^2 - x + 4",
+  "margin1": -0.011828005702410493,
+  "admissible": true,
+  "admissible_divisors": [
+   39
+  ],
+  "seconds": 0.09
+ },
+ {
+  "n": 40,
+  "degree": 8,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^7 - 6*x^5 + 9*x^3 - 2*x",
+  "margin1": 0.06909830056250525,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.04
+ },
+ {
+  "n": 41,
+  "degree": 20,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^19 + x^18 - 17*x^17 - 16*x^16 + 121*x^15 + 106*x^14 - 468*x^13 - 376*x^12 + 1068*x^11 + 771*x^10 - 1461*x^9 - 920*x^8 + 1163*x^7 + 610*x^6 - 496*x^5 - 200*x^4 + 95*x^3 + 25*x^2 - 5*x - 1",
+  "margin1": 0.0005716866448610552,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.65
+ },
+ {
+  "n": 43,
+  "degree": 21,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "milp",
+  "witness": "x^20 + x^19 - 18*x^18 - 17*x^17 + 137*x^16 + 121*x^15 - 574*x^14 - 468*x^13 + 1444*x^12 + 1068*x^11 - 2232*x^10 - 1461*x^9 + 2083*x^8 + 1163*x^7 - 1106*x^6 - 496*x^5 + 295*x^4 + 95*x^3 - 30*x^2 - 5*x",
+  "margin1": 0.0004956572988320876,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.71
+ },
+ {
+  "n": 44,
+  "degree": 10,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^9 - 9*x^7 + 28*x^5 - 35*x^3 + 15*x",
+  "margin1": 0.014431497015347166,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.03
+ },
+ {
+  "n": 45,
+  "degree": 12,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^11 - 10*x^9 - x^8 + 36*x^7 + 7*x^6 - 56*x^5 - 15*x^4 + 35*x^3 + 11*x^2 - 6*x - 2",
+  "margin1": 0.0247649032895391,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.06
+ },
+ {
+  "n": 47,
+  "degree": 23,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "milp",
+  "witness": "x^22 + x^21 - 20*x^20 - 19*x^19 + 172*x^18 + 154*x^17 - 832*x^16 - 695*x^15 + 2486*x^14 + 1912*x^13 - 4744*x^12 - 3300*x^11 + 5776*x^10 + 3544*x^9 - 4352*x^8 - 2269*x^7 + 1897*x^6 + 791*x^5 - 420*x^4 - 125*x^3 + 36*x^2 + 6*x - 1",
+  "margin1": 0.00037968135511574084,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.97
+ },
+ {
+  "n": 48,
+  "degree": 8,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^7 - 6*x^5 + 10*x^3 - 4*x",
+  "margin1": 0.125,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.02
+ },
+ {
+  "n": 49,
+  "degree": 21,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "milp",
+  "witness": "x^20 - 19*x^18 + 153*x^16 - 680*x^14 + x^13 + 1820*x^12 - 12*x^11 - 3003*x^10 + 55*x^9 + 3003*x^8 - 120*x^7 - 1716*x^6 + 126*x^5 + 495*x^4 - 56*x^3 - 55*x^2 + 7*x + 1",
+  "margin1": 0.01536776318943945,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.09
+ },
+ {
+  "n": 51,
+  "degree": 16,
+  "m": 2,
+  "empty_levels": [
+   [
+    1,
+    "dfs"
+   ]
+  ],
+  "witness_method": "lift from degree-8 subfield",
+  "witness": "2*x^15 - 2*x^14 - 28*x^13 + 28*x^12 + 155*x^11 - 155*x^10 - 428*x^9 + 428*x^8 + 607*x^7 - 607*x^6 - 401*x^5 + 401*x^4 + 89*x^3 - 88*x^2 - 5*x + 3",
+  "margin1": -0.008296188389412793,
+  "admissible": true,
+  "admissible_divisors": [
+   51
+  ],
+  "seconds": 0.16
+ },
+ {
+  "n": 52,
+  "degree": 12,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^11 - 11*x^9 + 45*x^7 - 84*x^5 + 70*x^3 - 21*x",
+  "margin1": 0.008811074949753086,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.07
+ },
+ {
+  "n": 53,
+  "degree": 26,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "milp",
+  "witness": "x^25 + x^24 - 23*x^23 - 22*x^22 + 232*x^21 + 211*x^20 - 1349*x^19 - 1158*x^18 + 4999*x^17 + 4013*x^16 - 12323*x^15 - 9142*x^14 + 20476*x^13 + 13820*x^12 - 22748*x^11 - 13672*x^10 + 16414*x^9 + 8518*x^8 - 7274*x^7 - 3108*x^6 + 1792*x^5 + 581*x^4 - 203*x^3 - 42*x^2 + 7*x",
+  "margin1": 0.00026486430137672573,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 1.75
+ },
+ {
+  "n": 55,
+  "degree": 20,
+  "m": 2,
+  "empty_levels": [
+   [
+    1,
+    "dfs"
+   ]
+  ],
+  "witness_method": "lift from degree-10 subfield",
+  "witness": "2*x^19 - 2*x^18 - 36*x^17 + 34*x^16 + 272*x^15 - 238*x^14 - 1122*x^13 + 884*x^12 + 2754*x^11 - 1870*x^10 - 4112*x^9 + 2242*x^8 + 3656*x^7 - 1414*x^6 - 1793*x^5 + 379*x^4 + 396*x^3 - 17*x^2 - 17*x + 1",
+  "margin1": -0.01676993255466323,
+  "admissible": true,
+  "admissible_divisors": [
+   55
+  ],
+  "seconds": 1.5
+ },
+ {
+  "n": 56,
+  "degree": 12,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^11 - 10*x^9 + 35*x^7 - 50*x^5 + 25*x^3 - 2*x",
+  "margin1": 0.026893585581519032,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.07
+ },
+ {
+  "n": 57,
+  "degree": 18,
+  "m": 2,
+  "empty_levels": [
+   [
+    1,
+    "dfs"
+   ]
+  ],
+  "witness_method": "lift from degree-9 subfield",
+  "witness": "2*x^17 - 2*x^16 - 32*x^15 + 32*x^14 + 208*x^13 - 208*x^12 - 702*x^11 + 702*x^10 + 1300*x^9 - 1302*x^8 - 1271*x^7 + 1287*x^6 + 554*x^5 - 596*x^4 - 49*x^3 + 89*x^2 - 9*x - 1",
+  "margin1": -0.0075661254951296525,
+  "admissible": true,
+  "admissible_divisors": [
+   57
+  ],
+  "seconds": 0.32
+ },
+ {
+  "n": 59,
+  "degree": 29,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "milp",
+  "witness": "x^28 + x^27 - 26*x^26 - 25*x^25 + 301*x^24 + 277*x^23 - 2046*x^22 - 1792*x^21 + 9066*x^20 + 7506*x^19 - 27492*x^18 - 21335*x^17 + 58277*x^16 + 41941*x^15 - 86662*x^14 - 57044*x^13 + 89402*x^12 + 52834*x^11 - 62292*x^10 - 32206*x^9 + 27966*x^8 + 12174*x^7 - 7476*x^6 - 2576*x^5 + 1036*x^4 + 252*x^3 - 56*x^2 - 7*x",
+  "margin1": 0.00019204067084280913,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 2.88
+ },
+ {
+  "n": 60,
+  "degree": 8,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^7 - 5*x^5 + 6*x^3 - x",
+  "margin1": 0.03714735493430868,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.03
+ },
+ {
+  "n": 61,
+  "degree": 30,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "milp",
+  "witness": "x^29 + x^28 - 27*x^27 - 26*x^26 + 326*x^25 + 301*x^24 - 2323*x^23 - 2046*x^22 + 10858*x^21 + 9066*x^20 - 34998*x^19 - 27492*x^18 + 79612*x^17 + 58277*x^16 - 128603*x^15 - 86662*x^14 + 146446*x^13 + 89402*x^12 - 115126*x^11 - 62292*x^10 + 60172*x^9 + 27966*x^8 - 19650*x^7 - 7476*x^6 + 3612*x^5 + 1036*x^4 - 308*x^3 - 56*x^2 + 8*x",
+  "margin1": 0.00017377457001347383,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 3.3
+ },
+ {
+  "n": 63,
+  "degree": 18,
+  "m": 2,
+  "empty_levels": [
+   [
+    1,
+    "dfs"
+   ]
+  ],
+  "witness_method": "lift from degree-9 subfield",
+  "witness": "2*x^17 - 32*x^15 - x^14 + 210*x^13 + 13*x^12 - 729*x^11 - 66*x^10 + 1440*x^9 + 167*x^8 - 1620*x^7 - 224*x^6 + 979*x^5 + 156*x^4 - 271*x^3 - 49*x^2 + 21*x + 4",
+  "margin1": -0.003565734224884501,
+  "admissible": false,
+  "admissible_divisors": [
+   21
+  ],
+  "seconds": 0.22
+ },
+ {
+  "n": 64,
+  "degree": 16,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^15 - 14*x^13 + 78*x^11 - 220*x^9 + 330*x^7 - 252*x^5 + 84*x^3 - 8*x",
+  "margin1": 0.0625,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.04
+ },
+ {
+  "n": 65,
+  "degree": 24,
+  "m": 2,
+  "empty_levels": [
+   [
+    1,
+    "milp"
+   ]
+  ],
+  "witness_method": "lift from degree-12 subfield",
+  "witness": "2*x^23 - 2*x^22 - 44*x^21 + 42*x^20 + 420*x^19 - 378*x^18 - 2282*x^17 + 1905*x^16 + 7783*x^15 - 5895*x^14 - 17330*x^13 + 11555*x^12 + 25379*x^11 - 14279*x^10 - 23990*x^9 + 10712*x^8 + 13918*x^7 - 4493*x^6 - 4469*x^5 + 900*x^4 + 636*x^3 - 66*x^2 - 22*x + 1",
+  "margin1": -0.014899823043840452,
+  "admissible": true,
+  "admissible_divisors": [
+   65
+  ],
+  "seconds": 8.29
+ },
+ {
+  "n": 67,
+  "degree": 33,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "milp",
+  "witness": "x^32 + x^31 - 30*x^30 - 29*x^29 + 407*x^28 + 379*x^27 - 3302*x^26 - 2950*x^25 + 17851*x^24 + 15227*x^23 - 67826*x^22 - 54922*x^21 + 186166*x^20 + 142102*x^19 - 373596*x^18 - 266492*x^17 + 548591*x^16 + 361711*x^15 - 584082*x^14 - 350974*x^13 + 442118*x^12 + 237590*x^11 - 230252*x^10 - 107788*x^9 + 78354*x^8 + 30738*x^7 - 16044*x^6 - 4956*x^5 + 1716*x^4 + 372*x^3 - 72*x^2 - 8*x",
+  "margin1": 0.00013116471576423593,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 5.44
+ },
+ {
+  "n": 68,
+  "degree": 16,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^15 - 15*x^13 + 91*x^11 - 286*x^9 + 495*x^7 - 462*x^5 + 210*x^3 - 36*x",
+  "margin1": 0.003972221799743776,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.11
+ },
+ {
+  "n": 69,
+  "degree": 22,
+  "m": 2,
+  "empty_levels": [
+   [
+    1,
+    "milp"
+   ]
+  ],
+  "witness_method": "lift from degree-11 subfield",
+  "witness": "2*x^21 - 2*x^20 - 40*x^19 + 40*x^18 + 340*x^17 - 340*x^16 - 1598*x^15 + 1599*x^14 + 4521*x^13 - 4535*x^12 - 7841*x^11 + 7919*x^10 + 8097*x^9 - 8317*x^8 - 4553*x^7 + 4883*x^6 + 1124*x^5 - 1376*x^4 - 59*x^3 + 143*x^2 - 5*x - 3",
+  "margin1": -0.006713101650698052,
+  "admissible": true,
+  "admissible_divisors": [
+   69
+  ],
+  "seconds": 2.79
+ },
+ {
+  "n": 71,
+  "degree": 35,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "milp",
+  "witness": "x^34 + x^33 - 32*x^32 - 31*x^31 + 466*x^30 + 436*x^29 - 4088*x^28 - 3681*x^27 + 24103*x^26 + 20801*x^25 - 100904*x^24 - 83053*x^23 + 308914*x^22 + 241088*x^21 - 701864*x^20 - 515698*x^19 + 1188679*x^18 + 815083*x^17 - 1494384*x^16 - 945793*x^15 + 1377174*x^14 + 793092*x^13 - 909960*x^12 - 467842*x^11 + 416394*x^10 + 186142*x^9 - 125136*x^8 - 46782*x^7 + 22716*x^6 + 6672*x^5 - 2160*x^4 - 444*x^3 + 81*x^2 + 9*x - 1",
+  "margin1": 0.00011023036408606108,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 7.15
+ },
+ {
+  "n": 72,
+  "degree": 12,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^11 - 10*x^9 + 36*x^7 - 56*x^5 + 35*x^3 - 6*x",
+  "margin1": 0.08333333333333333,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.04
+ },
+ {
+  "n": 73,
+  "degree": 36,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "milp feasibility",
+  "witness": "x^35 + x^34 - 33*x^33 - 32*x^32 + 497*x^31 + 466*x^30 - 4524*x^29 - 4088*x^28 + 27784*x^27 + 24103*x^26 - 121705*x^25 - 100904*x^24 + 391967*x^23 + 308914*x^22 - 942952*x^21 - 701864*x^20 + 1704377*x^19 + 1188679*x^18 - 2309467*x^17 - 1494384*x^16 + 2322967*x^15 + 1377174*x^14 - 1703052*x^13 - 909960*x^12 + 884236*x^11 + 416394*x^10 - 311278*x^9 - 125136*x^8 + 69498*x^7 + 22716*x^6 - 8832*x^5 - 2160*x^4 + 525*x^3 + 81*x^2 - 9*x - 1",
+  "margin1": 0.00010141986480526637,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 8.73
+ },
+ {
+  "n": 75,
+  "degree": 20,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^19 - 18*x^17 + 136*x^15 - x^14 - 560*x^13 + 13*x^12 + 1365*x^11 - 66*x^10 - 2002*x^9 + 165*x^8 + 1716*x^7 - 210*x^6 - 792*x^5 + 126*x^4 + 165*x^3 - 28*x^2 - 10*x + 1",
+  "margin1": 0.01485894197372347,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.38
+ },
+ {
+  "n": 76,
+  "degree": 18,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^17 - 17*x^15 + 120*x^13 - 455*x^11 + 1001*x^9 - 1287*x^7 + 924*x^5 - 330*x^3 + 45*x",
+  "margin1": 0.0028517241210192276,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.14
+ },
+ {
+  "n": 77,
+  "degree": 30,
+  "m": 2,
+  "empty_levels": [
+   [
+    1,
+    "milp"
+   ]
+  ],
+  "witness_method": "lift from degree-15 subfield",
+  "witness": "2*x^29 - 2*x^28 - 56*x^27 + 54*x^26 + 702*x^25 - 650*x^24 - 5200*x^23 + 4602*x^22 + 25298*x^21 - 21294*x^20 - 84968*x^19 + 67678*x^18 + 201552*x^17 - 151164*x^16 - 339454*x^15 + 238678*x^14 + 402192*x^13 - 264290*x^12 - 327028*x^11 + 200640*x^10 + 174306*x^9 - 100054*x^8 - 56126*x^7 + 30324*x^6 + 9311*x^5 - 4789*x^4 - 536*x^3 + 269*x^2 + 5*x - 3",
+  "margin1": -0.012755239536189775,
+  "admissible": true,
+  "admissible_divisors": [
+   77
+  ],
+  "seconds": 38.99
+ },
+ {
+  "n": 79,
+  "degree": 39,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "milp feasibility",
+  "witness": "x^38 + x^37 - 36*x^36 - 35*x^35 + 596*x^34 + 562*x^33 - 6016*x^32 - 5487*x^31 + 41386*x^30 + 36396*x^29 - 205464*x^28 - 173592*x^27 + 760384*x^26 + 614576*x^25 - 2136704*x^24 - 1643833*x^23 + 4601059*x^22 + 3349193*x^21 - 7608764*x^20 - 5202523*x^19 + 9624964*x^18 + 6126818*x^17 - 9220544*x^16 - 5403193*x^15 + 6577474*x^14 + 3497248*x^13 - 3406104*x^12 - 1611908*x^11 + 1233584*x^10 + 505912*x^9 - 295680*x^8 - 101046*x^7 + 43065*x^6 + 11517*x^5 - 3300*x^4 - 615*x^3 + 100*x^2 + 10*x - 1",
+  "margin1": 8.002939203301649e-05,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 11.79
+ },
+ {
+  "n": 80,
+  "degree": 16,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^15 - 14*x^13 + 78*x^11 - 220*x^9 + 330*x^7 - 252*x^5 + 84*x^3 - 8*x",
+  "margin1": 0.034549150281252626,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.07
+ },
+ {
+  "n": 81,
+  "degree": 27,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "milp feasibility",
+  "witness": "x^26 - 25*x^24 + 276*x^22 - 1771*x^20 + 7315*x^18 - 20349*x^16 + 38760*x^14 - 50388*x^12 + 43758*x^10 - 24310*x^8 + 8008*x^6 - 1365*x^4 + 91*x^2 - 1",
+  "margin1": 0.037037037037037035,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.04
+ },
+ {
+  "n": 83,
+  "degree": 41,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "milp feasibility",
+  "witness": "x^40 + x^39 - 38*x^38 - 37*x^37 + 667*x^36 + 631*x^35 - 7174*x^34 - 6578*x^33 + 52889*x^32 + 46873*x^31 - 283246*x^30 - 241860*x^29 + 1139440*x^28 + 933976*x^27 - 3511664*x^26 - 2751280*x^25 + 8381596*x^24 + 6244892*x^23 - 15559016*x^22 - 10957957*x^21 + 22436251*x^20 + 14827487*x^19 - 24972326*x^18 - 15347362*x^17 + 21201211*x^16 + 11980667*x^15 - 13480826*x^14 - 6903352*x^13 + 6251596*x^12 + 2845492*x^11 - 2035176*x^10 - 801592*x^9 + 439791*x^8 + 144111*x^7 - 57882*x^6 - 14817*x^5 + 4015*x^4 + 715*x^3 - 110*x^2 - 10*x",
+  "margin1": 6.901095711681844e-05,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 14.08
+ },
+ {
+  "n": 84,
+  "degree": 12,
+  "m": 2,
+  "empty_levels": [
+   [
+    1,
+    "dfs"
+   ]
+  ],
+  "witness_method": "lift from degree-6 subfield",
+  "witness": "2*x^11 - 18*x^9 + 57*x^7 - 77*x^5 + 42*x^3 - 7*x",
+  "margin1": -0.005348601337326765,
+  "admissible": false,
+  "admissible_divisors": [
+   21,
+   42
+  ],
+  "seconds": 0.05
+ },
+ {
+  "n": 85,
+  "degree": 32,
+  "m": 2,
+  "empty_levels": [
+   [
+    1,
+    "milp"
+   ]
+  ],
+  "witness_method": "lift from degree-16 subfield",
+  "witness": "2*x^31 - 2*x^30 - 60*x^29 + 58*x^28 + 812*x^27 - 754*x^26 - 6554*x^25 + 5800*x^24 + 35148*x^23 - 29348*x^22 - 132064*x^21 + 102716*x^20 + 357240*x^19 - 254523*x^18 - 703837*x^17 + 449295*x^16 + 1010018*x^15 - 560570*x^14 - 1044420*x^13 + 483170*x^12 + 760542*x^11 - 275552*x^10 - 374770*x^9 + 96215*x^8 + 116875*x^7 - 17657*x^6 - 20508*x^5 + 1135*x^4 + 1613*x^3 + 17*x^2 - 37*x - 1",
+  "margin1": -0.011020364813252657,
+  "admissible": true,
+  "admissible_divisors": [
+   85
+  ],
+  "seconds": 37.66
+ },
+ {
+  "n": 87,
+  "degree": 28,
+  "m": 2,
+  "empty_levels": [
+   [
+    1,
+    "milp"
+   ]
+  ],
+  "witness_method": "lift from degree-14 subfield",
+  "witness": "2*x^27 - 2*x^26 - 52*x^25 + 52*x^24 + 598*x^23 - 598*x^22 - 4002*x^21 + 4002*x^20 + 17250*x^19 - 17250*x^18 - 50048*x^17 + 50048*x^16 + 99178*x^15 - 99178*x^14 - 133381*x^13 + 133379*x^12 + 118548*x^11 - 118524*x^10 - 66166*x^9 + 66056*x^8 + 21295*x^7 - 21055*x^6 - 3487*x^5 + 3235*x^4 + 279*x^3 - 167*x^2 - 15*x + 1",
+  "margin1": -0.00517236225815744,
+  "admissible": true,
+  "admissible_divisors": [
+   87
+  ],
+  "seconds": 2.74
+ },
+ {
+  "n": 88,
+  "degree": 20,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^19 - 18*x^17 + 135*x^15 - 546*x^13 + 1288*x^11 - 1792*x^9 + 1421*x^7 - 590*x^5 + 107*x^3 - 6*x",
+  "margin1": 0.007215748507673592,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.38
+ },
+ {
+  "n": 89,
+  "degree": 44,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "milp feasibility",
+  "witness": "x^43 + x^42 - 41*x^41 - 40*x^40 + 781*x^39 + 742*x^38 - 9176*x^37 - 8472*x^36 + 74446*x^35 + 66641*x^34 - 442475*x^33 - 383008*x^32 + 1994665*x^31 + 1664546*x^30 - 6966380*x^29 - 5585080*x^28 + 19090180*x^27 + 14644540*x^26 - 41318380*x^25 - 30185504*x^24 + 70757132*x^23 + 48953224*x^22 - 95630272*x^21 - 62236064*x^20 + 101320712*x^19 + 61520899*x^18 - 83211277*x^17 - 46662704*x^16 + 52097267*x^15 + 26635774*x^14 - 24287212*x^13 - 11132264*x^12 + 8157227*x^11 + 3276559*x^10 - 1883167*x^9 - 641784*x^8 + 278707*x^7 + 76714*x^6 - 23672*x^5 - 4840*x^4 + 946*x^3 + 121*x^2 - 11*x - 1",
+  "margin1": 5.5976962904183716e-05,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 31.51
+ },
+ {
+  "n": 91,
+  "degree": 36,
+  "m": 2,
+  "empty_levels": [
+   [
+    1,
+    "milp"
+   ]
+  ],
+  "witness_method": "lift from degree-18 subfield",
+  "witness": "2*x^35 - 2*x^34 - 68*x^33 + 66*x^32 + 1056*x^31 - 992*x^30 - 9920*x^29 + 8990*x^28 + 62930*x^27 - 54810*x^26 - 285012*x^25 + 237510*x^24 + 950040*x^23 - 753478*x^22 - 2368082*x^21 + 1776018*x^20 + 4440190*x^19 - 3124170*x^18 - 6249442*x^17 + 4084013*x^16 + 6539151*x^15 - 3916407*x^14 - 4997034*x^13 + 2691871*x^12 + 2712814*x^11 - 1277562*x^10 - 1004629*x^9 + 394604*x^8 + 239086*x^7 - 71969*x^6 - 33309*x^5 + 6517*x^4 + 2275*x^3 - 201*x^2 - 47*x + 1",
+  "margin1": null,
+  "admissible": true,
+  "admissible_divisors": [
+   91
+  ],
+  "seconds": 68.73
+ },
+ {
+  "n": 92,
+  "degree": 22,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "milp feasibility",
+  "witness": "x^21 - 21*x^19 + 190*x^17 - 969*x^15 + 3060*x^13 - 6188*x^11 + 8008*x^9 - 6435*x^7 + 3003*x^5 - 715*x^3 + 65*x",
+  "margin1": 0.001612291854443509,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.18
+ },
+ {
+  "n": 93,
+  "degree": 30,
+  "m": 2,
+  "empty_levels": [
+   [
+    1,
+    "milp"
+   ]
+  ],
+  "witness_method": "lift from degree-15 subfield",
+  "witness": "2*x^29 - 2*x^28 - 56*x^27 + 56*x^26 + 700*x^25 - 700*x^24 - 5150*x^23 + 5150*x^22 + 24750*x^21 - 24750*x^20 - 81510*x^19 + 81510*x^18 + 187682*x^17 - 187682*x^16 - 302632*x^15 + 302630*x^14 + 336911*x^13 - 336883*x^12 - 250990*x^11 + 250834*x^10 + 118744*x^9 - 118304*x^8 - 33025*x^7 + 32365*x^6 + 4973*x^5 - 4469*x^4 - 417*x^3 + 249*x^2 + 19*x - 3",
+  "margin1": -0.004857590289410695,
+  "admissible": true,
+  "admissible_divisors": [
+   93
+  ],
+  "seconds": 3.46
+ },
+ {
+  "n": 95,
+  "degree": 36,
+  "m": 2,
+  "empty_levels": [
+   [
+    1,
+    "milp margin"
+   ]
+  ],
+  "witness_method": "lift from degree-18 subfield",
+  "witness": "2*x^35 - 2*x^34 - 68*x^33 + 66*x^32 + 1056*x^31 - 990*x^30 - 9922*x^29 + 8932*x^28 + 62986*x^27 - 54054*x^26 - 285712*x^25 + 231659*x^24 + 955191*x^23 - 723557*x^22 - 2392852*x^21 + 1669571*x^20 + 4521867*x^19 - 2854067*x^18 - 6437866*x^17 + 3591114*x^16 + 6843590*x^15 - 3272825*x^14 - 5335905*x^13 + 2101840*x^12 + 2962855*x^11 - 911403*x^10 - 1118030*x^9 + 250385*x^8 + 265965*x^7 - 39890*x^6 - 35234*x^5 + 3352*x^4 + 2118*x^3 - 131*x^2 - 41*x + 1",
+  "margin1": null,
+  "admissible": true,
+  "admissible_divisors": [
+   95
+  ],
+  "seconds": 207.48
+ },
+ {
+  "n": 96,
+  "degree": 16,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^15 - 14*x^13 + 78*x^11 - 220*x^9 + 330*x^7 - 252*x^5 + 84*x^3 - 8*x",
+  "margin1": 0.0625,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.03
+ },
+ {
+  "n": 97,
+  "degree": 48,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "milp feasibility",
+  "witness": "x^47 + x^46 - 45*x^45 - 44*x^44 + 947*x^43 + 904*x^42 - 12382*x^41 - 11520*x^40 + 112711*x^39 + 102012*x^38 - 758574*x^37 - 666480*x^36 + 3912826*x^35 + 3329264*x^34 - 15823412*x^33 - 13003264*x^32 + 50898157*x^31 + 40272566*x^30 - 131370000*x^29 - 99728360*x^28 + 273277036*x^27 + 198223936*x^26 - 458544280*x^25 - 316283264*x^24 + 619111172*x^23 + 403770544*x^22 - 668796712*x^21 - 409609664*x^20 + 572756312*x^19 + 326703424*x^18 - 383751472*x^17 - 201780224*x^16 + 197519942*x^15 + 94499689*x^14 - 76183147*x^13 - 32606444*x^12 + 21280337*x^11 + 7963384*x^10 - 4103242*x^9 - 1299584*x^8 + 508937*x^7 + 129844*x^6 - 36322*x^5 - 6864*x^4 + 1222*x^3 + 144*x^2 - 12*x - 1",
+  "margin1": 4.3240696129656394e-05,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 44.46
+ },
+ {
+  "n": 99,
+  "degree": 30,
+  "m": 2,
+  "empty_levels": [
+   [
+    1,
+    "milp"
+   ]
+  ],
+  "witness_method": "lift from degree-15 subfield",
+  "witness": "2*x^29 - 56*x^27 - 2*x^26 + 702*x^25 + 50*x^24 - 5200*x^23 - 552*x^22 + 25300*x^21 + 3542*x^20 - 85008*x^19 - 14630*x^18 + 201894*x^17 + 40698*x^16 - 341088*x^15 - 77520*x^14 + 406980*x^13 + 100776*x^12 - 335920*x^11 - 87516*x^10 + 184756*x^9 + 48620*x^8 - 63648*x^7 - 16016*x^6 + 12377*x^5 + 2730*x^4 - 1124*x^3 - 183*x^2 + 33*x + 3",
+  "margin1": -0.004648262252244538,
+  "admissible": false,
+  "admissible_divisors": [
+   33
+  ],
+  "seconds": 1.23
+ },
+ {
+  "n": 100,
+  "degree": 20,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^19 - 18*x^17 + 136*x^15 - 560*x^13 + 1365*x^11 - 2003*x^9 + 1724*x^7 - 813*x^5 + 185*x^3 - 15*x",
+  "margin1": 0.027639320225002102,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.23
+ },
+ {
+  "n": 101,
+  "degree": 50,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "milp feasibility",
+  "witness": "x^49 + x^48 - 47*x^47 - 46*x^46 + 1036*x^45 + 991*x^44 - 14233*x^43 - 13286*x^42 + 136613*x^41 + 124231*x^40 - 973297*x^39 - 860586*x^38 + 5337880*x^37 + 4579306*x^36 - 23065502*x^35 - 19152676*x^34 + 79724833*x^33 + 63901421*x^32 - 222540723*x^31 - 171642566*x^30 + 504375396*x^29 + 373005396*x^28 - 930045252*x^27 - 656768216*x^26 + 1393938716*x^25 + 935394436*x^24 - 1691678428*x^23 - 1072567256*x^22 + 1651162688*x^21 + 982365976*x^20 - 1283211208*x^19 - 710454896*x^18 + 783051638*x^17 + 399300166*x^16 - 368202778*x^15 - 170682836*x^14 + 130069928*x^13 + 53886781*x^12 - 33346963*x^11 - 12066626*x^10 + 5911763*x^9 + 1808521*x^8 - 675103*x^7 - 166166*x^6 + 44408*x^5 + 8086*x^4 - 1378*x^3 - 156*x^2 + 13*x",
+  "margin1": 3.8305007255557456e-05,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 34.55
+ },
+ {
+  "n": 103,
+  "degree": 51,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "milp feasibility",
+  "witness": "x^50 + x^49 - 48*x^48 - 47*x^47 + 1082*x^46 + 1036*x^45 - 15224*x^44 - 14233*x^43 + 149899*x^42 + 136613*x^41 - 1097528*x^40 - 973297*x^39 + 6198466*x^38 + 5337880*x^37 - 27644808*x^36 - 23065502*x^35 + 98877509*x^34 + 79724833*x^33 - 286442144*x^32 - 222540723*x^31 + 676017962*x^30 + 504375396*x^29 - 1303050648*x^28 - 930045252*x^27 + 2050706932*x^26 + 1393938716*x^25 - 2627072864*x^24 - 1691678428*x^23 + 2723729944*x^22 + 1651162688*x^21 - 2265577184*x^20 - 1283211208*x^19 + 1493506534*x^18 + 783051638*x^17 - 767502944*x^16 - 368202778*x^15 + 300752764*x^14 + 130069928*x^13 - 87233744*x^12 - 33346963*x^11 + 17978389*x^10 + 5911763*x^9 - 2483624*x^8 - 675103*x^7 + 210574*x^6 + 44408*x^5 - 9464*x^4 - 1378*x^3 + 169*x^2 + 13*x - 1",
+  "margin1": 3.611714252633325e-05,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 45.06
+ },
+ {
+  "n": 104,
+  "degree": 24,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "milp feasibility",
+  "witness": "x^23 - 22*x^21 + 209*x^19 - 1122*x^17 + 3741*x^15 - 8022*x^13 + 11088*x^11 - 9648*x^9 + 5014*x^7 - 1412*x^5 + 180*x^3 - 8*x",
+  "margin1": 0.004405537474876543,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.13
+ },
+ {
+  "n": 105,
+  "degree": 24,
+  "m": 2,
+  "empty_levels": [
+   [
+    1,
+    "milp"
+   ]
+  ],
+  "witness_method": "lift from degree-12 subfield",
+  "witness": "2*x^23 + 2*x^22 - 42*x^21 - 41*x^20 + 381*x^19 + 360*x^18 - 1958*x^17 - 1772*x^16 + 6285*x^15 + 5377*x^14 - 13105*x^13 - 10426*x^12 + 17889*x^11 + 12960*x^10 - 15715*x^9 - 10081*x^8 + 8494*x^7 + 4626*x^6 - 2598*x^5 - 1107*x^4 + 391*x^3 + 102*x^2 - 23*x - 1",
+  "margin1": null,
+  "admissible": true,
+  "admissible_divisors": [
+   21,
+   35,
+   105
+  ],
+  "seconds": 61.52
+ },
+ {
+  "n": 107,
+  "degree": 53,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "milp feasibility",
+  "witness": "x^52 + x^51 - 50*x^50 - 49*x^49 + 1177*x^48 + 1129*x^47 - 17342*x^46 - 16260*x^45 + 179356*x^44 + 164132*x^43 - 1384040*x^42 - 1234141*x^41 + 8269291*x^40 + 7171763*x^39 - 39181154*x^38 - 32982688*x^37 + 149587819*x^36 + 121943011*x^35 - 465044486*x^34 - 366166977*x^33 + 1185000829*x^32 + 898558685*x^31 - 2483444006*x^30 - 1807426044*x^29 + 4283802832*x^28 + 2980752184*x^27 - 6071718512*x^26 - 4021011580*x^25 + 7042481236*x^24 + 4415408372*x^23 - 6640469816*x^22 - 3916739872*x^21 + 5042294926*x^20 + 2776717742*x^19 - 3044061116*x^18 - 1550554582*x^17 + 1436458486*x^16 + 668955542*x^15 - 518056436*x^14 - 217303672*x^13 + 138559096*x^12 + 51325352*x^11 - 26373776*x^10 - 8395387*x^9 + 3369301*x^8 + 885677*x^7 - 264446*x^6 - 53872*x^5 + 11011*x^4 + 1547*x^3 - 182*x^2 - 13*x",
+  "margin1": 3.2216889359657646e-05,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 50.51
+ },
+ {
+  "n": 108,
+  "degree": 18,
+  "m": 1,
+  "empty_levels": [],
+  "witness_method": "dfs",
+  "witness": "x^17 - 16*x^15 + 105*x^13 - 364*x^11 + 715*x^9 - 792*x^7 + 462*x^5 - 120*x^3 + 9*x",
+  "margin1": 0.05555555555555555,
+  "admissible": false,
+  "admissible_divisors": [],
+  "seconds": 0.06
+ }
+]

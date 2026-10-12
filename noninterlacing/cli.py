@@ -155,7 +155,17 @@ def cmd_random(a):
 def cmd_paper(a):
     from .paper import run, write_report
 
-    res = run(full=a.full, only=a.only.split(",") if a.only else None)
+    import os
+
+    from .paper import Check
+
+    only = a.only.split(",") if a.only else None
+    res = run(full=a.full, only=only)
+    old = os.path.join(a.out, "paper_verification.json")
+    if only and os.path.exists(old):  # merge with an earlier complete run
+        prev = [Check(**{k: v for k, v in c.items()}) for c in json.load(open(old))]
+        new = {c.key: c for c in res}
+        res = [new.pop(c.key, c) for c in prev] + list(new.values())
     path = write_report(res, a.out)
     print(f"report written to {path}")
 

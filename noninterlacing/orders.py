@@ -273,16 +273,19 @@ class Order:
         res = self.lattice.enumerate(trace, mode="count")
         return res.count
 
-    def find(self, trace: int, method: str = "auto"):
+    def find(self, trace: int, method: str = "auto", time_limit: Optional[float] = None):
+        """A totally positive codifferent element of the given trace, or ``None``.
+
+        With ``time_limit`` the search may give up (returning ``None``)."""
         if method == "auto":
             method = "dfs" if self.d <= 20 else "milp"
         if method == "milp":
-            fr = self.lattice.feasible(trace)
+            fr = self.lattice.feasible(trace, time_limit=time_limit or 600.0)
             if fr.exists:
                 return self.element(fr.point)
             if fr.exists is False:
                 return None
-        res = self.lattice.enumerate(trace, mode="first")
+        res = self.lattice.enumerate(trace, mode="first", time_limit=time_limit)
         return self.element(res.points[0]) if res.points else None
 
     def margin(self, trace: int = 1):
@@ -340,3 +343,56 @@ def _gcd(a: int, b: int) -> int:
     while b:
         a, b = b, a % b
     return abs(a)
+
+
+def _order_level_certificate(self: Order, use_subfields: bool = True, time_limit: float = 200.0,
+                             max_level: Optional[int] = None) -> dict:
+    """``m(O)`` with certificates (see :meth:`Interlacing.level_certificate`)."""
+    out = {"order": repr(self), "degree": self.d, "empty_levels": [], "witness": None}
+    L = self.lattice
+    for j in range(1, (max_level or self.d) + 1):
+        lift = None
+        if use_subfields and j >= 2:
+            try:
+                from .heredity import lift_witness_at
+
+                lift = lift_witness_at(self, j, time_limit=min(30.0, time_limit))
+            except Exception:
+                lift = None
+        if lift is not None:
+            out.update(m=j, witness=to_str(lift.element, "a"),
+                       witness_method=f"lift from degree-{lift.subfield_degree} subfield")
+            return out
+        if self.d <= 20:
+            res = L.enumerate(j, mode="first", time_limit=time_limit)
+            if res.points:
+                out.update(m=j, witness=to_str(self.element(res.points[0]), "a"), witness_method="dfs")
+                return out
+            if res.complete:
+                out["empty_levels"].append((j, "dfs"))
+                continue
+        fr = L.feasible(j, time_limit=min(60.0, time_limit))
+        if fr.exists:
+            out.update(m=j, witness=to_str(self.element(fr.point), "a"), witness_method="milp feasibility")
+            return out
+        if fr.exists is False:
+            out["empty_levels"].append((j, "milp"))
+            continue
+        mm = L.max_min(j, time_limit=time_limit)
+        if mm.verified:
+            out.update(m=j, witness=to_str(self.element(mm.point), "a"), witness_method="milp margin")
+            return out
+        if mm.status == "optimal" and mm.exists is False:
+            out["empty_levels"].append((j, "milp margin"))
+            continue
+        res = L.enumerate(j, mode="first", time_limit=time_limit)
+        if res.points:
+            out.update(m=j, witness=to_str(self.element(res.points[0]), "a"), witness_method="dfs")
+            return out
+        out.update(m=None, undecided_level=j)
+        return out
+    out.update(m=None, undecided_level=(max_level or self.d) + 1)
+    return out
+
+
+Order.level_certificate = _order_level_certificate

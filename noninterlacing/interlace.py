@@ -191,18 +191,17 @@ class Interlacing:
         ``Z[alpha]^vee``, which is checked exactly).
         """
         out = {"f": to_str(self.f), "degree": self.d, "empty_levels": [], "witness": None}
-        lifted = []
-        if use_subfields:
-            try:
-                from .heredity import lifted_witnesses
-                from .orders import Order
-
-                lifted = lifted_witnesses(Order.monogenic(self.f))
-            except Exception:  # PARI missing or reducible f
-                lifted = []
         cap = max_level or self.d
         for j in range(1, cap + 1):
-            lift = next((w for w in lifted if w.trace == j), None)
+            lift = None
+            if use_subfields and j >= 2:
+                try:
+                    from .heredity import lift_witness_at
+                    from .orders import Order
+
+                    lift = lift_witness_at(Order.monogenic(self.f), j, time_limit=min(30.0, time_limit))
+                except Exception:  # PARI missing or reducible f
+                    lift = None
             if lift is not None:
                 g = (lift.element * fmpq_poly(self.roots.fprime)) % fmpq_poly(self.f)
                 g = fmpz_poly([int(c) for c in g.numer().coeffs()]) if g.denom() == 1 else None
@@ -218,13 +217,21 @@ class Interlacing:
                 if res.complete:
                     out["empty_levels"].append((j, "dfs"))
                     continue
-            fr = self.lattice.feasible(j, time_limit=time_limit)
+            fr = self.lattice.feasible(j, time_limit=min(60.0, time_limit))
             if fr.exists:
                 g = self.coords_to_poly(fr.point)
-                out.update(m=j, witness=to_str(g), witness_method="milp")
+                out.update(m=j, witness=to_str(g), witness_method="milp feasibility")
                 return out
             if fr.exists is False:
                 out["empty_levels"].append((j, "milp"))
+                continue
+            mm = self.lattice.max_min(j, time_limit=time_limit)
+            if mm.verified:
+                g = self.coords_to_poly(mm.point)
+                out.update(m=j, witness=to_str(g), witness_method="milp margin")
+                return out
+            if mm.status == "optimal" and mm.exists is False:
+                out["empty_levels"].append((j, "milp margin"))
                 continue
             res = self.lattice.enumerate(j, mode="first", time_limit=time_limit)
             if res.points:

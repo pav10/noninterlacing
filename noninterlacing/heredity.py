@@ -230,15 +230,20 @@ def in_codifferent(O: Order, mu) -> bool:
     return all(O.trace((mu * w) % F).q == 1 for w in O.basis)
 
 
-def lifted_witnesses(O: Order, max_subfield_degree: Optional[int] = None) -> list:
-    """Witnesses for ``m(O) <= [K:F] m(O_F)`` from all proper subfields (PARI)."""
+def lifted_witnesses(O: Order, max_index: int = 4) -> list:
+    """Witnesses for ``m(O) <= [K:F] m(O_F)`` from proper subfields of index
+    ``<= max_index`` (PARI ``nfsubfields`` restricted to those degrees)."""
     from .pari import subfields
 
     F = fmpq_poly(O.f)
     out = []
-    for g, h in subfields(O.f):
+    cands = []
+    for r in range(2, max_index + 1):
+        if O.d % r == 0 and O.d // r >= 1:
+            cands += subfields(O.f, O.d // r)
+    for g, h in cands:
         e = g.degree()
-        if e in (1, O.d) or (max_subfield_degree and e > max_subfield_degree):
+        if e in (1, O.d):
             continue
         OF = Order.maximal(g)
         mF = OF.min_trace()
@@ -250,3 +255,24 @@ def lifted_witnesses(O: Order, max_subfield_degree: Optional[int] = None) -> lis
         out.append(LiftedWitness(e, g, mF, int(tr.p), mu))
     out.sort(key=lambda w: w.trace)
     return out
+
+
+def lift_witness_at(O: Order, j: int, time_limit: float = 30.0) -> Optional[LiftedWitness]:
+    """A totally positive element of ``O^vee`` of trace ``j`` lifted from a
+    subfield ``F`` of index ``r | j`` (``r >= 2``) from an element of
+    ``O_F^vee`` of trace ``j / r``; ``None`` if none is found within budget."""
+    from .pari import subfields
+
+    F = fmpq_poly(O.f)
+    for r in range(2, j + 1):
+        if j % r or O.d % r:
+            continue
+        for g, h in subfields(O.f, O.d // r):
+            OF = Order.maximal(g)
+            nu = OF.find(j // r, time_limit=time_limit)
+            if nu is None:
+                continue
+            mu = nu(fmpq_poly(h)) % F
+            if in_codifferent(O, mu) and O.roots.is_totally_positive(mu):
+                return LiftedWitness(g.degree(), g, j // r, int(O.trace(mu).p), mu)
+    return None

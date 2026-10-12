@@ -98,3 +98,78 @@ def brute_force_interlacers(f: PolyLike, level: int = 1, max_box: int = 5_000_00
                 found.append(g)
     found.sort(key=lambda g: [int(c) for c in reversed(g.coeffs())])
     return found, size
+
+
+def lp_search_interlacers(f: PolyLike, level: int = 1, max_nodes: int = 10_000_000):
+    """Second reference method: depth-first search over the raw coefficients.
+
+    Coordinates ``c_{d-2}, c_{d-3}, ..., c_0`` are fixed one at a time; the
+    admissible range of the next one is the exact LP range over the slice of
+    ``P_j(f)`` (HiGHS), widened by a margin.  Leaves are decided by the exact
+    Sturm test.  No lattice reduction, convex hulls or embeddings are used,
+    so this is independent of :mod:`noninterlacing.simplex`.
+    Returns ``(interlacers, nodes)``.
+    """
+    from flint import fmpz_poly
+    from scipy.optimize import linprog
+
+    f = poly(f)
+    d = f.degree()
+    A, b = interlacing_polytope(f, level)  # A c < b, c = (c_0, ..., c_{d-2})
+    n = d - 1
+    order = list(range(n - 1, -1, -1))  # fix c_{d-2} first
+    found = []
+    nodes = [0]
+    fixed = {}
+
+    def bounds_for(k):
+        free = [i for i in range(n) if i not in fixed]
+        rhs = b - sum(A[:, i] * v for i, v in fixed.items()) if fixed else b.copy()
+        Af = A[:, free]
+        pos = free.index(k)
+        c = np.zeros(len(free))
+        c[pos] = 1.0
+        lo = linprog(c, A_ub=Af, b_ub=rhs, bounds=[(None, None)] * len(free), method="highs")
+        if lo.status != 0:
+            return None
+        hi = linprog(-c, A_ub=Af, b_ub=rhs, bounds=[(None, None)] * len(free), method="highs")
+        return lo.fun, -hi.fun
+
+    def rec(depth):
+        nodes[0] += 1
+        if nodes[0] > max_nodes:
+            raise RuntimeError("node limit exceeded")
+        k = order[depth]
+        if depth == n - 1:
+            rhs = b - sum(A[:, i] * v for i, v in fixed.items())
+            a = A[:, k]
+            lo, hi = -np.inf, np.inf
+            for ai, ri in zip(a, rhs):
+                if ai > 0:
+                    hi = min(hi, ri / ai)
+                elif ai < 0:
+                    lo = max(lo, ri / ai)
+                elif ri <= -1e-9:
+                    return
+            for v in range(math.ceil(lo - 1e-6), math.floor(hi + 1e-6) + 1):
+                coeffs = [0] * (d + 1)
+                coeffs[d - 1] = level
+                for i, w in fixed.items():
+                    coeffs[i] = w
+                coeffs[k] = v
+                g = fmpz_poly(coeffs)
+                if interlaces(f, g):
+                    found.append(g)
+            return
+        r = bounds_for(k)
+        if r is None:
+            return
+        lo, hi = r
+        for v in range(math.ceil(lo - 1e-6), math.floor(hi + 1e-6) + 1):
+            fixed[k] = v
+            rec(depth + 1)
+            del fixed[k]
+
+    rec(0)
+    found.sort(key=lambda g: [int(c) for c in reversed(g.coeffs())])
+    return found, nodes[0]

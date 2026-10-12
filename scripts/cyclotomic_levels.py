@@ -25,7 +25,7 @@ def main(out, nmax, maxdeg):
             continue
         t = time.time()
         I = Interlacing(real_cyclotomic(n))
-        cert = I.level_certificate()
+        cert = I.level_certificate(time_limit=200)
         mm = I.margin(1, time_limit=60)
         row = {"n": n, "degree": e, "m": cert["m"], "empty_levels": cert["empty_levels"],
                "witness_method": cert.get("witness_method"), "witness": cert["witness"],

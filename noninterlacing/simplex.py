@@ -536,7 +536,7 @@ def _max_min(self: SimplexLattice, j: int, time_limit: Optional[float] = None) -
                 "time_limit": 600.0 if time_limit is None else time_limit}
         with _Silence():
             r = milp(c, constraints=[cons], integrality=integrality, bounds=Bounds(lb, ub), options=opts)
-        if r.x is not None and r.status == 0:
+        if (r.x is not None and r.status == 0) or r.status == 1:  # solved, or out of time
             break
     if r.x is None:
         return MaxMinResult(j, math.nan, None, None, r.message, time.time() - start)
