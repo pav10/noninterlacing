@@ -161,7 +161,7 @@ Full details are in [`results/paper_verification.md`](results/paper_verification
   distinct `Ψ_n = minpoly(2cos(2π/n))`):
   * Level 1 is the Beukers–Heckman/McKee–Smyth classification of interlacing
     cyclotomic pairs; the engine agrees with it on every squarefree cyclotomic
-    polynomial of degree ≤ 10.
+    polynomial of degree ≤ 11.
   * Consequence: `Ψ_n` is interlacing iff `rad(odd part of n) ∈ {1, p, 15}`.
   * Level `j` ↔ Schur-stable `H ∈ Z[z]` with `lc(H) = j+1` and `|H(0)| = j−1`, via
     the Blaschke-phase argument of Mao–Wang–Zheng (arXiv:2609.34551).

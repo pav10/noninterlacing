@@ -22,7 +22,7 @@ by McKee–Smyth, *Cent. Eur. J. Math.* 11 (2013), Thm 1.1 (extracted from Beuke
 infinite families or 26 sporadic pairs. Hence **the monic interlacers of `f` are the partners
 of `F` in that list** (`kronecker.ms_all_pairs`, `ms_monic_interlacers`).
 
-*Verified*: for all 3384 squarefree cyclotomic polynomials of degree ≤ 10 (up to
+*Verified*: for all 5678 squarefree cyclotomic polynomials of degree ≤ 11 (up to
 `x → -x`) the complete list of monic interlacers computed by the codifferent engine coincides
 with the McKee–Smyth prediction: **no disagreement**.
 
@@ -33,7 +33,7 @@ with the McKee–Smyth prediction: **no disagreement**.
 single-factor sporadic members `Φ_9, Φ_12, Φ_15, Φ_18, Φ_20, Φ_24, Φ_30` add only
 `2^a 3^b 5^c`.) For squarefree `n` this is Yatsyna's theorem (exceptions 15 and 30 are
 exactly the `{3,5}` case). *Verified* against the generated pairs for all `n < 400` of
-degree ≤ 60, and against the computed `m(Ψ_n)` for 83 conductors: no disagreement.
+degree ≤ 60, and against the computed `m(Ψ_n)` for 84 conductors: no disagreement.
 
 ## 2. Level j: Schur-stable polynomials with leading coefficient j+1
 
@@ -77,7 +77,7 @@ counts are sums/convolutions over components (`kronecker.components`, `convolve_
 In particular a cyclotomic `f` with `r` components has `m(f) ≥ r`, so is never interlacing
 when `r ≥ 2`.
 
-*Verified*: `m(f) = Σ m(components)` for all 2366 census polynomials with ≥ 2
+*Verified*: `m(f) = Σ m(components)` for all 4047 census polynomials with ≥ 2
 components (0 exceptions); the convolution formula for `I_1..I_4`:
 `Psi_5*Psi_7`: `I_1..I_4 = [0, 6, 45, 155]` (matches);
 `Psi_3*Psi_4*Psi_5`: `I_1..I_4 = [0, 0, 2, 9]` (matches);
@@ -103,12 +103,12 @@ For a level-`j` interlacer and an irreducible factor `f_i` of degree `e_i`, the 
     m(f) ≥ ⌈ Σ_i e_i · |disc(f_i) · Res(f_i, f/f_i)|^{-1/e_i} ⌉     (kronecker.amgm_lower_bound).
 
 For irreducible `f` this is Yatsyna's `|disc f| ≥ d^d` for interlacing `f`. *Verified*: never
-violated (ok), and equal to `m(f)` for 2667 of 3384 census
+violated (ok), and equal to `m(f)` for 4209 of 5678 census
 polynomials; it misses the additivity of §3 (e.g. it gives 2 for `Ψ_21 Ψ_33`, whose level is 4).
 
 ## 5. Data
 
-Census of all squarefree cyclotomic polynomials of degree ≤ 10 up to `x → -x`
+Census of all squarefree cyclotomic polynomials of degree ≤ 11 up to `x → -x`
 (`results/kronecker_census.json`). Number of polynomials with `m(f) = k`:
 
 | degree | m=1 | m=2 | m=3 | m=4 | m=5 | max m |
@@ -123,13 +123,14 @@ Census of all squarefree cyclotomic polynomials of degree ≤ 10 up to `x → -x
 | 8 | 36 | 260 | 187 | 24 | 0 | 4 |
 | 9 | 50 | 373 | 350 | 76 | 0 | 4 |
 | 10 | 43 | 569 | 624 | 184 | 7 | 5 |
+| 11 | 53 | 769 | 1050 | 392 | 30 | 5 |
 
 * Every level set is an interval `{0} ∪ [m, ∞)`: **True** (for `f` with a
   1-interlaced factor this follows from `S(f) + S(h) ⊆ S(f)`).
-* Connected index sets (1018 polynomials): `m` distribution {1: 252, 2: 726, 3: 40}.
-* Irreducible `Ψ_n` (`results/cyclotomic_levels.json`, 83 fields, conductor ≤
-  116, degree ≤ 60): `m` distribution {1: 63, 2: 20};
-  all 20 non-interlacing `Ψ_n` have a level-3 interlacer: True, so `S(Ψ_n) = <2,3>` for each. Undecided (time budget): n = [115].
+* Connected index sets (1631 polynomials): `m` distribution {1: 305, 2: 1200, 3: 126}.
+* Irreducible `Ψ_n` (`results/cyclotomic_levels.json`, 84 fields, conductor ≤
+  117, degree ≤ 60): `m` distribution {1: 63, 2: 21};
+  all 21 non-interlacing `Ψ_n` have a level-3 interlacer: True, so `S(Ψ_n) = <2,3>` for each. Undecided (time budget): n = [115].
 
 ## 6. Open questions suggested by the data
 
