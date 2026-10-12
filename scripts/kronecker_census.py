@@ -23,7 +23,13 @@ def save(rows, out):
 
 
 def main(out, dmax):
-    rows = json.load(open(out)) if os.path.exists(out) else []
+    # out holds complete degrees only; rows of an unfinished degree go to out.partial
+    part = out + ".partial"
+    rows = []
+    for fn in (out, part):
+        if os.path.exists(fn):
+            seen = {tuple(r["indices"]) for r in rows}
+            rows += [r for r in json.load(open(fn)) if tuple(r["indices"]) not in seen]
     done = {tuple(r["indices"]) for r in rows}
     pairs = ms_all_pairs(2 * dmax)
     t0 = last = time.time()
@@ -43,9 +49,11 @@ def main(out, dmax):
                          "I_1": len(mine), "ms_agrees": mine == ms, "amgm_bound": lb, "amgm_sum": s,
                          "margin1": I.margin(1).value})
             if time.time() - last > 120:
-                save(rows, out)
+                save(rows, part)
                 last = time.time()
-        save(rows, out)
+        save([r for r in rows if r["degree"] <= d], out)
+        if os.path.exists(part) and all(r["degree"] <= d for r in rows):
+            os.remove(part)
         print(d, len(rows), round(time.time() - t0, 1), flush=True)
 
 
