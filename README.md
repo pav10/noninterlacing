@@ -189,8 +189,8 @@ Full details are in [`results/paper_verification.md`](results/paper_verification
   * Among all 398 totally real sextic fields in the sails/LMFDB list
     (disc ≤ 10⁷), **F₂₁ is the only one with `m(O_K) = 2`**, and
     `m(Z[a]) = m(O_K)` for every polredabs polynomial.
-  * The census of irreducible totally real sextics of span ≤ 4 (17 classes up to
-    `x → ±x + n`) contains one non-interlacing class (`F_21`).
+  * The census of irreducible totally real sextics of span ≤ 4.3 (226 classes up to
+    `x → ±x + n`) contains exactly one non-interlacing class, `F_21`.
   * A table of `m(F_n)` for real cyclotomic fields
     ([`results/cyclotomic_levels.json`](results/cyclotomic_levels.json)).
   * Margins: whenever the obstruction is inherited from `F`, the computed
