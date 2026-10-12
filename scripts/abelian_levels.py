@@ -54,7 +54,8 @@ def main(out, nmax, mindeg, maxdeg):
                        "seconds": round(time.time() - t, 2)}
                 rows.append(row)
                 print(n, e, row["m"], row["witness_method"], row["seconds"], key[:60], flush=True)
-                json.dump(rows, open(out, "w"), indent=1)
+                json.dump(rows, open(out + ".tmp", "w"), indent=1)
+                os.replace(out + ".tmp", out)
 
 
 if __name__ == "__main__":

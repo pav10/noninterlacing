@@ -68,7 +68,8 @@ def main(out, nmax, maxdeg):
               row.get("witness_method"), row.get("seconds"), row.get("error", ""), flush=True)
         rows.append(row)
         rows.sort(key=lambda r: r["n"])
-        json.dump(rows, open(out, "w"), indent=1)
+        json.dump(rows, open(out + ".tmp", "w"), indent=1)
+        os.replace(out + ".tmp", out)
 
 
 if __name__ == "__main__":

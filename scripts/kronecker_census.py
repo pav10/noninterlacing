@@ -17,11 +17,16 @@ from noninterlacing.kronecker import (amgm_lower_bound, cyclotomic_products, fac
                                       ms_all_pairs, ms_monic_interlacers, product_poly)
 
 
+def save(rows, out):
+    json.dump(rows, open(out + ".tmp", "w"))
+    os.replace(out + ".tmp", out)
+
+
 def main(out, dmax):
     rows = json.load(open(out)) if os.path.exists(out) else []
     done = {tuple(r["indices"]) for r in rows}
     pairs = ms_all_pairs(2 * dmax)
-    t0 = time.time()
+    t0 = last = time.time()
     for d in range(1, dmax + 1):
         for t in cyclotomic_products(d):
             if t in done:
@@ -37,7 +42,10 @@ def main(out, dmax):
                          "interval": S.gaps == list(range(1, S.multiplicity)),
                          "I_1": len(mine), "ms_agrees": mine == ms, "amgm_bound": lb, "amgm_sum": s,
                          "margin1": I.margin(1).value})
-        json.dump(rows, open(out, "w"))
+            if time.time() - last > 120:
+                save(rows, out)
+                last = time.time()
+        save(rows, out)
         print(d, len(rows), round(time.time() - t0, 1), flush=True)
 
 

@@ -33,7 +33,11 @@ def predicted_psi_interlacing(n):
 def main():
     K = json.load(open(os.path.join(RES, "kronecker_census.json")))
     C = json.load(open(os.path.join(RES, "cyclotomic_levels.json")))
-    dmax = max(r["degree"] for r in K)
+    have = collections.Counter(r["degree"] for r in K)
+    dmax = 0
+    while have[dmax + 1] == len(list(cyclotomic_products(dmax + 1))):
+        dmax += 1
+    K = [r for r in K if r["degree"] <= dmax]  # report complete degrees only
     by_d = collections.defaultdict(collections.Counter)
     for r in K:
         by_d[r["degree"]][r["m"]] += 1
