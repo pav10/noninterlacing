@@ -414,3 +414,60 @@ def check_disc_polynomial(indices, g: fmpz_poly) -> dict:
 def _reverse(p: fmpz_poly, n: int) -> fmpz_poly:
     c = [int(x) for x in p.coeffs()] + [0] * (n + 1 - len(p.coeffs()))
     return fmpz_poly(list(reversed(c)))
+
+
+# ---------------------------------------------------------------------------
+# Decomposition along unit resultants
+# ---------------------------------------------------------------------------
+
+def is_prime_power(n: int) -> bool:
+    from .cyclotomic import factorint
+
+    return n > 1 and len(factorint(n)) == 1
+
+
+def linked(m: int, n: int) -> bool:
+    """``Res(Psi_m, Psi_n) != +-1``  iff  ``m/n`` or ``n/m`` is a prime power."""
+    a, b = max(m, n), min(m, n)
+    return a % b == 0 and is_prime_power(a // b)
+
+
+def components(indices) -> list:
+    """Connected components of the graph ``m ~ n  iff  m/n is a prime power``.
+
+    If ``f = f_1 f_2`` with ``Res(f_1, f_2) = +-1`` then
+    ``Z[x]/(f) = Z[x]/(f_1) x Z[x]/(f_2)`` (CRT), so the totally positive
+    codifferent elements -- i.e. the interlacers -- split:
+    every level-``j`` interlacer of ``f`` is uniquely ``g_1 f_2 + g_2 f_1`` with
+    ``g_i`` interlacers of ``f_i`` of levels adding to ``j``.  Hence
+    ``S(f) = S(f_1) + S(f_2)``, ``m(f) = m(f_1) + m(f_2)`` and
+    ``I_j(f) = sum_{j_1 + j_2 = j} I_{j_1}(f_1) I_{j_2}(f_2)``.
+    """
+    idx = list(indices)
+    comp, seen = [], set()
+    for n in idx:
+        if n in seen:
+            continue
+        stack, cur = [n], []
+        seen.add(n)
+        while stack:
+            a = stack.pop()
+            cur.append(a)
+            for b in idx:
+                if b not in seen and linked(a, b):
+                    seen.add(b)
+                    stack.append(b)
+        comp.append(tuple(sorted(cur)))
+    return sorted(comp)
+
+
+def convolve_counts(*count_lists) -> list:
+    """Convolution of interlacer count sequences ``[I_0 = 0, I_1, I_2, ...]``."""
+    out = [1]
+    for c in count_lists:
+        new = [0] * (len(out) + len(c) - 1)
+        for i, a in enumerate(out):
+            for k, b in enumerate(c):
+                new[i + k] += a * b
+        out = new
+    return out

@@ -519,6 +519,63 @@ def _capacity(c: Check, full: bool):
 # New computations
 # ---------------------------------------------------------------------------
 
+OCTIC = "x^8 - 4*x^7 - x^6 + 17*x^5 - 5*x^4 - 23*x^3 + 6*x^2 + 9*x - 1"
+
+
+@check("degree-8", "§6, Question on degree 8",
+       "Do irreducible non-interlacing polynomials exist in degree 8? (open in the draft; any example "
+       "must carry a genuinely new obstruction, not inherited from a subfield)")
+def _octic(c: Check, full: bool):
+    from .bruteforce import lp_search_interlacers
+    from .interlace import Interlacing
+    from .realroots import RootData, is_totally_real
+
+    f = poly(OCTIC)
+    h = poly("x^4 - 7*x^3 + 15*x^2 - 9*x - 1")
+    I = Interlacing(f)
+    res = I.enumerate(1, mode="count")
+    lp1, n1 = lp_search_interlacers(f, 1)
+    lp2, _ = lp_search_interlacers(f, 2)
+    eng2 = I.interlacers(2)
+    mm = I.margin(1)
+    c.status = "extended"
+    c.data = {"f": OCTIC, "composition": "h(x^2 - x)", "h": to_str(h), "span": I.roots.span,
+              "I_1": res.count, "I_2": len(eng2), "lp_I_1": len(lp1), "margin": mm.value}
+    ok = (compose(h, "x^2 - x") == f and is_irreducible(f) and is_totally_real(f) and res.count == 0
+          and not lp1 and [to_str(g) for g in lp2] == [to_str(g) for g in eng2] and mm.exists is False)
+    c.evidence.append(f"f = {OCTIC} = h(x^2 - x), h = {to_str(h)} (the totally real quartic of "
+                      f"discriminant 725); irreducible, totally real, span {I.roots.span:.4f}")
+    c.evidence.append(f"I_1(f) = 0 by the simplex search ({res.count} found, {res.nodes} nodes) and by the "
+                      f"independent LP coefficient search ({n1} nodes); MILP margin {mm.value:.6f} < 0")
+    c.evidence.append(f"I_2(f) = {len(eng2)}, identical lists from both searches; level semigroup {I.levels()}")
+    if _have_pari():
+        from .orders import Order
+        from .pari import nfdisc, subfields
+        from .siegel import siegel_zeta
+
+        OK = Order.maximal(f)
+        z = siegel_zeta(f)
+        subs = [(g.degree(), nfdisc(g)) for g, _ in subfields(f) if 1 < g.degree() < 8]
+        c.data.update(disc=nfdisc(f), index=int(Order.monogenic(f).index_in(OK)), m_OK=OK.min_trace(),
+                      siegel=z, subfields=subs)
+        c.evidence.append(f"disc K = {nfdisc(f)} = 5^4 * 19 * 29^2 * 31, O_K = Z[alpha] "
+                          f"(index {c.data['index']}), m(O_K) = {c.data['m_OK']}")
+        c.evidence.append(f"Siegel: s_K(1) = {z['s_K'][0]}, s_K(2) = {z['s_K'][1]} from {z['counts'][1]} elements "
+                          f"gives zeta_K(-1) = {z['siegel']}; PARI: {z['pari_rational_guess']} (agree: {z['agree']})")
+        c.evidence.append(f"proper subfields (degree, disc): {subs}; all have m = 1 (degree <= 5), so no "
+                          "heredity argument applies: the obstruction is genuinely new, as the draft predicts")
+        ok = ok and z["agree"] and c.data["m_OK"] == 2
+    fam = [N for N in range(1, 13) if Interlacing(compose(h, fmpz_poly([-N, -1, 1]))).find(1) is None]
+    c.data["family_noninterlacing_N"] = fam
+    c.evidence.append(f"h(x^2 - x - N) for N = 1..12: non-interlacing for N in {fam or 'none'} (N < 0: not totally "
+                      "real), so the example is sporadic; it was found by the census of octics of span <= 4 "
+                      "(26 classes, results/census_deg8_span4.json), where it is the only non-interlacing one")
+    ok = ok and not fam
+    if not ok:
+        c.status = "refuted"
+        c.evidence.append("CHECK FAILED")
+
+
 @check("sextic-census", "Table §6 (degree 6)",
        "Degree 6: non-interlacing fields exist (F_21); finiteness modulo Z open.")
 def _sextic(c: Check, full: bool):

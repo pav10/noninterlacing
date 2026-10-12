@@ -42,7 +42,7 @@ Consequences that the program uses and reports:
 ```bash
 pip install -e .            # numpy, scipy, python-flint
 pip install cypari2         # optional: maximal orders, subfields, zeta values (PARI/GP)
-python -m pytest tests      # 38 tests, ~30 s
+python -m pytest tests      # 45 tests, ~1.5 min
 ```
 
 ## Command line
@@ -138,7 +138,37 @@ for symmetric realisations), `sailsdata.py` (bridge to
 
 ## Findings
 
-Full details are in [`results/paper_verification.md`](results/paper_verification.md).
+Full details are in [`results/paper_verification.md`](results/paper_verification.md) and
+[`results/higher_interlacing_cyclotomic.md`](results/higher_interlacing_cyclotomic.md).
+
+* **A non-interlacing octic** (the draft leaves degree 8 open):
+
+      f = x^8 - 4x^7 - x^6 + 17x^5 - 5x^4 - 23x^3 + 6x^2 + 9x - 1 = h(x^2 - x),
+      h = x^4 - 7x^3 + 15x^2 - 9x - 1   (the totally real quartic of discriminant 725).
+
+  `f` is irreducible and totally real with span 3.798, `O_K = Z[α]`, disc
+  `309593125 = 5^4·19·29^2·31`, and `m(f) = m(O_K) = 2`, with `S = <2,3>`. Evidence:
+  * the simplex search;
+  * an independent LP coefficient search, which produces the same 406 level-2 interlacers;
+  * the MILP margin −0.00695;
+  * Siegel's formula: `s_K(1) = 0` and `s_K(2) = 137088` give `ζ_K(−1) = 3584/15`, matching PARI.
+
+  Its proper subfields `Q(√5)` and the quartic field have `m = 1`. So this is the
+  "genuinely new obstruction" the draft says a degree-8 example would need. It is
+  sporadic: `h(x^2 − x − N)` is interlacing for `N = 1..12`. It is the only
+  non-interlacing class among the 26 octics of span ≤ 4.
+* **Higher interlacing of cyclotomic polynomials** (roots in `[−2,2]`, i.e. products of
+  distinct `Ψ_n = minpoly(2cos(2π/n))`):
+  * Level 1 is the Beukers–Heckman/McKee–Smyth classification of interlacing
+    cyclotomic pairs; the engine agrees with it on every squarefree cyclotomic
+    polynomial of degree ≤ 10.
+  * Consequence: `Ψ_n` is interlacing iff `rad(odd part of n) ∈ {1, p, 15}`.
+  * Level `j` ↔ Schur-stable `H ∈ Z[z]` with `lc(H) = j+1` and `|H(0)| = j−1`, via
+    the Blaschke-phase argument of Mao–Wang–Zheng (arXiv:2609.34551).
+  * Unit resultants split everything: `S`, `m` and the counts `I_j` are
+    sums/convolutions over the components of the graph `m ~ n ⟺ m/n` is a prime
+    power. So `m(Ψ_{p_1}⋯Ψ_{p_k}) = k`, and levels are unbounded.
+  * Every non-interlacing `Ψ_n` computed has `S = <2,3>`.
 
 * **Confirmed:** `I(m_β) = 0` (box of 22,680 points); Theorem 3.1 (i)–(v) for
   `N = 2..30` (total reality from `N = 2`, irreducibility, `I(f_N) = 0`, span,
@@ -159,8 +189,8 @@ Full details are in [`results/paper_verification.md`](results/paper_verification
   * Among all 398 totally real sextic fields in the sails/LMFDB list
     (disc ≤ 10⁷), **F₂₁ is the only one with `m(O_K) = 2`**, and
     `m(Z[a]) = m(O_K)` for every polredabs polynomial.
-  * The census of irreducible totally real sextics of span ≤ 4.3 contains one
-    non-interlacing class (`F_21`).
+  * The census of irreducible totally real sextics of span ≤ 4 (17 classes up to
+    `x → ±x + n`) contains one non-interlacing class (`F_21`).
   * A table of `m(F_n)` for real cyclotomic fields
     ([`results/cyclotomic_levels.json`](results/cyclotomic_levels.json)).
   * Margins: whenever the obstruction is inherited from `F`, the computed
@@ -193,6 +223,7 @@ trace-one `δ` supports the sail only along a lower-dimensional face through 1.
 | `cyclotomic.py`, `families.py` | real cyclotomic bases, admissibility, `D`, `f_N`, towers |
 | `siegel.py` | modular forms, Siegel coefficients, `ζ_K(−1)` check |
 | `search.py`, `symmetric.py`, `sailsdata.py` | census/random search, Lemma 4.1, sails bridge |
-| `bruteforce.py` | reference bounding-box enumeration |
+| `kronecker.py` | cyclotomic polynomials: McKee–Smyth pairs, components, AM–GM bound, level-`j` disc polynomials |
+| `bruteforce.py` | reference methods: bounding-box scan, LP-bounded coefficient search |
 | `paper.py`, `cli.py` | verification report, command line |
-| `scripts/` | `sextic_census.py`, `cyclotomic_levels.py` (produce `results/`) |
+| `scripts/` | `sextic_census.py`, `cyclotomic_levels.py`, `abelian_levels.py`, `span_census.py`, `kronecker_census.py`, `kronecker_report.py` (produce `results/`) |
