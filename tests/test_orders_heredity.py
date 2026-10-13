@@ -101,3 +101,14 @@ def test_lifted_witnesses_bound_m():
     assert in_codifferent(O, w.element) and O.roots.is_totally_positive(w.element)
     cert = Interlacing(real_cyclotomic(77)).level_certificate()
     assert cert["m"] == 2 and cert["empty_levels"] == [(1, "milp")]
+
+
+@needs_pari
+def test_trace_down_witness():
+    from noninterlacing.heredity import trace_down_witness
+
+    # the cubic subfield of Q(zeta_13)^+ is interlacing because Psi_13 is
+    assert trace_down_witness("x^3 + x^2 - 4*x + 1", real_cyclotomic(13))["m_upper"] == 1
+    # from a level-2 interlacer of Psi_21 down to Q(zeta_7)^+
+    g2 = Interlacing(real_cyclotomic(21)).find(2)
+    assert trace_down_witness("x^3 + x^2 - 2*x - 1", real_cyclotomic(21), g2)["m_upper"] == 2

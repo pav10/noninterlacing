@@ -42,7 +42,7 @@ Consequences that the program uses and reports:
 ```bash
 pip install -e .            # numpy, scipy, python-flint
 pip install cypari2         # optional: maximal orders, subfields, zeta values (PARI/GP)
-python -m pytest tests      # 46 tests, ~1.5 min
+python -m pytest tests      # 47 tests, ~1.5 min
 ```
 
 ## Command line
@@ -161,7 +161,7 @@ Full details are in [`results/paper_verification.md`](results/paper_verification
   distinct `Ψ_n = minpoly(2cos(2π/n))`):
   * Level 1 is the Beukers–Heckman/McKee–Smyth classification of interlacing
     cyclotomic pairs; the engine agrees with it on every squarefree cyclotomic
-    polynomial of degree ≤ 11.
+    polynomial of degree ≤ 12 (9363 polynomials up to `x → −x`).
   * Consequence: `Ψ_n` is interlacing iff `rad(odd part of n) ∈ {1, p, 15}`.
   * Level `j` ↔ Schur-stable `H ∈ Z[z]` with `lc(H) = j+1` and `|H(0)| = j−1`, via
     the Blaschke-phase argument of Mao–Wang–Zheng (arXiv:2609.34551).
@@ -174,6 +174,9 @@ Full details are in [`results/paper_verification.md`](results/paper_verification
     witness. Hence `m(Ψ_n) = 2` whenever `n` has two odd prime factors (other than
     `{3, 5}`) or three including 3 and 5. The first open case is `n = 231 = 3·7·11`,
     where only `2 ≤ m ≤ 4` is known.
+  * Abelian fields: trace-down gives `m(O_K) ≤ m(Ψ_n)` for a real abelian field `K` of
+    conductor `n`. So no real abelian field of conductor < 231 has `m ≥ 3`, and `K` is
+    interlacing whenever `Ψ_n` is.
   * Every non-interlacing `Ψ_n` in the table (58 conductors) has `S = <2,3>`.
 
 * **Confirmed:** `I(m_β) = 0` (box of 22,680 points); Theorem 3.1 (i)–(v) for
@@ -200,6 +203,10 @@ Full details are in [`results/paper_verification.md`](results/paper_verification
   * A table of `m(F_n)` for the real cyclotomic fields with `n ≤ 400` and degree ≤ 60
     ([`results/cyclotomic_levels.json`](results/cyclotomic_levels.json)). 155 of the
     156 fields are decided, 9 of them by the compositum bound; only `n = 231` is open.
+  * All 141 real abelian fields of degree 6–24 and conductor ≤ 113
+    ([`results/abelian_levels.json`](results/abelian_levels.json)): 126 have `m = 1` and
+    15 have `m = 2`. Four of them are decided by trace-down from `Q(ζ_p)^+`
+    (`p = 73, 89, 97, 109`) after the direct search ran out of time.
   * Margins: whenever the obstruction is inherited from `F`, the computed
     level-1 margin is `ε_1(K) = ε_1(F)/[K:F]` (`F_84, F_63, F_147, F_189` over
     `F_21`, `F_99` over `F_33`), and `ε_1(f_N) → ε_1(F_21)/2`. Trace-down
@@ -226,7 +233,7 @@ trace-one `δ` supports the sail only along a lower-dimensional face through 1.
 | `realroots.py` | Sturm sequences, Cauchy index, exact interlacing test, certified root balls |
 | `simplex.py` | the enumeration engine, MILP margin and feasibility |
 | `interlace.py` | level-`j` interlacers, counts, `m(f)`, level semigroup, certificates |
-| `orders.py`, `heredity.py` | orders, codifferents, `m(O)`, subfields, trace-down, lifts |
+| `orders.py`, `heredity.py` | orders, codifferents, `m(O)`, subfields, trace-down (bounds and witnesses), lifts |
 | `cyclotomic.py`, `families.py` | real cyclotomic bases, admissibility, compositum witnesses, `D`, `f_N`, towers |
 | `siegel.py` | modular forms, Siegel coefficients, `ζ_K(−1)` check |
 | `search.py`, `symmetric.py`, `sailsdata.py` | census/random search, Lemma 4.1, sails bridge |

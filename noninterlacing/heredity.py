@@ -276,3 +276,45 @@ def lift_witness_at(O: Order, j: int, time_limit: float = 30.0) -> Optional[Lift
             if in_codifferent(O, mu) and O.roots.is_totally_positive(mu):
                 return LiftedWitness(g.degree(), g, j // r, int(O.trace(mu).p), mu)
     return None
+
+
+# ---------------------------------------------------------------------------
+# Upper bounds by tracing down from a superfield
+# ---------------------------------------------------------------------------
+
+def trace_down_witness(g: PolyLike, f: PolyLike, gK: Optional[PolyLike] = None) -> dict:
+    """``m(O_F) <= j`` for ``F = Q[y]/(g)`` inside ``K = Q[x]/(f)`` with ``Z[alpha] = O_K``.
+
+    If ``mu`` is a totally positive element of ``O_K^vee`` of trace ``j`` then
+    ``nu = Tr_{K/F}(mu)`` is a totally positive element of ``O_F^vee`` of trace ``j``
+    (``Tr_F(nu x) = Tr_K(mu x)`` for ``x in O_F``).  ``mu = gK(alpha)/f'(alpha)`` for a
+    level-``j`` interlacer ``gK`` of ``f`` (found if not given).  The result is checked
+    exactly: ``nu in O_F^vee``, ``Tr_F(nu) = j``, and ``nu`` totally positive, i.e.
+    ``nu g'(y) mod g`` interlaces ``g``.
+    """
+    from .interlace import Interlacing
+    from .pari import embeddings
+    from .realroots import interlaces
+
+    g, f = poly(g), poly(f)
+    if gK is None:
+        gK = Interlacing(f).find(1)
+        if gK is None:
+            raise ValueError("f is not interlacing; pass a higher-level interlacer")
+    gK = poly(gK)
+    F = fmpq_poly(f)
+    _, inv, _ = fmpq_poly(f.derivative()).xgcd(F)
+    mu = fmpq_poly(gK) * inv % F
+    hs = embeddings(g, f)
+    if not hs:
+        raise ValueError("Q[y]/(g) does not embed in Q[x]/(f)")
+    O = Order.monogenic(f)
+    nu = relative_trace(O, mu, hs[0], g)
+    OF = Order.maximal(g)
+    j = int(gK.coeffs()[-1])
+    G = nu * fmpq_poly(g.derivative()) % fmpq_poly(g)
+    ok = in_codifferent(OF, nu) and OF.trace(nu) == j and interlaces(g, fmpz_poly((G * G.denom()).numer()))
+    if not ok:
+        raise ArithmeticError("trace-down witness failed verification")
+    return {"m_upper": j, "nu": str(nu), "superfield": str(f)}
+

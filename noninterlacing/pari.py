@@ -98,6 +98,14 @@ def subfields(f: fmpz_poly, degree: int | None = None) -> list:
     return out
 
 
+def embeddings(g: fmpz_poly, f: fmpz_poly) -> list:
+    """Embeddings of ``Q[y]/(g)`` into ``Q[x]/(f)``: all ``h`` (``fmpq_poly``) with ``g(h) = 0 mod f``."""
+    res = pari().nfisincl(to_pari(g), to_pari(f))
+    if str(pari().type(res)) != "t_VEC":
+        return []
+    return [from_pari(h) for h in res]
+
+
 def polredabs(f: fmpz_poly) -> fmpz_poly:
     g = from_pari(pari().polredabs(to_pari(f)))
     return fmpz_poly([int(c) for c in g.numer().coeffs()])

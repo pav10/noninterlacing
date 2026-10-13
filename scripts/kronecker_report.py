@@ -48,6 +48,14 @@ def main():
                   for n in comp_n)
     comp_agree = all(r["m"] == 2 for r in C if r["n"] in comp_n)
     no_split = [r["n"] for r in C if not psi_interlacing_predicted(r["n"]) and not compositum_splits(r["n"])]
+    A_path = os.path.join(RES, "abelian_levels.json")
+    A = json.load(open(A_path)) if os.path.exists(A_path) else []
+    m_psi = {r["n"]: r["m"] for r in C}
+    ab_bound = [(r["m"], m_psi.get(r["conductor"], 1 if psi_interlacing_predicted(r["conductor"]) else None))
+                for r in A if r["m"] is not None]
+    ab_ok = all(b is not None and m <= b for m, b in ab_bound)
+    ab_tight = sum(m == b for m, b in ab_bound)
+    ab_td = sum("trace-down" in (r["witness_method"] or "") for r in A)
     open_n = [n for n in range(3, 400) if n % 4 != 2 and not psi_interlacing_predicted(n)
               and not compositum_splits(n)][:4]
     psi_m = collections.Counter(r["m"] for r in psi_rows)
@@ -219,6 +227,18 @@ def main():
     w(f"{len(by_comp)} conductors the direct computation could not: "
       f"{', '.join(str(r['n']) for r in by_comp) or 'none'}. Non-interlacing conductors of the table")
     w(f"without a split: {no_split or 'none'}; the first such `n` are {open_n}.")
+    w("")
+    w("**Abelian fields.** Every real abelian field `K` of conductor `n` lies in `F_n`, and")
+    w("trace-down (`Tr_{F_n/K}` of a witness, `heredity.trace_down_witness`) gives `m(O_K) ≤ m(Ψ_n)`.")
+    w("So a real abelian field is interlacing whenever `rad(odd part of its conductor) ∈ {1, p, 15}`,")
+    w(f"and **no real abelian field of conductor < {open_n[0]} has `m ≥ 3`**: below {open_n[0]} every")
+    w("conductor has at most two odd prime factors or is `{3, 5, p}`-type.")
+    if A:
+        w(f"*Verified* on `results/abelian_levels.json` ({len(A)} fields, degree "
+          f"{min(r['degree'] for r in A)}–{max(r['degree'] for r in A)}, conductor ≤ "
+          f"{max(r['conductor'] for r in A)}): `m(O_K) ≤ m(Ψ_n)` for every decided field "
+          f"({'ok' if ab_ok else 'VIOLATED'}), with equality for {ab_tight}; {ab_td} fields, where the")
+        w("direct search ran out of time, are decided by trace-down from `F_p`.")
     w("")
     w("## 5. The AM–GM lower bound")
     w("")

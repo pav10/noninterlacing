@@ -22,7 +22,7 @@ by McKee–Smyth, *Cent. Eur. J. Math.* 11 (2013), Thm 1.1 (extracted from Beuke
 infinite families or 26 sporadic pairs. Hence **the monic interlacers of `f` are the partners
 of `F` in that list** (`kronecker.ms_all_pairs`, `ms_monic_interlacers`).
 
-*Verified*: for all 5678 squarefree cyclotomic polynomials of degree ≤ 11 (up to
+*Verified*: for all 9363 squarefree cyclotomic polynomials of degree ≤ 12 (up to
 `x → -x`) the complete list of monic interlacers computed by the codifferent engine coincides
 with the McKee–Smyth prediction: **no disagreement**.
 
@@ -77,7 +77,7 @@ counts are sums/convolutions over components (`kronecker.components`, `convolve_
 In particular a cyclotomic `f` with `r` components has `m(f) ≥ r`, so is never interlacing
 when `r ≥ 2`.
 
-*Verified*: `m(f) = Σ m(components)` for all 4047 census polynomials with ≥ 2
+*Verified*: `m(f) = Σ m(components)` for all 6794 census polynomials with ≥ 2
 components (0 exceptions); the convolution formula for `I_1..I_4`:
 `Psi_5*Psi_7`: `I_1..I_4 = [0, 6, 45, 155]` (matches);
 `Psi_3*Psi_4*Psi_5`: `I_1..I_4 = [0, 0, 2, 9]` (matches);
@@ -123,6 +123,14 @@ computed `m = 2` wherever that exists (ok), and it decides
 9 conductors the direct computation could not: 115, 119, 133, 143, 145, 155, 165, 195, 396. Non-interlacing conductors of the table
 without a split: [231]; the first such `n` are [231, 273, 357, 385].
 
+**Abelian fields.** Every real abelian field `K` of conductor `n` lies in `F_n`, and
+trace-down (`Tr_{F_n/K}` of a witness, `heredity.trace_down_witness`) gives `m(O_K) ≤ m(Ψ_n)`.
+So a real abelian field is interlacing whenever `rad(odd part of its conductor) ∈ {1, p, 15}`,
+and **no real abelian field of conductor < 231 has `m ≥ 3`**: below 231 every
+conductor has at most two odd prime factors or is `{3, 5, p}`-type.
+*Verified* on `results/abelian_levels.json` (141 fields, degree 6–24, conductor ≤ 113): `m(O_K) ≤ m(Ψ_n)` for every decided field (ok), with equality for 101; 4 fields, where the
+direct search ran out of time, are decided by trace-down from `F_p`.
+
 ## 5. The AM–GM lower bound
 
 For a level-`j` interlacer and an irreducible factor `f_i` of degree `e_i`, the component
@@ -131,12 +139,12 @@ For a level-`j` interlacer and an irreducible factor `f_i` of degree `e_i`, the 
     m(f) ≥ ⌈ Σ_i e_i · |disc(f_i) · Res(f_i, f/f_i)|^{-1/e_i} ⌉     (kronecker.amgm_lower_bound).
 
 For irreducible `f` this is Yatsyna's `|disc f| ≥ d^d` for interlacing `f`. *Verified*: never
-violated (ok), and equal to `m(f)` for 4209 of 5678 census
+violated (ok), and equal to `m(f)` for 6440 of 9363 census
 polynomials; it misses the additivity of §3 (e.g. it gives 2 for `Ψ_21 Ψ_33`, whose level is 4).
 
 ## 6. Data
 
-Census of all squarefree cyclotomic polynomials of degree ≤ 11 up to `x → -x`
+Census of all squarefree cyclotomic polynomials of degree ≤ 12 up to `x → -x`
 (`results/kronecker_census.json`). Number of polynomials with `m(f) = k`:
 
 | degree | m=1 | m=2 | m=3 | m=4 | m=5 | max m |
@@ -152,10 +160,11 @@ Census of all squarefree cyclotomic polynomials of degree ≤ 11 up to `x → -x
 | 9 | 50 | 373 | 350 | 76 | 0 | 4 |
 | 10 | 43 | 569 | 624 | 184 | 7 | 5 |
 | 11 | 53 | 769 | 1050 | 392 | 30 | 5 |
+| 12 | 53 | 1048 | 1684 | 805 | 95 | 5 |
 
 * Every level set is an interval `{0} ∪ [m, ∞)`: **True** (for `f` with a
   1-interlaced factor this follows from `S(f) + S(h) ⊆ S(f)`).
-* Connected index sets (1631 polynomials): `m` distribution {1: 305, 2: 1200, 3: 126}.
+* Connected index sets (2569 polynomials): `m` distribution {1: 358, 2: 1864, 3: 347}.
 * Irreducible `Ψ_n` (`results/cyclotomic_levels.json`, 155 fields, conductor ≤
   396, degree ≤ 60): `m` distribution {1: 97, 2: 58};
   all 58 non-interlacing `Ψ_n` have a level-3 interlacer: True, so `S(Ψ_n) = <2,3>` for each. Of these, 9 are decided by §4 rather than by the engine. Undecided: n = [231].
