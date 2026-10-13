@@ -11,6 +11,7 @@ import os
 
 import random
 
+from noninterlacing.cyclotomic import compositum_splits, compositum_witness, factorint, psi_interlacing_predicted
 from noninterlacing.interlace import Interlacing
 from noninterlacing.kronecker import (check_disc_polynomial, components, convolve_counts,
                                       cyclotomic_products, label, product_poly, reflected_index)
@@ -18,16 +19,6 @@ from noninterlacing.poly import real_cyclotomic
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RES = os.path.join(HERE, "results")
-
-
-def predicted_psi_interlacing(n):
-    from noninterlacing.cyclotomic import factorint
-
-    odd = [p for p in factorint(n) if p != 2]
-    r = 1
-    for p in odd:
-        r *= p
-    return r == 1 or r == 15 or len(odd) == 1
 
 
 def main():
@@ -48,7 +39,17 @@ def main():
     amgm_ok = all(r["amgm_bound"] <= r["m"] for r in K)
     amgm_tight = sum(r["amgm_bound"] == r["m"] for r in K)
     psi_rows = [r for r in C if r["m"] is not None]
-    psi_bad = [r["n"] for r in psi_rows if (r["m"] == 1) != predicted_psi_interlacing(r["n"])]
+    by_comp = [r for r in psi_rows if (r["witness_method"] or "").startswith("compositum")]
+    computed = [r for r in psi_rows if r not in by_comp]
+    psi_bad = [r["n"] for r in computed if (r["m"] == 1) != psi_interlacing_predicted(r["n"])]
+    # the compositum bound, rebuilt for every non-interlacing conductor of the table with a split
+    comp_n = [r["n"] for r in C if not psi_interlacing_predicted(r["n"]) and compositum_splits(r["n"])]
+    comp_ok = all(compositum_witness(n, *min(compositum_splits(n), key=lambda s: s[1])).coeffs()[-1] == 2
+                  for n in comp_n)
+    comp_agree = all(r["m"] == 2 for r in C if r["n"] in comp_n)
+    no_split = [r["n"] for r in C if not psi_interlacing_predicted(r["n"]) and not compositum_splits(r["n"])]
+    open_n = [n for n in range(3, 400) if n % 4 != 2 and not psi_interlacing_predicted(n)
+              and not compositum_splits(n)][:4]
     psi_m = collections.Counter(r["m"] for r in psi_rows)
     undecided = [r["n"] for r in C if r["m"] is None]
     max_m = {d: max(r["m"] for r in K if r["degree"] == d) for d in by_d}
@@ -131,7 +132,7 @@ def main():
     w("single-factor sporadic members `Φ_9, Φ_12, Φ_15, Φ_18, Φ_20, Φ_24, Φ_30` add only")
     w("`2^a 3^b 5^c`.) For squarefree `n` this is Yatsyna's theorem (exceptions 15 and 30 are")
     w("exactly the `{3,5}` case). *Verified* against the generated pairs for all `n < 400` of")
-    w(f"degree ≤ 60, and against the computed `m(Ψ_n)` for {len(psi_rows)} conductors: "
+    w(f"degree ≤ 60, and against the computed `m(Ψ_n)` for {len(computed)} conductors: "
       f"{'no disagreement' if not psi_bad else psi_bad}.")
     w("")
     w("## 2. Level j: Schur-stable polynomials with leading coefficient j+1")
@@ -190,7 +191,36 @@ def main():
     w("non-interlacing level; e.g. `m(Ψ_3 Ψ_4 Ψ_5 Ψ_7 Ψ_11) = 5` with `S = <5,6,7,8,9>` (degree 12),")
     w("`m(Ψ_21 Ψ_33) = 4`.")
     w("")
-    w("## 4. The AM–GM lower bound")
+    w("## 4. Composita: `m(Ψ_n) ≤ 2 m(Ψ_{n_1}) m(Ψ_{n_2})`")
+    w("")
+    w("**Lemma.** If `F_1, F_2` are totally real with coprime discriminants, then")
+    w("`max(m(O_{F_1}), m(O_{F_2})) ≤ m(O_{F_1 F_2}) ≤ m(O_{F_1}) m(O_{F_2})`. Indeed")
+    w("`O_{F_1F_2} = O_{F_1} ⊗ O_{F_2}` (Neukirch I.2.11) with `Tr = Tr_1 ⊗ Tr_2`, so the codifferent")
+    w("is `O_{F_1}^∨ ⊗ O_{F_2}^∨` and `μ_1 μ_2` is totally positive of trace `Tr(μ_1) Tr(μ_2)`; the")
+    w("lower bound is the trace-down.")
+    w("")
+    w("**Theorem.** If `n = n_1 n_2` with `gcd(n_1, n_2) = 1` and `n_1, n_2 > 2`, then")
+    w("`F_{n_1} F_{n_2}` has index 2 in `F_n = Q(ζ_n)^+` and, by the subfield lift,")
+    w("")
+    w("    m(Ψ_n) ≤ 2 m(Ψ_{n_1}) m(Ψ_{n_2}).")
+    w("")
+    w("Explicitly, `g = μ_1(C_{n_2}(α)) μ_2(C_{n_1}(α)) Ψ_n'(α) mod Ψ_n` with")
+    w("`μ_i = g_i/Ψ_{n_i}'` and `C_k(2cos t) = 2cos kt` (`cyclotomic.compositum_witness`, which")
+    w("checks integrality and interlacing exactly).")
+    w("")
+    w("**Corollary.** Let `P` be the set of odd primes dividing `n`. If `|P| = 2` with `P ≠ {3, 5}`,")
+    w("or `P = {3, 5, p}`, then `m(Ψ_n) = 2`: split `n` into two coprime parts with interlacing `Ψ`")
+    w("(the power of 2 goes with either), and level 1 is empty by §1. In general")
+    w("`m(Ψ_n) ≤ 2^{b-1}`, where `b` counts the odd primes with 3 and 5 taken together.")
+    w("")
+    w(f"*Verified*: the witness is rebuilt with leading coefficient 2 for all {len(comp_n)} non-interlacing")
+    w(f"conductors of the table that split ({'ok' if comp_ok else 'FAILED'}); it agrees with the directly")
+    w(f"computed `m = 2` wherever that exists ({'ok' if comp_agree else 'DISAGREEMENT'}), and it decides")
+    w(f"{len(by_comp)} conductors the direct computation could not: "
+      f"{', '.join(str(r['n']) for r in by_comp) or 'none'}. Non-interlacing conductors of the table")
+    w(f"without a split: {no_split or 'none'}; the first such `n` are {open_n}.")
+    w("")
+    w("## 5. The AM–GM lower bound")
     w("")
     w("For a level-`j` interlacer and an irreducible factor `f_i` of degree `e_i`, the component")
     w("`μ_i = g(α_i)/f'(α_i)` is totally positive with `|N(g(α_i))| ≥ 1`, so")
@@ -201,7 +231,7 @@ def main():
     w(f"violated ({'ok' if amgm_ok else 'VIOLATED'}), and equal to `m(f)` for {amgm_tight} of {len(K)} census")
     w("polynomials; it misses the additivity of §3 (e.g. it gives 2 for `Ψ_21 Ψ_33`, whose level is 4).")
     w("")
-    w("## 5. Data")
+    w("## 6. Data")
     w("")
     w(f"Census of all squarefree cyclotomic polynomials of degree ≤ {dmax} up to `x → -x`")
     w("(`results/kronecker_census.json`). Number of polynomials with `m(f) = k`:")
@@ -219,13 +249,14 @@ def main():
     w(f"  {max(r['n'] for r in C)}, degree ≤ 60): `m` distribution {dict(sorted(psi_m.items()))};")
     w(f"  all {len(psi3)} non-interlacing `Ψ_n` have a level-3 interlacer: "
       f"{all(psi3.values())}, so `S(Ψ_n) = <2,3>` for each."
-      + (f" Undecided (time budget): n = {undecided}." if undecided else ""))
+      + (f" Of these, {len(by_comp)} are decided by §4 rather than by the engine." if by_comp else "")
+      + (f" Undecided: n = {undecided}." if undecided else ""))
     w("")
-    w("## 6. Open questions suggested by the data")
+    w("## 7. Open questions suggested by the data")
     w("")
-    w("* Is `m(Ψ_n) ≤ 2` for every `n` (equivalently `m(O_{F_n}) ≤ 2`)? The subfield lift")
-    w("  `m(F_n) ≤ [F_n : F] m(F)` proves it whenever `F_n` has an interlacing subfield of index 2")
-    w("  (e.g. `3 ‖ n` or `4 | n` with `Ψ_{n/3}` resp. `Ψ_{n/2}` interlacing).")
+    w("* Is `m(Ψ_n) ≤ 2` for every `n` (equivalently `m(O_{F_n}) ≤ 2`)? §4 proves it when `n` has")
+    w(f"  at most two odd prime factors, or exactly three including 3 and 5; open from `n = {open_n[0]}`")
+    w(f"  (degree {real_cyclotomic(open_n[0]).degree()}, `2 ≤ m ≤ 4`) on, where §4 gives only `m ≤ 2^{{b-1}}`.")
     w("* Is `m ≤ 3` on connected index sets? Which connected sets reach 3?")
     w("* Is `S(f)` always an interval for cyclotomic `f` (also when no factor is 1-interlaced)?")
     with open(os.path.join(RES, "higher_interlacing_cyclotomic.md"), "w") as fh:

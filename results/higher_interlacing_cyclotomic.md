@@ -33,7 +33,7 @@ with the McKee–Smyth prediction: **no disagreement**.
 single-factor sporadic members `Φ_9, Φ_12, Φ_15, Φ_18, Φ_20, Φ_24, Φ_30` add only
 `2^a 3^b 5^c`.) For squarefree `n` this is Yatsyna's theorem (exceptions 15 and 30 are
 exactly the `{3,5}` case). *Verified* against the generated pairs for all `n < 400` of
-degree ≤ 60, and against the computed `m(Ψ_n)` for 84 conductors: no disagreement.
+degree ≤ 60, and against the computed `m(Ψ_n)` for 146 conductors: no disagreement.
 
 ## 2. Level j: Schur-stable polynomials with leading coefficient j+1
 
@@ -95,7 +95,35 @@ Without unit resultant the order is smaller: `Ψ_21 Ψ_42` (resultant 64) has `S
 non-interlacing level; e.g. `m(Ψ_3 Ψ_4 Ψ_5 Ψ_7 Ψ_11) = 5` with `S = <5,6,7,8,9>` (degree 12),
 `m(Ψ_21 Ψ_33) = 4`.
 
-## 4. The AM–GM lower bound
+## 4. Composita: `m(Ψ_n) ≤ 2 m(Ψ_{n_1}) m(Ψ_{n_2})`
+
+**Lemma.** If `F_1, F_2` are totally real with coprime discriminants, then
+`max(m(O_{F_1}), m(O_{F_2})) ≤ m(O_{F_1 F_2}) ≤ m(O_{F_1}) m(O_{F_2})`. Indeed
+`O_{F_1F_2} = O_{F_1} ⊗ O_{F_2}` (Neukirch I.2.11) with `Tr = Tr_1 ⊗ Tr_2`, so the codifferent
+is `O_{F_1}^∨ ⊗ O_{F_2}^∨` and `μ_1 μ_2` is totally positive of trace `Tr(μ_1) Tr(μ_2)`; the
+lower bound is the trace-down.
+
+**Theorem.** If `n = n_1 n_2` with `gcd(n_1, n_2) = 1` and `n_1, n_2 > 2`, then
+`F_{n_1} F_{n_2}` has index 2 in `F_n = Q(ζ_n)^+` and, by the subfield lift,
+
+    m(Ψ_n) ≤ 2 m(Ψ_{n_1}) m(Ψ_{n_2}).
+
+Explicitly, `g = μ_1(C_{n_2}(α)) μ_2(C_{n_1}(α)) Ψ_n'(α) mod Ψ_n` with
+`μ_i = g_i/Ψ_{n_i}'` and `C_k(2cos t) = 2cos kt` (`cyclotomic.compositum_witness`, which
+checks integrality and interlacing exactly).
+
+**Corollary.** Let `P` be the set of odd primes dividing `n`. If `|P| = 2` with `P ≠ {3, 5}`,
+or `P = {3, 5, p}`, then `m(Ψ_n) = 2`: split `n` into two coprime parts with interlacing `Ψ`
+(the power of 2 goes with either), and level 1 is empty by §1. In general
+`m(Ψ_n) ≤ 2^{b-1}`, where `b` counts the odd primes with 3 and 5 taken together.
+
+*Verified*: the witness is rebuilt with leading coefficient 2 for all 58 non-interlacing
+conductors of the table that split (ok); it agrees with the directly
+computed `m = 2` wherever that exists (ok), and it decides
+9 conductors the direct computation could not: 115, 119, 133, 143, 145, 155, 165, 195, 396. Non-interlacing conductors of the table
+without a split: [231]; the first such `n` are [231, 273, 357, 385].
+
+## 5. The AM–GM lower bound
 
 For a level-`j` interlacer and an irreducible factor `f_i` of degree `e_i`, the component
 `μ_i = g(α_i)/f'(α_i)` is totally positive with `|N(g(α_i))| ≥ 1`, so
@@ -106,7 +134,7 @@ For irreducible `f` this is Yatsyna's `|disc f| ≥ d^d` for interlacing `f`. *V
 violated (ok), and equal to `m(f)` for 4209 of 5678 census
 polynomials; it misses the additivity of §3 (e.g. it gives 2 for `Ψ_21 Ψ_33`, whose level is 4).
 
-## 5. Data
+## 6. Data
 
 Census of all squarefree cyclotomic polynomials of degree ≤ 11 up to `x → -x`
 (`results/kronecker_census.json`). Number of polynomials with `m(f) = k`:
@@ -128,14 +156,14 @@ Census of all squarefree cyclotomic polynomials of degree ≤ 11 up to `x → -x
 * Every level set is an interval `{0} ∪ [m, ∞)`: **True** (for `f` with a
   1-interlaced factor this follows from `S(f) + S(h) ⊆ S(f)`).
 * Connected index sets (1631 polynomials): `m` distribution {1: 305, 2: 1200, 3: 126}.
-* Irreducible `Ψ_n` (`results/cyclotomic_levels.json`, 84 fields, conductor ≤
-  117, degree ≤ 60): `m` distribution {1: 63, 2: 21};
-  all 21 non-interlacing `Ψ_n` have a level-3 interlacer: True, so `S(Ψ_n) = <2,3>` for each. Undecided (time budget): n = [115].
+* Irreducible `Ψ_n` (`results/cyclotomic_levels.json`, 155 fields, conductor ≤
+  396, degree ≤ 60): `m` distribution {1: 97, 2: 58};
+  all 58 non-interlacing `Ψ_n` have a level-3 interlacer: True, so `S(Ψ_n) = <2,3>` for each. Of these, 9 are decided by §4 rather than by the engine. Undecided: n = [231].
 
-## 6. Open questions suggested by the data
+## 7. Open questions suggested by the data
 
-* Is `m(Ψ_n) ≤ 2` for every `n` (equivalently `m(O_{F_n}) ≤ 2`)? The subfield lift
-  `m(F_n) ≤ [F_n : F] m(F)` proves it whenever `F_n` has an interlacing subfield of index 2
-  (e.g. `3 ‖ n` or `4 | n` with `Ψ_{n/3}` resp. `Ψ_{n/2}` interlacing).
+* Is `m(Ψ_n) ≤ 2` for every `n` (equivalently `m(O_{F_n}) ≤ 2`)? §4 proves it when `n` has
+  at most two odd prime factors, or exactly three including 3 and 5; open from `n = 231`
+  (degree 60, `2 ≤ m ≤ 4`) on, where §4 gives only `m ≤ 2^{b-1}`.
 * Is `m ≤ 3` on connected index sets? Which connected sets reach 3?
 * Is `S(f)` always an interval for cyclotomic `f` (also when no factor is 1-interlaced)?

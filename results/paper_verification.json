@@ -1509,14 +1509,14 @@
   "claim": "Real cyclotomic fields: which conductors give m(O_{F_n}) >= 2; any m = 3?",
   "status": "extended",
   "evidence": [
-   "84 fields F_n, n <= 116, degree <= 56",
+   "156 fields F_n, n <= 396, degree <= 60",
    "admissible conductors with m = 1: none (Theorem 2.4 confirmed on this range)",
-   "non-admissible conductors with m >= 2: [(63, 18, [21]), (84, 12, [21, 42]), (99, 30, [33])]",
-   "fields with m >= 3: none; undecided: [115]",
-   "witness methods: {'dfs': 40, 'lift from degree-3 subfield': 1, 'lift from degree-5 subfield': 1, 'lift from degree-6 subfield': 3, 'milp': 8, 'lift from degree-8 subfield': 1, 'lift from degree-10 subfield': 1, 'lift from degree-9 subfield': 2, 'lift from degree-12 subfield': 2, 'lift from degree-11 subfield': 1, 'milp feasibility': 15, 'lift from degree-15 subfield': 3, 'lift from degree-16 subfield': 1, 'lift from degree-14 subfield': 1, 'lift from degree-18 subfield': 3, '?': 1}"
+   "non-admissible conductors with m >= 2: [(63, 18, [21]), (84, 12, [21, 42]), (99, 30, [33]), (117, 36, [39]), (132, 20, [33, 66]), (140, 24, [35, 70]), (147, 42, [21]), (153, 48, [51]), (156, 24, [39, 78]), (168, 24, [21, 42]), (171, 54, [57]), (175, 60, [35]), (189, 54, [21]), (204, 32, [51, 102]), (220, 40, [55, 110]), (228, 36, [57, 114]), (252, 36, [21, 42]), (260, 48, [65, 130]), (264, 40, [33, 66]), (276, 44, [69, 138]), (280, 48, [35, 70]), (308, 60, [77, 154]), (312, 48, [39, 78]), (336, 48, [21, 42]), (348, 56, [87, 174]), (372, 60, [93, 186]), (396, 60, [33, 66])]",
+   "fields with m >= 3: none; undecided: [231]",
+   "witness methods: {'dfs': 41, 'lift from degree-3 subfield': 1, 'lift from degree-5 subfield': 1, 'lift from degree-6 subfield': 3, 'milp': 8, 'lift from degree-8 subfield': 1, 'lift from degree-10 subfield': 2, 'lift from degree-9 subfield': 2, 'lift from degree-12 subfield': 5, 'lift from degree-11 subfield': 1, 'milp feasibility': 53, 'lift from degree-15 subfield': 3, 'lift from degree-16 subfield': 2, 'lift from degree-14 subfield': 1, 'lift from degree-18 subfield': 5, 'compositum Psi_5 x Psi_23': 1, 'compositum Psi_7 x Psi_17': 1, 'lift from degree-20 subfield': 3, 'lift from degree-21 subfield': 2, 'compositum Psi_7 x Psi_19': 1, 'lift from degree-23 subfield': 1, 'compositum Psi_11 x Psi_13': 1, 'compositum Psi_5 x Psi_29': 1, 'compositum Psi_5 x Psi_31': 1, 'lift from degree-26 subfield': 1, 'compositum Psi_11 x Psi_15': 1, 'lift from degree-29 subfield': 1, 'lift from degree-30 subfield': 3, 'compositum Psi_13 x Psi_15': 1, '?': 1, 'lift from degree-24 subfield': 4, 'lift from degree-22 subfield': 1, 'lift from degree-28 subfield': 1, 'compositum Psi_11 x Psi_36': 1}"
   ],
   "data": {
-   "rows": 84,
+   "rows": 156,
    "admissible_with_m1": [],
    "nonadmissible_with_m_ge_2": [
     [
@@ -1540,11 +1540,200 @@
      [
       33
      ]
+    ],
+    [
+     117,
+     36,
+     [
+      39
+     ]
+    ],
+    [
+     132,
+     20,
+     [
+      33,
+      66
+     ]
+    ],
+    [
+     140,
+     24,
+     [
+      35,
+      70
+     ]
+    ],
+    [
+     147,
+     42,
+     [
+      21
+     ]
+    ],
+    [
+     153,
+     48,
+     [
+      51
+     ]
+    ],
+    [
+     156,
+     24,
+     [
+      39,
+      78
+     ]
+    ],
+    [
+     168,
+     24,
+     [
+      21,
+      42
+     ]
+    ],
+    [
+     171,
+     54,
+     [
+      57
+     ]
+    ],
+    [
+     175,
+     60,
+     [
+      35
+     ]
+    ],
+    [
+     189,
+     54,
+     [
+      21
+     ]
+    ],
+    [
+     204,
+     32,
+     [
+      51,
+      102
+     ]
+    ],
+    [
+     220,
+     40,
+     [
+      55,
+      110
+     ]
+    ],
+    [
+     228,
+     36,
+     [
+      57,
+      114
+     ]
+    ],
+    [
+     252,
+     36,
+     [
+      21,
+      42
+     ]
+    ],
+    [
+     260,
+     48,
+     [
+      65,
+      130
+     ]
+    ],
+    [
+     264,
+     40,
+     [
+      33,
+      66
+     ]
+    ],
+    [
+     276,
+     44,
+     [
+      69,
+      138
+     ]
+    ],
+    [
+     280,
+     48,
+     [
+      35,
+      70
+     ]
+    ],
+    [
+     308,
+     60,
+     [
+      77,
+      154
+     ]
+    ],
+    [
+     312,
+     48,
+     [
+      39,
+      78
+     ]
+    ],
+    [
+     336,
+     48,
+     [
+      21,
+      42
+     ]
+    ],
+    [
+     348,
+     56,
+     [
+      87,
+      174
+     ]
+    ],
+    [
+     372,
+     60,
+     [
+      93,
+      186
+     ]
+    ],
+    [
+     396,
+     60,
+     [
+      33,
+      66
+     ]
     ]
    ],
    "m_ge_3": [],
-   "max_conductor": 116,
-   "max_degree": 56
+   "undecided": [
+    231
+   ],
+   "max_conductor": 396,
+   "max_degree": 60
   },
   "seconds": 0.0
  }

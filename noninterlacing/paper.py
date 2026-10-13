@@ -618,8 +618,8 @@ def _cyclo(c: Check, full: bool):
              if not r["admissible"] and (r["m"] or 0) >= 2]
     m3 = [(r["n"], r["degree"]) for r in rows if (r["m"] or 0) >= 3]
     undecided = [r["n"] for r in rows if r["m"] is None]
-    c.data["undecided"] = undecided
     c.data = {"rows": len(rows), "admissible_with_m1": adm_bad, "nonadmissible_with_m_ge_2": extra, "m_ge_3": m3,
+              "undecided": undecided,
               "max_conductor": max(r["n"] for r in rows), "max_degree": max(r["degree"] for r in rows)}
     c.evidence.append(f"{len(rows)} fields F_n, n <= {c.data['max_conductor']}, degree <= {c.data['max_degree']}")
     c.evidence.append(f"admissible conductors with m = 1: {adm_bad or 'none'} (Theorem 2.4 confirmed on this range)")

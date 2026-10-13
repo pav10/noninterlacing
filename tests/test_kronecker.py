@@ -1,10 +1,12 @@
 from noninterlacing.bruteforce import lp_search_interlacers
-from noninterlacing.cyclotomic import factorint
+from noninterlacing.cyclotomic import (compositum_splits, compositum_witness, factorint,
+                                       psi_interlacing_predicted)
 from noninterlacing.interlace import Interlacing
 from noninterlacing.kronecker import (amgm_lower_bound, check_disc_polynomial, components, convolve_counts,
                                       cyclotomic_products, factor_as_psi, linked, ms_all_pairs,
                                       ms_monic_interlacers, product_poly)
 from noninterlacing.poly import compose, poly, real_cyclotomic
+from noninterlacing.realroots import interlaces
 
 from .conftest import needs_pari
 
@@ -28,11 +30,26 @@ def test_psi_interlacing_formula():
             r *= p
         return r in (1, 15) or len(odd) == 1
 
+    assert all(pred(n) == psi_interlacing_predicted(n) for n in range(3, 1000))
     for n in range(3, 160):
         if real_cyclotomic(n).degree() <= 40:
             assert (frozenset([n]) in members) == pred(n), n
     for n in (21, 28, 33, 35, 45, 60, 75):
         assert (Interlacing(real_cyclotomic(n)).min_level() == 1) == pred(n), n
+
+
+def test_compositum_witness():
+    # m(Psi_n) <= 2 m(Psi_n1) m(Psi_n2) for coprime n = n1 n2 (n1, n2 > 2)
+    I21 = Interlacing(real_cyclotomic(21))
+    g = compositum_witness(21, 3, 7)
+    assert g.coeffs()[-1] == 2 and g in I21.interlacers(2)
+    assert compositum_witness(84, 7, 12).coeffs()[-1] == 2
+    assert compositum_witness(115, 5, 23).degree() == 43
+    # levels multiply: Psi_4 (level 1) and Psi_21 (level 2) give level 2 * 1 * 2 for Psi_84
+    g = compositum_witness(84, 4, 21, None, I21.find(2))
+    assert g.coeffs()[-1] == 4 and interlaces(real_cyclotomic(84), g)
+    assert compositum_splits(231) == [] and compositum_splits(165) == [(11, 15)]
+    assert compositum_splits(396) == [(9, 44), (11, 36)]
 
 
 def test_unit_resultant_additivity():

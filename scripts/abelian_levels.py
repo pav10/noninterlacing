@@ -4,7 +4,9 @@ Usage: python scripts/abelian_levels.py OUT.json NMAX MINDEG MAXDEG
 
 Fields are deduplicated by polredabs.  For each field: degree, conductor
 (first n where it appears), discriminant, m(O_K) with certificate, and the
-Siegel ceiling dim M_2d.
+Siegel ceiling dim M_2d.  Each field runs in a child process with a 5 GB
+memory limit and a 30-minute wall-clock limit; a failure is recorded with
+m = None and the reason.
 """
 import json
 import os
@@ -14,11 +16,22 @@ import time
 from flint import fmpz_poly
 
 from noninterlacing.cyclotomic import euler_phi
+from noninterlacing.jobs import run_limited
 from noninterlacing.orders import Order
 from noninterlacing.pari import from_pari, nfdisc, pari, polredabs
-from noninterlacing.poly import to_str
+from noninterlacing.poly import poly, to_str
 from noninterlacing.realroots import is_totally_real
 from noninterlacing.siegel import dim_M
+
+
+def field_row(key, e, n):
+    t = time.time()
+    O = Order.maximal(poly(key))
+    cert = O.level_certificate(time_limit=200)
+    return {"poly": key, "degree": e, "conductor": n, "disc": O.discriminant,
+            "m": cert["m"], "empty_levels": cert["empty_levels"],
+            "witness_method": cert.get("witness_method"), "ceiling": dim_M(2 * e),
+            "seconds": round(time.time() - t, 2)}
 
 
 def main(out, nmax, mindeg, maxdeg):
@@ -45,13 +58,11 @@ def main(out, nmax, mindeg, maxdeg):
                 if key in seen:
                     continue
                 seen.add(key)
-                t = time.time()
-                O = Order.maximal(g)
-                cert = O.level_certificate(time_limit=200)
-                row = {"poly": key, "degree": e, "conductor": n, "disc": O.discriminant,
-                       "m": cert["m"], "empty_levels": cert["empty_levels"],
-                       "witness_method": cert.get("witness_method"), "ceiling": dim_M(2 * e),
-                       "seconds": round(time.time() - t, 2)}
+                row, err = run_limited(field_row, (key, e, n), mem_bytes=5 << 30, wall=1800)
+                if row is None:
+                    row = {"poly": key, "degree": e, "conductor": n, "disc": int(nfdisc(g)), "m": None,
+                           "empty_levels": [], "witness_method": None, "ceiling": dim_M(2 * e),
+                           "seconds": None, "error": err}
                 rows.append(row)
                 print(n, e, row["m"], row["witness_method"], row["seconds"], key[:60], flush=True)
                 json.dump(rows, open(out + ".tmp", "w"), indent=1)

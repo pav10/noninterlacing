@@ -8,3 +8,4 @@ dist/
 *.xz
 *.tmp
 *.partial
+cysignals_crash_logs/

@@ -180,3 +180,67 @@ def cyclotomic_table(nmin: int = 3, nmax: int = 100, max_degree: int = 60,
             continue
         out.append(cyclotomic_level(n))
     return out
+
+
+# ---------------------------------------------------------------------------
+# Upper bounds from composita: m(Psi_n) <= 2 m(Psi_{n1}) m(Psi_{n2})
+# ---------------------------------------------------------------------------
+
+def psi_interlacing_predicted(n: int) -> bool:
+    """McKee--Smyth: ``Psi_n`` is interlacing iff rad(odd part of n) is 1, a prime or 15."""
+    odd = [p for p in factorint(n) if p != 2]
+    return len(odd) <= 1 or sorted(odd) == [3, 5]
+
+
+def compositum_witness(n: int, n1: int, n2: int, g1=None, g2=None) -> fmpz_poly:
+    """A level-``2 j1 j2`` interlacer of ``Psi_n`` built from interlacers of ``Psi_{n1}``, ``Psi_{n2}``.
+
+    ``n = n1 n2`` with ``gcd(n1, n2) = 1`` and ``n1, n2 > 2``; ``g_i`` is a level-``j_i``
+    interlacer of ``Psi_{n_i}`` (found if not given).  ``F = Q(zeta_{n1})^+ Q(zeta_{n2})^+``
+    has index 2 in ``K = Q(zeta_n)^+`` and, the discriminants being coprime,
+    ``O_F = O_1 (x) O_2`` and ``O_F^vee = O_1^vee O_2^vee``.  So ``mu = mu_1 mu_2`` with
+    ``mu_i = g_i(beta_{n_i}) / Psi_{n_i}'(beta_{n_i})`` is totally positive in ``O_F^vee``
+    of trace ``j1 j2``, hence in ``O_K^vee`` of trace ``2 j1 j2``.  The result
+    ``g = mu Psi_n'(alpha) mod Psi_n`` is checked exactly (integrality and interlacing).
+    """
+    from flint import fmpq_poly
+
+    from .interlace import Interlacing
+    from .realroots import interlaces
+
+    if n1 * n2 != n or gcd(n1, n2) != 1 or min(n1, n2) <= 2:
+        raise ValueError("need n = n1 n2 with coprime n1, n2 > 2")
+    P = fmpq_poly(real_cyclotomic(n))
+    mu = fmpq_poly([1])
+    for ni, other, gi in ((n1, n2, g1), (n2, n1, g2)):
+        fi = real_cyclotomic(ni)
+        if gi is None:
+            gi = Interlacing(fi).find(1)
+            if gi is None:
+                raise ValueError(f"Psi_{ni} has no level-1 interlacer")
+        # beta_{n_i} = 2cos(2 pi other / n) = C_other(alpha)
+        b = fmpq_poly(chebyshev_C(other)) % P
+        num = fmpq_poly(gi)(b) % P
+        den = fmpq_poly(fi.derivative())(b) % P
+        gg, inv, _ = den.xgcd(P)
+        if gg != 1:
+            raise ArithmeticError("Psi_ni'(beta) not invertible")
+        mu = mu * num * inv % P
+    g = mu * fmpq_poly(P.derivative()) % P
+    if g.denom() != 1:
+        raise ArithmeticError("compositum witness is not integral")
+    g = fmpz_poly(g.numer())
+    if not interlaces(real_cyclotomic(n), g):
+        raise ArithmeticError("compositum witness does not interlace")
+    return g
+
+
+def compositum_splits(n: int) -> list:
+    """Coprime splits ``n = n1 n2`` (``n1 < n2``, both > 2) with ``Psi_{n1}``, ``Psi_{n2}`` interlacing."""
+    out = []
+    for n1 in range(3, n):
+        n2, r = divmod(n, n1)
+        if r == 0 and n1 < n2 and gcd(n1, n2) == 1 and n2 > 2 \
+                and psi_interlacing_predicted(n1) and psi_interlacing_predicted(n2):
+            out.append((n1, n2))
+    return out
