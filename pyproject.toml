@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "noninterlacing"
+version = "0.1.0"
+description = "Interlacing polynomials of every level, codifferents of totally real orders, and non-interlacing families"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = ["numpy>=1.22", "scipy>=1.9", "python-flint>=0.6"]
+
+[project.optional-dependencies]
+pari = ["cypari2>=2.1"]
+test = ["pytest"]
+
+[project.scripts]
+noninterlacing = "noninterlacing.cli:main"
+
+[tool.setuptools]
+packages = ["noninterlacing"]

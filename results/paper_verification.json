@@ -1,0 +1,1740 @@
+[
+ {
+  "key": "base",
+  "section": "\u00a72, after Thm 2.4",
+  "claim": "m_beta = x^6 - x^5 - 6x^4 + 6x^3 + 8x^2 - 8x + 1 (beta = 2cos(2pi/21)) is non-interlacing; the coefficient bounding box has 22,680 points, none admissible.",
+  "status": "confirmed",
+  "evidence": [
+   "bounding box: 22680 integer points, 0 interlacers (exact Sturm test)",
+   "simplex search: I_1 = 0 after 26 nodes; I_2 = 141, I_3 = 1324",
+   "m(m_beta) = 2, witness g = 2*x^5 - 2*x^4 - 8*x^3 + 7*x^2 + 5*x - 2; levels S = <2, 3>, gaps [1]",
+   "disc(F_21) = 453789 = 3^3 * 7^5"
+  ],
+  "data": {
+   "box_points": 22680,
+   "box_interlacers": 0,
+   "I_1": 0,
+   "search_nodes_level1": 26,
+   "I_2": 141,
+   "I_3": 1324,
+   "trace2_witness": "2*x^5 - 2*x^4 - 8*x^3 + 7*x^2 + 5*x - 2",
+   "level_semigroup": "<2, 3>",
+   "gaps": [
+    1
+   ],
+   "margin_level1": -0.010697202674653516,
+   "disc": 453789
+  },
+  "seconds": 0.29
+ },
+ {
+  "key": "siegel-ceiling",
+  "section": "Rem 2.3 / \u00a75.4",
+  "claim": "m(O_L) = 1 for totally real L of degree 2, 3, 4, 5, 7; the Siegel ceiling allows m = 2 in degrees 9 and 11 (dim M_18 = dim M_22 = 2).",
+  "status": "confirmed",
+  "evidence": [
+   "dim M_2d = 1 exactly for d in [2, 3, 4, 5, 7]: then zeta_K(-1) = 2^d b_1 s_K(1) != 0 forces m(O_K) = 1",
+   "dim M_2d by degree: 2:1, 3:1, 4:1, 5:1, 6:2, 7:1, 8:2, 9:2, 10:2, 11:2, 12:3, 13:2, 14:3, 15:3, 16:3, 17:3, 18:4, 19:3, 20:4, 21:4, 22:4, 23:4, 24:5",
+   "consequence (monotonicity Z[alpha] in O_K): every monic totally real f of degree d has m(f) <= dim M_2d; levels >= 3 need d >= 12 (d != 13), levels >= 4 need d >= 18 (d != 19)"
+  ],
+  "data": {
+   "dim_M_2d": {
+    "2": 1,
+    "3": 1,
+    "4": 1,
+    "5": 1,
+    "6": 2,
+    "7": 1,
+    "8": 2,
+    "9": 2,
+    "10": 2,
+    "11": 2,
+    "12": 3,
+    "13": 2,
+    "14": 3,
+    "15": 3,
+    "16": 3,
+    "17": 3,
+    "18": 4,
+    "19": 3,
+    "20": 4,
+    "21": 4,
+    "22": 4,
+    "23": 4,
+    "24": 5
+   }
+  },
+  "seconds": 0.0
+ },
+ {
+  "key": "main-theorem",
+  "section": "Thm 3.1",
+  "claim": "f_N = m_beta(x^2 - x - N), F = F_21: totally real for N >= 2, irreducible for 2 <= N <= 30, non-interlacing, span = sqrt(1 + 4N + 4 beta_max), Mahler measure = m_beta(-N) = N^6 + N^5 - 6N^4 - 6N^3 + 8N^2 + 8N + 1 for N >= 4, |disc f_N| = disc(F)^2 |N(1 + 4N + 4beta)|.",
+  "status": "confirmed",
+  "evidence": [
+   "N = 1: not totally real (1 + 4 + 4*2cos(20pi/21) < 0), as stated",
+   "N = 2..30: totally real (Sturm), irreducible (FLINT), I(f_N) = 0 (each in <= 26 search nodes), span formula, exact discriminant formula",
+   "Mahler measure = m_beta(-N) for N = 4..30 (certified Arb ball contains the integer); for N = 2, 3 some root lies in (-1, 1) and the formula does not apply, as stated",
+   "spans pairwise distinct: True; heredity certificate (N=2): Z[alpha] cap F = O_F (maximal: True) with m(O_F) = 2",
+   "level-1 margins eps_1(f_N) are negative and increase to -0.005349 ~ eps_1(F_21)/2 = -0.0053485: [-0.00666, -0.005496, -0.00548, -0.005458] ... [-0.005349, -0.00535]"
+  ],
+  "data": {
+   "rows": [
+    {
+     "N": 1,
+     "degree": 12,
+     "totally_real": false,
+     "irreducible": true
+    },
+    {
+     "N": 2,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 4.079777254494309,
+     "span_formula": 4.079777254494309,
+     "span_ok": true,
+     "disc": 20913070030903197,
+     "disc_formula_ok": true,
+     "mahler": 118.70044006463596,
+     "mahler_formula": null,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.006659604611202755
+    },
+    {
+     "N": 3,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 4.543630976024475,
+     "span_formula": 4.543630976024475,
+     "span_ok": true,
+     "disc": 655494817432973301,
+     "disc_formula_ok": true,
+     "mahler": 802.27749619687,
+     "mahler_formula": null,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005495932103368684
+    },
+    {
+     "N": 4,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 4.964331016994045,
+     "span_formula": 4.964331016994045,
+     "span_ok": true,
+     "disc": 4251850132876586541,
+     "disc_formula_ok": true,
+     "mahler": 3361.0,
+     "mahler_formula": 3361,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005480314076843629
+    },
+    {
+     "N": 5,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 5.352063382125545,
+     "span_formula": 5.352063382125545,
+     "span_ok": true,
+     "disc": 16670701071853750341,
+     "disc_formula_ok": true,
+     "mahler": 14491.0,
+     "mahler_formula": 14491,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005458446500880371
+    },
+    {
+     "N": 6,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 5.713543773026433,
+     "span_formula": 5.713543773026433,
+     "span_ok": true,
+     "disc": 49667335841626618941,
+     "disc_formula_ok": true,
+     "mahler": 45697.0,
+     "mahler_formula": 45697,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005451496895830105
+    },
+    {
+     "N": 7,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 6.053476889052202,
+     "span_formula": 6.053476889052202,
+     "span_ok": true,
+     "disc": 123877480472868950037,
+     "disc_formula_ok": true,
+     "mahler": 118441.0,
+     "mahler_formula": 118441,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005445718793680193
+    },
+    {
+     "N": 8,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 6.375310380388481,
+     "span_formula": 6.375310380388481,
+     "span_ok": true,
+     "disc": 272410466424522772941,
+     "disc_formula_ok": true,
+     "mahler": 267841.0,
+     "mahler_formula": 267841,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005411156949140031
+    },
+    {
+     "N": 9,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 6.681660156449827,
+     "span_formula": 6.681660156449827,
+     "span_ok": true,
+     "disc": 545049694121870268261,
+     "disc_formula_ok": true,
+     "mahler": 547471.0,
+     "mahler_formula": 547471,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005407735779936779
+    },
+    {
+     "N": 10,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 6.974566828577179,
+     "span_formula": 6.974566828577179,
+     "span_ok": true,
+     "disc": 1013060392427820859101,
+     "disc_formula_ok": true,
+     "mahler": 1034881.0,
+     "mahler_formula": 1034881,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005401151404857481
+    },
+    {
+     "N": 11,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 7.255658650066797,
+     "span_formula": 7.255658650066796,
+     "span_ok": true,
+     "disc": 1774604674047413513781,
+     "disc_formula_ok": true,
+     "mahler": 1837837.0,
+     "mahler_formula": 1837837,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005398575452906382
+    },
+    {
+     "N": 12,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 7.5262595255737175,
+     "span_formula": 7.526259525573718,
+     "span_ok": true,
+     "disc": 2960763886865534260077,
+     "disc_formula_ok": true,
+     "mahler": 3101281.0,
+     "mahler_formula": 3101281,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005396778671997782
+    },
+    {
+     "N": 13,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 7.787463158583103,
+     "span_formula": 7.787463158583104,
+     "span_ok": true,
+     "disc": 4742168261217848910981,
+     "disc_formula_ok": true,
+     "mahler": 5015011.0,
+     "mahler_formula": 5015011,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005371181831666481
+    },
+    {
+     "N": 14,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 8.040185473376166,
+     "span_formula": 8.040185473376166,
+     "span_ok": true,
+     "disc": 7336233853094951001981,
+     "disc_formula_ok": true,
+     "mahler": 7822081.0,
+     "mahler_formula": 7822081,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.00536489228639047
+    },
+    {
+     "N": 15,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 8.28520261950721,
+     "span_formula": 8.28520261950721,
+     "span_ok": true,
+     "disc": 11015006783279724939861,
+     "disc_formula_ok": true,
+     "mahler": 11827921.0,
+     "mahler_formula": 11827921,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.00536352400108122
+    },
+    {
+     "N": 16,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 8.52317912790111,
+     "span_formula": 8.523179127901109,
+     "span_ok": true,
+     "disc": 16113614772417924363021,
+     "disc_formula_ok": true,
+     "mahler": 17410177.0,
+     "mahler_formula": 17410177,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005363603087416471
+    },
+    {
+     "N": 17,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 8.754689169027598,
+     "span_formula": 8.754689169027598,
+     "span_ok": true,
+     "disc": 23039325972021965713317,
+     "disc_formula_ok": true,
+     "mahler": 25029271.0,
+     "mahler_formula": 25029271,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005362723745380452
+    },
+    {
+     "N": 18,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 8.980232872609102,
+     "span_formula": 8.980232872609102,
+     "span_ok": true,
+     "disc": 32281215091407937019421,
+     "disc_formula_ok": true,
+     "mahler": 35239681.0,
+     "mahler_formula": 35239681,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.0053623690529954054
+    },
+    {
+     "N": 19,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 9.2002490426232,
+     "span_formula": 9.2002490426232,
+     "span_ok": true,
+     "disc": 44420436820565821891701,
+     "disc_formula_ok": true,
+     "mahler": 48701941.0,
+     "mahler_formula": 48701941,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.00536203980972632
+    },
+    {
+     "N": 20,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 9.415125195465492,
+     "span_formula": 9.415125195465492,
+     "span_ok": true,
+     "disc": 60141106548962938728621,
+     "disc_formula_ok": true,
+     "mahler": 66195361.0,
+     "mahler_formula": 66195361,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005361733110963475
+    },
+    {
+     "N": 21,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 9.625205579429934,
+     "span_formula": 9.625205579429933,
+     "span_ok": true,
+     "disc": 80241788380280595134661,
+     "disc_formula_ok": true,
+     "mahler": 88631467.0,
+     "mahler_formula": 88631467,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005352090057674785
+    },
+    {
+     "N": 22,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 9.830797650561683,
+     "span_formula": 9.830797650561683,
+     "span_ok": true,
+     "disc": 105647590443083957549757,
+     "disc_formula_ok": true,
+     "mahler": 117068161.0,
+     "mahler_formula": 117068161,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005352185730523512
+    },
+    {
+     "N": 23,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 10.032177353211472,
+     "span_formula": 10.032177353211472,
+     "span_ok": true,
+     "disc": 137422867497425136090261,
+     "disc_formula_ok": true,
+     "mahler": 152724601.0,
+     "mahler_formula": 152724601,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005351818717356516
+    },
+    {
+     "N": 24,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 10.229593464370376,
+     "span_formula": 10.229593464370376,
+     "span_ok": true,
+     "disc": 176784530837379484601421,
+     "disc_formula_ok": true,
+     "mahler": 196996801.0,
+     "mahler_formula": 196996801,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.00534957304071898
+    },
+    {
+     "N": 25,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 10.423271197003805,
+     "span_formula": 10.423271197003805,
+     "span_ok": true,
+     "disc": 225115965489515115921381,
+     "disc_formula_ok": true,
+     "mahler": 251473951.0,
+     "mahler_formula": 251473951,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005349554156725958
+    },
+    {
+     "N": 26,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 10.613415211245112,
+     "span_formula": 10.613415211245112,
+     "span_ok": true,
+     "disc": 283981554707295632356701,
+     "disc_formula_ok": true,
+     "mahler": 317955457.0,
+     "mahler_formula": 317955457,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.0053495165261457645
+    },
+    {
+     "N": 27,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 10.800212148207512,
+     "span_formula": 10.800212148207512,
+     "span_ok": true,
+     "disc": 355141811761416071369397,
+     "disc_formula_ok": true,
+     "mahler": 398468701.0,
+     "mahler_formula": 398468701,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005349500697339263
+    },
+    {
+     "N": 28,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 10.983832775779552,
+     "span_formula": 10.98383277577955,
+     "span_ok": true,
+     "disc": 440569119026072066475501,
+     "disc_formula_ok": true,
+     "mahler": 495287521.0,
+     "mahler_formula": 495287521,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005349548853213648
+    },
+    {
+     "N": 29,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 11.16443381664691,
+     "span_formula": 11.16443381664691,
+     "span_ok": true,
+     "disc": 542464074361162223355141,
+     "disc_formula_ok": true,
+     "mahler": 610951411.0,
+     "mahler_formula": 610951411,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005349497044777066
+    },
+    {
+     "N": 30,
+     "degree": 12,
+     "totally_real": true,
+     "irreducible": true,
+     "span": 11.342159514232248,
+     "span_formula": 11.342159514232248,
+     "span_ok": true,
+     "disc": 663272444790423711174141,
+     "disc_formula_ok": true,
+     "mahler": 748285441.0,
+     "mahler_formula": 748285441,
+     "mahler_formula_ok": true,
+     "I(f)": 0,
+     "search_nodes": 26,
+     "noninterlacing": true,
+     "margin": -0.005349506571779001
+    }
+   ],
+   "heredity_certificate_N2": {
+    "degree": 6,
+    "subfield_poly": "y^6 - y^5 - 6*y^4 + 6*y^3 + 8*y^2 - 8*y + 1",
+    "embedding": "x^2 - x - 2",
+    "disc(O cap F)": 453789,
+    "disc(F)": 453789,
+    "O cap F maximal": true,
+    "m(O cap F)": 2
+   }
+  },
+  "seconds": 31.32
+ },
+ {
+  "key": "towers",
+  "section": "Thm 3.3",
+  "claim": "Iterating x^2 - x = alpha + M keeps non-interlacing (degrees 2^j * 6).",
+  "status": "confirmed",
+  "evidence": [
+   "N=2, M=3: degree 24, totally real True, irreducible True, margin -0.004022, heredity bound m >= 2, span 4.812",
+   "N=3, M=4: degree 24, totally real True, irreducible True, margin -0.002806, heredity bound m >= 2, span 5.300",
+   "N=5, M=6: degree 24, totally real True, irreducible True, margin -0.002775, heredity bound m >= 2, span 6.140"
+  ],
+  "data": {
+   "towers": [
+    {
+     "N": 2,
+     "M": 3,
+     "degree": 24,
+     "M > max|conj|": "True",
+     "totally_real": true,
+     "irreducible": true,
+     "margin_level1": -0.004021718266840358,
+     "milp_says_noninterlacing": true,
+     "m(Z[alpha] cap Q(alpha_N))": 2,
+     "span": 4.812437481047272
+    },
+    {
+     "N": 3,
+     "M": 4,
+     "degree": 24,
+     "M > max|conj|": "True",
+     "totally_real": true,
+     "irreducible": true,
+     "margin_level1": -0.0028061156941082827,
+     "milp_says_noninterlacing": true,
+     "m(Z[alpha] cap Q(alpha_N))": 2,
+     "span": 5.299741687294669
+    },
+    {
+     "N": 5,
+     "M": 6,
+     "degree": 24,
+     "M > max|conj|": "True",
+     "totally_real": true,
+     "irreducible": true,
+     "margin_level1": -0.0027753829091801095,
+     "milp_says_noninterlacing": true,
+     "m(Z[alpha] cap Q(alpha_N))": 2,
+     "span": 6.140368617945595
+    }
+   ]
+  },
+  "seconds": 605.83
+ },
+ {
+  "key": "cauchy",
+  "section": "Lemma 4.1 / Cor 4.2",
+  "claim": "Minimal polynomials (irreducible) of integer symmetric matrices are interlacing; so no f_N is such a minimal polynomial; |disc f_N| -> infinity.",
+  "status": "confirmed",
+  "evidence": [
+   "460/460 random integer symmetric matrices with irreducible minimal polynomial (114 with multiplicity > 1): the Cauchy interlacer h = chi'/f^(m-1) interlaces f",
+   "|disc f_N| for N = 2,3,5,10,30: 2.091e+16, 6.555e+17, 1.667e+19, 1.013e+21, 6.633e+23  (12^12 = 8.916e+12)"
+  ],
+  "data": {
+   "random_matrices": 460,
+   "lemma_holds": 460,
+   "with_multiplicity": 114,
+   "discs": {
+    "2": 20913070030903197,
+    "3": 655494817432973301,
+    "5": 16670701071853750341,
+    "10": 1013060392427820859101,
+    "30": 663272444790423711174141
+   }
+  },
+  "seconds": 0.04
+ },
+ {
+  "key": "monogenic",
+  "section": "Lemma 5.1",
+  "claim": "O_{F_n} = Z[beta_n] for every conductor n.",
+  "status": "confirmed",
+  "evidence": [
+   "disc(m_beta_n) = disc(F_n) (PARI nfdisc) for all 106 conductors n <= 300, n != 2 mod 4, degree <= 40"
+  ],
+  "data": {
+   "checked": 106,
+   "failures": []
+  },
+  "seconds": 0.04
+ },
+ {
+  "key": "divisor-heredity",
+  "section": "Thm 5.2",
+  "claim": "m_{beta_n} is non-interlacing for n = 84 (with m = 2 and a trace-2 element), 63, 147, 189, 99.",
+  "status": "confirmed",
+  "evidence": [
+   "n = 84 (degree 12): level 1 empty (dfs); exact level-2 interlacer (lift from degree-6 subfield), so m = 2",
+   "n = 63 (degree 18): level 1 empty (dfs); exact level-2 interlacer (lift from degree-9 subfield), so m = 2",
+   "n = 99 (degree 30): level 1 empty (milp); exact level-2 interlacer (lift from degree-15 subfield), so m = 2",
+   "n = 147 (degree 42): level 1 empty (milp); exact level-2 interlacer (lift from degree-21 subfield), so m = 2",
+   "n = 189 (degree 54): level 1 empty (milp); exact level-2 interlacer (milp feasibility), so m = 2",
+   "n = 84: sextic subfields and m(Z[beta_84] cap F): disc 4148928: m = 1, disc 1075648: m = 1, disc 453789: m = 2"
+  ],
+  "data": {
+   "84": {
+    "degree": 12,
+    "m": 2,
+    "empty_levels": [
+     [
+      1,
+      "dfs"
+     ]
+    ],
+    "witness_method": "lift from degree-6 subfield"
+   },
+   "63": {
+    "degree": 18,
+    "m": 2,
+    "empty_levels": [
+     [
+      1,
+      "dfs"
+     ]
+    ],
+    "witness_method": "lift from degree-9 subfield"
+   },
+   "99": {
+    "degree": 30,
+    "m": 2,
+    "empty_levels": [
+     [
+      1,
+      "milp"
+     ]
+    ],
+    "witness_method": "lift from degree-15 subfield"
+   },
+   "147": {
+    "degree": 42,
+    "m": 2,
+    "empty_levels": [
+     [
+      1,
+      "milp"
+     ]
+    ],
+    "witness_method": "lift from degree-21 subfield"
+   },
+   "189": {
+    "degree": 54,
+    "m": 2,
+    "empty_levels": [
+     [
+      1,
+      "milp"
+     ]
+    ],
+    "witness_method": "milp feasibility"
+   },
+   "84_subfields": {
+    "f": "x^12 - 11*x^10 + 44*x^8 - 78*x^6 + 60*x^4 - 16*x^2 + 1",
+    "lower bound for m(Z[alpha])": 2,
+    "subfields": [
+     {
+      "degree": 6,
+      "subfield_poly": "y^6 - 15*y^4 + 54*y^2 - 27",
+      "embedding": "-2*x^11 + 21*x^9 - 78*x^7 + 122*x^5 - 75*x^3 + 13*x",
+      "disc(O cap F)": 4148928,
+      "disc(F)": 4148928,
+      "O cap F maximal": true,
+      "m(O cap F)": 1
+     },
+     {
+      "degree": 6,
+      "subfield_poly": "y^6 - 7*y^4 + 14*y^2 - 7",
+      "embedding": "2*x^11 - 21*x^9 + 78*x^7 - 122*x^5 + 75*x^3 - 11*x",
+      "disc(O cap F)": 1075648,
+      "disc(F)": 1075648,
+      "O cap F maximal": true,
+      "m(O cap F)": 1
+     },
+     {
+      "degree": 6,
+      "subfield_poly": "y^6 - 22*y^5 + 176*y^4 - 624*y^3 + 960*y^2 - 512*y + 64",
+      "embedding": "2*x^2",
+      "disc(O cap F)": 453789,
+      "disc(F)": 453789,
+      "O cap F maximal": true,
+      "m(O cap F)": 2
+     }
+    ]
+   }
+  },
+  "seconds": 7.11
+ },
+ {
+  "key": "chebyshev",
+  "section": "Rem 5.3",
+  "claim": "m_{beta_21}(C_k(x)) is irreducible for 2 <= k <= 11 exactly when k in {3, 7, 9}, and then equals m_{beta_21k}.",
+  "status": "confirmed",
+  "evidence": [
+   "irreducible exactly for k in [3, 7, 9] (predicted [3, 7, 9]); equal to m_beta_(21k): True"
+  ],
+  "data": {
+   "irreducible_k": [
+    3,
+    7,
+    9
+   ],
+   "predicted": [
+    3,
+    7,
+    9
+   ],
+   "equals_m_beta_21k": true
+  },
+  "seconds": 0.01
+ },
+ {
+  "key": "reach",
+  "section": "Prop 5.4, Prop 5.8",
+  "claim": "Every degree in D = {2^j phi(n)/2 : n has an admissible divisor} is even; D has density zero; 202, 206, 214, 218 are not in D.",
+  "status": "confirmed",
+  "evidence": [
+   "|D cap [1,3000]| = 939, odd elements: []",
+   "density |D cap [1,X]|/X: X=100: 0.350, X=300: 0.347, X=1000: 0.327, X=3000: 0.313",
+   "202, 206, 214, 218 in D: none; even degrees <= 100 not in D: [2, 4, 8, 14, 26, 34, 38, 50, 62, 68, 74, 76, 86, 94, 98]"
+  ],
+  "data": {
+   "bound": 3000,
+   "count": 939,
+   "odd": [],
+   "non_members_present": [],
+   "density": {
+    "100": 0.35,
+    "300": 0.3466666666666667,
+    "1000": 0.327,
+    "3000": 0.313
+   },
+   "smallest": [
+    6,
+    10,
+    12,
+    16,
+    18,
+    20,
+    22,
+    24,
+    28,
+    30,
+    32,
+    36,
+    40,
+    42,
+    44,
+    46,
+    48,
+    52,
+    54,
+    56
+   ],
+   "even_not_reached_below_100": [
+    2,
+    4,
+    8,
+    14,
+    26,
+    34,
+    38,
+    50,
+    62,
+    68,
+    74,
+    76,
+    86,
+    94,
+    98
+   ]
+  },
+  "seconds": 0.22
+ },
+ {
+  "key": "odd-cyclotomic",
+  "section": "Prop 5.7",
+  "claim": "If phi(n)/2 is odd then F_n has degree <= 5 or 7, or n = p prime; hence no odd-degree non-interlacing real cyclotomic field; verified p = 19, 23, 31, 43, 47.",
+  "status": "corrected",
+  "evidence": [
+   "phi(n)/2 odd for n <= 130 (n != 2 mod 4): [3, 4, 7, 9, 11, 19, 23, 27, 31, 43, 47, 49, 59, 67, 71, 79, 81, 83, 103, 107, 121, 127]",
+   "the statement omits the prime powers p^k (k >= 2, p = 3 mod 4): [27, 49, 81, 121]",
+   "computed: F_19 (deg 9) interlacing, F_23 (deg 11) interlacing, F_31 (deg 15) interlacing, F_43 (deg 21) interlacing, F_47 (deg 23) interlacing, F_27 (deg 9) interlacing, F_49 (deg 21) interlacing, F_81 (deg 27) interlacing, F_121 (deg 55) interlacing, F_59 (deg 29) interlacing, F_67 (deg 33) interlacing, F_71 (deg 35) interlacing, F_79 (deg 39) interlacing, F_83 (deg 41) interlacing",
+   "so the conclusion survives for the conductors checked, but the case analysis must include n = p^k; e.g. f'/9 interlaces m_beta_27 (beta_27 has margin exactly 1/9)"
+  ],
+  "data": {
+   "odd_degree_conductors_le_130": [
+    3,
+    4,
+    7,
+    9,
+    11,
+    19,
+    23,
+    27,
+    31,
+    43,
+    47,
+    49,
+    59,
+    67,
+    71,
+    79,
+    81,
+    83,
+    103,
+    107,
+    121,
+    127
+   ],
+   "missed_by_statement": [
+    27,
+    49,
+    81,
+    121
+   ],
+   "levels": {
+    "19": {
+     "degree": 9,
+     "interlacing": true,
+     "witness": "x^8 + x^7 - 6*x^6 - 5*x^5 + 11*x^4 + 7*x^3 - 6*x^2 - 2*x"
+    },
+    "23": {
+     "degree": 11,
+     "interlacing": true,
+     "witness": "x^10 + x^9 - 8*x^8 - 7*x^7 + 22*x^6 + 16*x^5 - 24*x^4 - 13*x^3 + 9*x^2 + 3*x - 1"
+    },
+    "31": {
+     "degree": 15,
+     "interlacing": true,
+     "witness": "x^14 + x^13 - 12*x^12 - 11*x^11 + 56*x^10 + 46*x^9 - 128*x^8 - 91*x^7 + 148*x^6 + 86*x^5 - 80*x^4 - 34*x^3 + 16*x^2 + 4*x - 1"
+    },
+    "43": {
+     "degree": 21,
+     "interlacing": true,
+     "witness": "x^20 + x^19 - 18*x^18 - 17*x^17 + 137*x^16 + 121*x^15 - 574*x^14 - 468*x^13 + 1444*x^12 + 1068*x^11 - 2232*x^10 - 1461*x^9 + 2083*x^8 + 1163*x^7 - 1106*x^6 - 496*x^5 + 295*x^4 + 95*x^3 - 30*x^2 - 5*x"
+    },
+    "47": {
+     "degree": 23,
+     "interlacing": true,
+     "witness": "x^22 + x^21 - 20*x^20 - 19*x^19 + 172*x^18 + 154*x^17 - 832*x^16 - 695*x^15 + 2486*x^14 + 1912*x^13 - 4744*x^12 - 3300*x^11 + 5776*x^10 + 3544*x^9 - 4352*x^8 - 2269*x^7 + 1897*x^6 + 791*x^5 - 420*x^4 - 125*x^3 + 36*x^2 + 6*x - 1"
+    },
+    "27": {
+     "degree": 9,
+     "interlacing": true,
+     "witness": "x^8 - 7*x^6 + 15*x^4 - 10*x^2 + 1"
+    },
+    "49": {
+     "degree": 21,
+     "interlacing": true,
+     "witness": "x^20 - 19*x^18 + 153*x^16 - 680*x^14 + x^13 + 1820*x^12 - 12*x^11 - 3003*x^10 + 55*x^9 + 3003*x^8 - 120*x^7 - 1716*x^6 + 126*x^5 + 495*x^4 - 56*x^3 - 55*x^2 + 7*x + 1"
+    },
+    "81": {
+     "degree": 27,
+     "interlacing": true,
+     "witness": "x^26 - 25*x^24 + 276*x^22 - 1771*x^20 + 7315*x^18 - 20349*x^16 + 38760*x^14 - 50388*x^12 + 43758*x^10 - 24310*x^8 + 8008*x^6 - 1365*x^4 + 91*x^2 - 1"
+    },
+    "121": {
+     "degree": 55,
+     "interlacing": true,
+     "witness": "x^54 - 53*x^52 + 1326*x^50 - 20825*x^48 + 230300*x^46 - 1906884*x^44 + x^43 + 12271512*x^42 - 42*x^41 - 62891499*x^40 + 820*x^39 + 260932815*x^38 - 9880*x^37 - 886163135*x^36 + 82251*x^35 + 2481256778*x^34 - 501942*x^33 - 5752004348*x^32 + 2324784*x^31 + 11058116857*x^30 - 8347680*x^29 - 17620075925*x^28 + 23535820*x^27 + 23206926186*x^26 - 52451256*x^25 - 25140820185*x^24 + 92561040*x^23 + 22239893700*x^22 - 129024480*x^21 - 15905138480*x^20 + 141120525*x^19 + 9074654600*x^18 - 119759850*x^17 - 4059193479*x^16 + 77558760*x^15 + 1391158450*x^14 - 37442160*x^13 - 354170674*x^12 + 13037895*x^11 + 64159524*x^10 - 3124550*x^9 - 7762755*x^8 + 480700*x^7 + 566643*x^6 - 42504*x^5 - 20691*x^4 + 1771*x^3 + 242*x^2 - 22*x"
+    },
+    "59": {
+     "degree": 29,
+     "interlacing": true,
+     "witness": "x^28 + x^27 - 26*x^26 - 25*x^25 + 301*x^24 + 277*x^23 - 2046*x^22 - 1792*x^21 + 9066*x^20 + 7506*x^19 - 27492*x^18 - 21335*x^17 + 58277*x^16 + 41941*x^15 - 86662*x^14 - 57044*x^13 + 89402*x^12 + 52834*x^11 - 62292*x^10 - 32206*x^9 + 27966*x^8 + 12174*x^7 - 7476*x^6 - 2576*x^5 + 1036*x^4 + 252*x^3 - 56*x^2 - 7*x"
+    },
+    "67": {
+     "degree": 33,
+     "interlacing": true,
+     "witness": "x^32 + x^31 - 30*x^30 - 29*x^29 + 407*x^28 + 379*x^27 - 3302*x^26 - 2950*x^25 + 17851*x^24 + 15227*x^23 - 67826*x^22 - 54922*x^21 + 186166*x^20 + 142102*x^19 - 373596*x^18 - 266492*x^17 + 548591*x^16 + 361711*x^15 - 584082*x^14 - 350974*x^13 + 442118*x^12 + 237590*x^11 - 230252*x^10 - 107788*x^9 + 78354*x^8 + 30738*x^7 - 16044*x^6 - 4956*x^5 + 1716*x^4 + 372*x^3 - 72*x^2 - 8*x"
+    },
+    "71": {
+     "degree": 35,
+     "interlacing": true,
+     "witness": "x^34 + x^33 - 32*x^32 - 31*x^31 + 466*x^30 + 436*x^29 - 4088*x^28 - 3681*x^27 + 24103*x^26 + 20801*x^25 - 100904*x^24 - 83053*x^23 + 308914*x^22 + 241088*x^21 - 701864*x^20 - 515698*x^19 + 1188679*x^18 + 815083*x^17 - 1494384*x^16 - 945793*x^15 + 1377174*x^14 + 793092*x^13 - 909960*x^12 - 467842*x^11 + 416394*x^10 + 186142*x^9 - 125136*x^8 - 46782*x^7 + 22716*x^6 + 6672*x^5 - 2160*x^4 - 444*x^3 + 81*x^2 + 9*x - 1"
+    },
+    "79": {
+     "degree": 39,
+     "interlacing": true,
+     "witness": "x^38 + x^37 - 36*x^36 - 35*x^35 + 596*x^34 + 562*x^33 - 6016*x^32 - 5487*x^31 + 41386*x^30 + 36396*x^29 - 205464*x^28 - 173592*x^27 + 760384*x^26 + 614576*x^25 - 2136704*x^24 - 1643833*x^23 + 4601059*x^22 + 3349193*x^21 - 7608764*x^20 - 5202523*x^19 + 9624964*x^18 + 6126818*x^17 - 9220544*x^16 - 5403193*x^15 + 6577474*x^14 + 3497248*x^13 - 3406104*x^12 - 1611908*x^11 + 1233584*x^10 + 505912*x^9 - 295680*x^8 - 101046*x^7 + 43065*x^6 + 11517*x^5 - 3300*x^4 - 615*x^3 + 100*x^2 + 10*x - 1"
+    },
+    "83": {
+     "degree": 41,
+     "interlacing": true,
+     "witness": "x^40 + x^39 - 38*x^38 - 37*x^37 + 667*x^36 + 631*x^35 - 7174*x^34 - 6578*x^33 + 52889*x^32 + 46873*x^31 - 283246*x^30 - 241860*x^29 + 1139440*x^28 + 933976*x^27 - 3511664*x^26 - 2751280*x^25 + 8381596*x^24 + 6244892*x^23 - 15559016*x^22 - 10957957*x^21 + 22436251*x^20 + 14827487*x^19 - 24972326*x^18 - 15347362*x^17 + 21201211*x^16 + 11980667*x^15 - 13480826*x^14 - 6903352*x^13 + 6251596*x^12 + 2845492*x^11 - 2035176*x^10 - 801592*x^9 + 439791*x^8 + 144111*x^7 - 57882*x^6 - 14817*x^5 + 4015*x^4 + 715*x^3 - 110*x^2 - 10*x"
+    }
+   }
+  },
+  "seconds": 0.9
+ },
+ {
+  "key": "degree9",
+  "section": "\u00a75.4",
+  "claim": "Degree-9 subfields of Q(zeta_p)^+ with 9 | (p-1)/2, and the perturbations C_9 +- 1, C_9 - x + 1, are interlacing.",
+  "status": "corrected",
+  "evidence": [
+   "Q(zeta_19) deg-9 subfield 1: {'poly': 'x^9 - x^8 - 8*x^7 + 7*x^6 + 21*x^5 - 15*x^4 - 20*x^3 + 10*x^2 + 5*x - 1', 'm(Z[a])': 1, 'm(O_K)': 1}",
+   "Q(zeta_37) deg-9 subfield 1: {'poly': 'x^9 - x^8 - 16*x^7 + 11*x^6 + 66*x^5 - 32*x^4 - 73*x^3 + 7*x^2 + 7*x - 1', 'm(Z[a])': 1, 'm(O_K)': 1}",
+   "Q(zeta_73) deg-9 subfield 1: {'poly': 'x^9 - x^8 - 32*x^7 + 11*x^6 + 278*x^5 + 34*x^4 - 427*x^3 - 150*x^2 - 8*x + 1', 'm(Z[a])': 1, 'm(O_K)': 1}",
+   "Q(zeta_109) deg-9 subfield 1: {'poly': 'x^9 - x^8 - 48*x^7 + 73*x^6 + 660*x^5 - 1454*x^4 - 2149*x^3 + 8350*x^2 - 7432*x + 2008', 'm(Z[a])': 1, 'm(O_K)': 1}",
+   "Q(zeta_127) deg-9 subfield 1: {'poly': 'x^9 - x^8 - 56*x^7 + 118*x^6 + 573*x^5 - 1249*x^4 - 1582*x^3 + 2700*x^2 + 1576*x - 32', 'm(Z[a])': 1, 'm(O_K)': 1}",
+   "Q(zeta_163) deg-9 subfield 1: {'poly': 'x^9 - x^8 - 72*x^7 + 73*x^6 + 1482*x^5 - 1034*x^4 - 9637*x^3 + 1173*x^2 + 10087*x - 853', 'm(Z[a])': 1, 'm(O_K)': 1}",
+   "Q(zeta_181) deg-9 subfield 1: {'poly': 'x^9 - x^8 - 80*x^7 - 53*x^6 + 1668*x^5 + 3314*x^4 - 4261*x^3 - 10795*x^2 - 2933*x + 1949', 'm(Z[a])': 1, 'm(O_K)': 1}",
+   "Q(zeta_199) deg-9 subfield 1: {'poly': 'x^9 - x^8 - 88*x^7 + 325*x^6 + 775*x^5 - 3447*x^4 - 1602*x^3 + 7354*x^2 - 3333*x - 121', 'm(Z[a])': 1, 'm(O_K)': 1}",
+   "C_9 + 1: {'poly': 'x^9 - 9*x^7 + 27*x^5 - 30*x^3 + 9*x + 1', 'totally_real': True, 'irreducible': True, 'm': 1}",
+   "C_9 - 1: {'poly': 'x^9 - 9*x^7 + 27*x^5 - 30*x^3 + 9*x - 1', 'totally_real': True, 'irreducible': True, 'm': 1}",
+   "C_9 - x + 1: {'poly': 'x^9 - 9*x^7 + 27*x^5 - 30*x^3 + 8*x + 1', 'totally_real': False, 'irreducible': True}",
+   "note: C_9 + 1 = m_beta_27 and C_9 - 1 = -m_beta_27(-x): the 'perturbations' are the real cyclotomic field F_27, a prime-power conductor (cf. Prop 5.7)",
+   "C_9 - x + 1 is not totally real (Sturm count), so it cannot be among the tested fields"
+  ],
+  "data": {
+   "Q(zeta_19) deg-9 subfield 1": {
+    "poly": "x^9 - x^8 - 8*x^7 + 7*x^6 + 21*x^5 - 15*x^4 - 20*x^3 + 10*x^2 + 5*x - 1",
+    "m(Z[a])": 1,
+    "m(O_K)": 1
+   },
+   "Q(zeta_37) deg-9 subfield 1": {
+    "poly": "x^9 - x^8 - 16*x^7 + 11*x^6 + 66*x^5 - 32*x^4 - 73*x^3 + 7*x^2 + 7*x - 1",
+    "m(Z[a])": 1,
+    "m(O_K)": 1
+   },
+   "Q(zeta_73) deg-9 subfield 1": {
+    "poly": "x^9 - x^8 - 32*x^7 + 11*x^6 + 278*x^5 + 34*x^4 - 427*x^3 - 150*x^2 - 8*x + 1",
+    "m(Z[a])": 1,
+    "m(O_K)": 1
+   },
+   "Q(zeta_109) deg-9 subfield 1": {
+    "poly": "x^9 - x^8 - 48*x^7 + 73*x^6 + 660*x^5 - 1454*x^4 - 2149*x^3 + 8350*x^2 - 7432*x + 2008",
+    "m(Z[a])": 1,
+    "m(O_K)": 1
+   },
+   "Q(zeta_127) deg-9 subfield 1": {
+    "poly": "x^9 - x^8 - 56*x^7 + 118*x^6 + 573*x^5 - 1249*x^4 - 1582*x^3 + 2700*x^2 + 1576*x - 32",
+    "m(Z[a])": 1,
+    "m(O_K)": 1
+   },
+   "Q(zeta_163) deg-9 subfield 1": {
+    "poly": "x^9 - x^8 - 72*x^7 + 73*x^6 + 1482*x^5 - 1034*x^4 - 9637*x^3 + 1173*x^2 + 10087*x - 853",
+    "m(Z[a])": 1,
+    "m(O_K)": 1
+   },
+   "Q(zeta_181) deg-9 subfield 1": {
+    "poly": "x^9 - x^8 - 80*x^7 - 53*x^6 + 1668*x^5 + 3314*x^4 - 4261*x^3 - 10795*x^2 - 2933*x + 1949",
+    "m(Z[a])": 1,
+    "m(O_K)": 1
+   },
+   "Q(zeta_199) deg-9 subfield 1": {
+    "poly": "x^9 - x^8 - 88*x^7 + 325*x^6 + 775*x^5 - 3447*x^4 - 1602*x^3 + 7354*x^2 - 3333*x - 121",
+    "m(Z[a])": 1,
+    "m(O_K)": 1
+   },
+   "C_9 + 1": {
+    "poly": "x^9 - 9*x^7 + 27*x^5 - 30*x^3 + 9*x + 1",
+    "totally_real": true,
+    "irreducible": true,
+    "m": 1
+   },
+   "C_9 - 1": {
+    "poly": "x^9 - 9*x^7 + 27*x^5 - 30*x^3 + 9*x - 1",
+    "totally_real": true,
+    "irreducible": true,
+    "m": 1
+   },
+   "C_9 - x + 1": {
+    "poly": "x^9 - 9*x^7 + 27*x^5 - 30*x^3 + 8*x + 1",
+    "totally_real": false,
+    "irreducible": true
+   }
+  },
+  "seconds": 0.22
+ },
+ {
+  "key": "random-odd",
+  "section": "\u00a75.4",
+  "claim": "Random totally real nonic / undecic polynomials are all interlacing.",
+  "status": "confirmed",
+  "evidence": [
+   "degree 9: 600 irreducible totally real samples, non-interlacing: 0 (6.11 s)",
+   "degree 9 clustered: 300 irreducible totally real samples, non-interlacing: 0 (102.6 s)",
+   "degree 11: 200 irreducible totally real samples, non-interlacing: 0 (3.76 s)"
+  ],
+  "data": {
+   "deg9": {
+    "degree": 9,
+    "tested": 600,
+    "noninterlacing": [],
+    "seconds": 6.11
+   },
+   "deg9_clustered": {
+    "degree": 9,
+    "tested": 300,
+    "noninterlacing": [],
+    "seconds": 102.6
+   },
+   "deg11": {
+    "degree": 11,
+    "tested": 200,
+    "noninterlacing": [],
+    "seconds": 3.76
+   }
+  },
+  "seconds": 112.47
+ },
+ {
+  "key": "siegel-signs",
+  "section": "Rem 5.9",
+  "claim": "In zeta_K(-1) = 2^d (b_1 s_1 + b_2 s_2) (dim M_2d = 2): b_1, b_2 < 0 precisely in the odd degrees 9, 11, and b_1 b_2 < 0 in the 'even degrees 6, 8, 10, 13'.",
+  "status": "refuted",
+  "evidence": [
+   "d = 6: b_1 = 1/8190, b_2 = 1/196560  (signs ++)",
+   "d = 8: b_1 = -1/680, b_2 = 1/146880  (signs -+)",
+   "d = 9: b_1 = -22/3591, b_2 = -1/86184  (signs --)",
+   "d = 10: b_1 = -19/1650, b_2 = 1/39600  (signs -+)",
+   "d = 11: b_1 = -4/207, b_2 = -1/14904  (signs --)",
+   "d = 13: b_1 = -2/51, b_2 = -1/1224  (signs --)",
+   "both negative: [9, 11, 13]; mixed signs: [8, 10]; both positive: [6]",
+   "so the remark is wrong for d = 6 (b_1, b_2 > 0) and d = 13 (odd, both negative); in every case sign(b_2) = (-1)^d = sign zeta_K(-1), so s_1 = 0 is never excluded by signs"
+  ],
+  "data": {
+   "rows": [
+    {
+     "d": 6,
+     "dim M_2d": 2,
+     "b": [
+      "1/8190",
+      "1/196560"
+     ],
+     "signs": "++",
+     "sign zeta_K(-1)": "+"
+    },
+    {
+     "d": 8,
+     "dim M_2d": 2,
+     "b": [
+      "-1/680",
+      "1/146880"
+     ],
+     "signs": "-+",
+     "sign zeta_K(-1)": "+"
+    },
+    {
+     "d": 9,
+     "dim M_2d": 2,
+     "b": [
+      "-22/3591",
+      "-1/86184"
+     ],
+     "signs": "--",
+     "sign zeta_K(-1)": "-"
+    },
+    {
+     "d": 10,
+     "dim M_2d": 2,
+     "b": [
+      "-19/1650",
+      "1/39600"
+     ],
+     "signs": "-+",
+     "sign zeta_K(-1)": "+"
+    },
+    {
+     "d": 11,
+     "dim M_2d": 2,
+     "b": [
+      "-4/207",
+      "-1/14904"
+     ],
+     "signs": "--",
+     "sign zeta_K(-1)": "-"
+    },
+    {
+     "d": 13,
+     "dim M_2d": 2,
+     "b": [
+      "-2/51",
+      "-1/1224"
+     ],
+     "signs": "--",
+     "sign zeta_K(-1)": "-"
+    }
+   ]
+  },
+  "seconds": 0.02
+ },
+ {
+  "key": "siegel-formula",
+  "section": "\u00a75.4 (Siegel's formula)",
+  "claim": "zeta_K(-1) = 2^d sum_{k <= dim M_2d} b_k s_K(k) with s_K(1) = 0 for non-interlacing fields.",
+  "status": "extended",
+  "evidence": [
+   "F_21 (degree 6): s_K = [0, 16380] from [0, 141] enumerated elements; Siegel gives 16/3, PARI lfun gives 16/3: agree = True",
+   "F_28 (degree 6): s_K = [24, 60264] from [3, 243] enumerated elements; Siegel gives 416/21, PARI lfun gives 416/21: agree = True",
+   "F_33 (degree 10): s_K = [0, 1894500] from [0, 935] enumerated elements; Siegel gives 538880/11, PARI lfun gives 538880/11: agree = True",
+   "F_27 (degree 9): s_K = [133, 2257143] from [4, 1126] enumerated elements; Siegel gives -373312/27, PARI lfun gives -373312/27: agree = True",
+   "F_84 (degree 12): s_K = [0, 8556768, 89762267136] from [0, 1479, 128440] enumerated elements; Siegel gives 21139456/3, PARI lfun gives 4427252890942047576/628292358745: agree = True"
+  ],
+  "data": {
+   "F_21": {
+    "degree": 6,
+    "b": [
+     "1/8190",
+     "1/196560"
+    ],
+    "s_K": [
+     0,
+     16380
+    ],
+    "counts": [
+     0,
+     141
+    ],
+    "siegel": "16/3",
+    "pari": "5.333333333333333335",
+    "pari_rational_guess": "16/3",
+    "abs_error": 1.734723475976807e-18,
+    "agree": true
+   },
+   "F_28": {
+    "degree": 6,
+    "b": [
+     "1/8190",
+     "1/196560"
+    ],
+    "s_K": [
+     24,
+     60264
+    ],
+    "counts": [
+     3,
+     243
+    ],
+    "siegel": "416/21",
+    "pari": "19.809523809523809530",
+    "pari_rational_guess": "416/21",
+    "abs_error": 6.6084703846735505e-18,
+    "agree": true
+   },
+   "F_33": {
+    "degree": 10,
+    "b": [
+     "-19/1650",
+     "1/39600"
+    ],
+    "s_K": [
+     0,
+     1894500
+    ],
+    "counts": [
+     0,
+     935
+    ],
+    "siegel": "538880/11",
+    "pari": "48989.09090909090911",
+    "pari_rational_guess": "538880/11",
+    "abs_error": 1.5502750598402185e-14,
+    "agree": true
+   },
+   "F_27": {
+    "degree": 9,
+    "b": [
+     "-22/3591",
+     "-1/86184"
+    ],
+    "s_K": [
+     133,
+     2257143
+    ],
+    "counts": [
+     4,
+     1126
+    ],
+    "siegel": "-373312/27",
+    "pari": "-13826.370370370370376",
+    "pari_rational_guess": "-373312/27",
+    "abs_error": 5.26327952414889e-15,
+    "agree": true
+   },
+   "F_84": {
+    "degree": 12,
+    "b": [
+     "-1087/291200",
+     "1/1092000",
+     "1/52416000"
+    ],
+    "s_K": [
+     0,
+     8556768,
+     89762267136
+    ],
+    "counts": [
+     0,
+     1479,
+     128440
+    ],
+    "siegel": "21139456/3",
+    "pari": "7046485.333333333338",
+    "pari_rational_guess": "4427252890942047576/628292358745",
+    "abs_error": 4.244308608273665e-12,
+    "agree": true
+   }
+  },
+  "seconds": 117.63
+ },
+ {
+  "key": "disc-bound",
+  "section": "(E2)",
+  "claim": "Interlacing implies |disc f| >= d^d (Yatsyna, Prop. 19); the notes' reversed inequality is wrong.",
+  "status": "confirmed",
+  "evidence": [
+   "1404 interlacing census polynomials (degrees 3-6, small span), violations of |disc| >= d^d: 0; polynomials with |disc| < d^d: 615"
+  ],
+  "data": {
+   "interlacing_tested": 1404,
+   "violations": [],
+   "small_disc": 615
+  },
+  "seconds": 23.45
+ },
+ {
+  "key": "volume",
+  "section": "(E3)/(E4)",
+  "claim": "vol P_1(f) = sqrt|disc f| / (d-1)! for the coefficient polytope of monic interlacers.",
+  "status": "confirmed",
+  "evidence": [
+   "x^6 - x^5 - 6*x^4 + 6*x^3 + 8*x^2 - 8*x + 1: vol = 5.613655, sqrt|disc|/(d-1)! = 5.613655",
+   "x^6 + x^5 - 5*x^4 - 4*x^3 + 6*x^2 + 3*x - 1: vol = 5.077818, sqrt|disc|/(d-1)! = 5.077818",
+   "x^4 - 4*x^2 + 2: vol = 7.542472, sqrt|disc|/(d-1)! = 7.542472",
+   "x^5 - 5*x^3 + 5*x - 1: vol = 6.987712, sqrt|disc|/(d-1)! = 6.987712"
+  ],
+  "data": {
+   "x^6 - x^5 - 6*x^4 + 6*x^3 + 8*x^2 - 8*x + 1": {
+    "volume": 5.613655226320906,
+    "sqrt|disc|/(d-1)!": 5.613655226320904
+   },
+   "x^6 + x^5 - 5*x^4 - 4*x^3 + 6*x^2 + 3*x - 1": {
+    "volume": 5.077818046278402,
+    "sqrt|disc|/(d-1)!": 5.077818046278452
+   },
+   "x^4 - 4*x^2 + 2": {
+    "volume": 7.542472332656511,
+    "sqrt|disc|/(d-1)!": 7.542472332656508
+   },
+   "x^5 - 5*x^3 + 5*x - 1": {
+    "volume": 6.987712429686842,
+    "sqrt|disc|/(d-1)!": 6.987712429686844
+   }
+  },
+  "seconds": 0.02
+ },
+ {
+  "key": "capacity",
+  "section": "Prop 5.6",
+  "claim": "Irreducible totally real f with span < S are finite up to translation for S < 3.",
+  "status": "corrected",
+  "evidence": [
+   "true as stated, but the threshold is 4: cover the possible positions of the least root by finitely many intervals [a, a + delta]; each set of roots lies in an interval of length S + delta < 4, of capacity < 1 (Fekete), so S < 4 suffices (Robinson: S > 4 gives infinitely many classes).  The proof's interval [0, 1 + S] is what needs S < 3."
+  ],
+  "data": {},
+  "seconds": 0.0
+ },
+ {
+  "key": "degree-8",
+  "section": "\u00a76, Question on degree 8",
+  "claim": "Do irreducible non-interlacing polynomials exist in degree 8? (open in the draft; any example must carry a genuinely new obstruction, not inherited from a subfield)",
+  "status": "extended",
+  "evidence": [
+   "f = x^8 - 4*x^7 - x^6 + 17*x^5 - 5*x^4 - 23*x^3 + 6*x^2 + 9*x - 1 = h(x^2 - x), h = x^4 - 7*x^3 + 15*x^2 - 9*x - 1 (the totally real quartic of discriminant 725); irreducible, totally real, span 3.7977",
+   "I_1(f) = 0 by the simplex search (0 found, 44 nodes) and by the independent LP coefficient search (69 nodes); MILP margin -0.006953 < 0",
+   "I_2(f) = 406, identical lists from both searches; level semigroup <2, 3>",
+   "disc K = 309593125 = 5^4 * 19 * 29^2 * 31, O_K = Z[alpha] (index 1), m(O_K) = 2",
+   "Siegel: s_K(1) = 0, s_K(2) = 137088 from 406 elements gives zeta_K(-1) = 3584/15; PARI: 3584/15 (agree: True)",
+   "proper subfields (degree, disc): [(2, 5), (4, 725)]; all have m = 1 (degree <= 5), so no heredity argument applies: the obstruction is genuinely new, as the draft predicts",
+   "h(x^2 - x - N) for N = 1..12: non-interlacing for N in none (N < 0: not totally real), so the example is sporadic; it was found by the census of octics of span <= 4 (26 classes, results/census_deg8_span4.json), where it is the only non-interlacing one"
+  ],
+  "data": {
+   "f": "x^8 - 4*x^7 - x^6 + 17*x^5 - 5*x^4 - 23*x^3 + 6*x^2 + 9*x - 1",
+   "composition": "h(x^2 - x)",
+   "h": "x^4 - 7*x^3 + 15*x^2 - 9*x - 1",
+   "span": 3.797722630197251,
+   "I_1": 0,
+   "I_2": 406,
+   "lp_I_1": 0,
+   "margin": -0.006953274895436623,
+   "disc": 309593125,
+   "index": 1,
+   "m_OK": 2,
+   "siegel": {
+    "degree": 8,
+    "b": [
+     "-1/680",
+     "1/146880"
+    ],
+    "s_K": [
+     0,
+     137088
+    ],
+    "counts": [
+     0,
+     406
+    ],
+    "siegel": "3584/15",
+    "pari": "238.93333333333333382",
+    "pari_rational_guess": "3584/15",
+    "abs_error": 4.884981308350689e-16,
+    "agree": true
+   },
+   "subfields": [
+    [
+     2,
+     5
+    ],
+    [
+     4,
+     725
+    ]
+   ],
+   "family_noninterlacing_N": []
+  },
+  "seconds": 4.07
+ },
+ {
+  "key": "sextic-census",
+  "section": "Table \u00a76 (degree 6)",
+  "claim": "Degree 6: non-interlacing fields exist (F_21); finiteness modulo Z open.",
+  "status": "extended",
+  "evidence": [
+   "all 398 totally real sextic fields of the sails/LMFDB list (disc <= 10^7): m(O_K) = 2 only for ['6.6.453789.1']; m(Z[a]) = m(O_K) for every polredabs polynomial",
+   "consistent with the sails facets through 1 (m <= min d_F, = 1 if some d_F = 1): all",
+   "22 fields have m = 1 although no sail facet through 1 has distance 1 (the trace-one element supports a lower-dimensional face), e.g. ['6.6.810448.1', '6.6.1081856.1', '6.6.1075648.1', '6.6.1259712.1']",
+   "census of irreducible totally real sextics with span <= 4.3 up to x -> +-x + n: 226 classes, non-interlacing: ['x^6 - 5*x^5 + 4*x^4 + 8*x^3 - 5*x^2 - 3*x + 1']"
+  ],
+  "data": {
+   "fields": 398,
+   "noninterlacing": [
+    "6.6.453789.1"
+   ],
+   "inconsistent_with_sails": [],
+   "trace_one_not_a_facet_normal": [
+    "6.6.810448.1",
+    "6.6.1081856.1",
+    "6.6.1075648.1",
+    "6.6.1259712.1",
+    "6.6.1397493.1",
+    "6.6.2806769.1",
+    "6.6.3477989.1",
+    "6.6.3728437.1",
+    "6.6.4218557.1",
+    "6.6.4254689.1",
+    "6.6.6293081.1",
+    "6.6.6357609.1",
+    "6.6.7109829.1",
+    "6.6.7294973.1",
+    "6.6.7978176.1",
+    "6.6.8086336.1",
+    "6.6.8060672.1",
+    "6.6.8605184.1",
+    "6.6.9186752.1",
+    "6.6.9761821.1",
+    "6.6.9652257.1",
+    "6.6.9900549.1"
+   ],
+   "span_census": {
+    "max_span": 4.3,
+    "irreducible_classes": 226,
+    "noninterlacing": [
+     {
+      "f": "x^6 - 5*x^5 + 4*x^4 + 8*x^3 - 5*x^2 - 3*x + 1",
+      "span": 3.888807,
+      "irreducible": true,
+      "level": 2,
+      "margin": -0.010697
+     }
+    ]
+   }
+  },
+  "seconds": 22.98
+ },
+ {
+  "key": "cyclotomic-table",
+  "section": "Thm 2.4 (Yatsyna) and beyond",
+  "claim": "Real cyclotomic fields: which conductors give m(O_{F_n}) >= 2; any m = 3?",
+  "status": "extended",
+  "evidence": [
+   "156 fields F_n, n <= 396, degree <= 60",
+   "admissible conductors with m = 1: none (Theorem 2.4 confirmed on this range)",
+   "non-admissible conductors with m >= 2: [(63, 18, [21]), (84, 12, [21, 42]), (99, 30, [33]), (117, 36, [39]), (132, 20, [33, 66]), (140, 24, [35, 70]), (147, 42, [21]), (153, 48, [51]), (156, 24, [39, 78]), (168, 24, [21, 42]), (171, 54, [57]), (175, 60, [35]), (189, 54, [21]), (204, 32, [51, 102]), (220, 40, [55, 110]), (228, 36, [57, 114]), (252, 36, [21, 42]), (260, 48, [65, 130]), (264, 40, [33, 66]), (276, 44, [69, 138]), (280, 48, [35, 70]), (308, 60, [77, 154]), (312, 48, [39, 78]), (336, 48, [21, 42]), (348, 56, [87, 174]), (372, 60, [93, 186]), (396, 60, [33, 66])]",
+   "fields with m >= 3: none; undecided: [231]",
+   "witness methods: {'dfs': 41, 'lift from degree-3 subfield': 1, 'lift from degree-5 subfield': 1, 'lift from degree-6 subfield': 3, 'milp': 8, 'lift from degree-8 subfield': 1, 'lift from degree-10 subfield': 2, 'lift from degree-9 subfield': 2, 'lift from degree-12 subfield': 5, 'lift from degree-11 subfield': 1, 'milp feasibility': 53, 'lift from degree-15 subfield': 3, 'lift from degree-16 subfield': 2, 'lift from degree-14 subfield': 1, 'lift from degree-18 subfield': 5, 'compositum Psi_5 x Psi_23': 1, 'compositum Psi_7 x Psi_17': 1, 'lift from degree-20 subfield': 3, 'lift from degree-21 subfield': 2, 'compositum Psi_7 x Psi_19': 1, 'lift from degree-23 subfield': 1, 'compositum Psi_11 x Psi_13': 1, 'compositum Psi_5 x Psi_29': 1, 'compositum Psi_5 x Psi_31': 1, 'lift from degree-26 subfield': 1, 'compositum Psi_11 x Psi_15': 1, 'lift from degree-29 subfield': 1, 'lift from degree-30 subfield': 3, 'compositum Psi_13 x Psi_15': 1, '?': 1, 'lift from degree-24 subfield': 4, 'lift from degree-22 subfield': 1, 'lift from degree-28 subfield': 1, 'compositum Psi_11 x Psi_36': 1}"
+  ],
+  "data": {
+   "rows": 156,
+   "admissible_with_m1": [],
+   "nonadmissible_with_m_ge_2": [
+    [
+     63,
+     18,
+     [
+      21
+     ]
+    ],
+    [
+     84,
+     12,
+     [
+      21,
+      42
+     ]
+    ],
+    [
+     99,
+     30,
+     [
+      33
+     ]
+    ],
+    [
+     117,
+     36,
+     [
+      39
+     ]
+    ],
+    [
+     132,
+     20,
+     [
+      33,
+      66
+     ]
+    ],
+    [
+     140,
+     24,
+     [
+      35,
+      70
+     ]
+    ],
+    [
+     147,
+     42,
+     [
+      21
+     ]
+    ],
+    [
+     153,
+     48,
+     [
+      51
+     ]
+    ],
+    [
+     156,
+     24,
+     [
+      39,
+      78
+     ]
+    ],
+    [
+     168,
+     24,
+     [
+      21,
+      42
+     ]
+    ],
+    [
+     171,
+     54,
+     [
+      57
+     ]
+    ],
+    [
+     175,
+     60,
+     [
+      35
+     ]
+    ],
+    [
+     189,
+     54,
+     [
+      21
+     ]
+    ],
+    [
+     204,
+     32,
+     [
+      51,
+      102
+     ]
+    ],
+    [
+     220,
+     40,
+     [
+      55,
+      110
+     ]
+    ],
+    [
+     228,
+     36,
+     [
+      57,
+      114
+     ]
+    ],
+    [
+     252,
+     36,
+     [
+      21,
+      42
+     ]
+    ],
+    [
+     260,
+     48,
+     [
+      65,
+      130
+     ]
+    ],
+    [
+     264,
+     40,
+     [
+      33,
+      66
+     ]
+    ],
+    [
+     276,
+     44,
+     [
+      69,
+      138
+     ]
+    ],
+    [
+     280,
+     48,
+     [
+      35,
+      70
+     ]
+    ],
+    [
+     308,
+     60,
+     [
+      77,
+      154
+     ]
+    ],
+    [
+     312,
+     48,
+     [
+      39,
+      78
+     ]
+    ],
+    [
+     336,
+     48,
+     [
+      21,
+      42
+     ]
+    ],
+    [
+     348,
+     56,
+     [
+      87,
+      174
+     ]
+    ],
+    [
+     372,
+     60,
+     [
+      93,
+      186
+     ]
+    ],
+    [
+     396,
+     60,
+     [
+      33,
+      66
+     ]
+    ]
+   ],
+   "m_ge_3": [],
+   "undecided": [
+    231
+   ],
+   "max_conductor": 396,
+   "max_degree": 60
+  },
+  "seconds": 0.0
+ }
+]
