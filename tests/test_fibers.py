@@ -74,3 +74,11 @@ def test_values_survive_cancellation():
     x = fmpq_poly(K.f) * 10**40 + 1
     for v in K.values(x, K.G, 128):
         assert abs(float(v.mid()) - 1) < 1e-30 and float(v.rad()) < 2.0 ** -100
+
+
+def test_parse_rational_poly_round_trip():
+    from noninterlacing.poly import parse_rational_poly
+
+    K = CyclotomicField(21)
+    for x in K.codifferent(K.fixer(7)) + K.codifferent([1]):
+        assert parse_rational_poly(str(x)) == x

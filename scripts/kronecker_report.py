@@ -14,6 +14,7 @@ import random
 from flint import fmpz_poly
 
 from noninterlacing.cyclotomic import compositum_splits, compositum_witness, factorint, psi_interlacing_predicted
+from noninterlacing.fibers import CyclotomicField, tower_levels
 from noninterlacing.interlace import Interlacing
 from noninterlacing.kronecker import (check_disc_polynomial, components, convolve_counts,
                                       cyclotomic_products, expected_count_log10, label, product_poly,
@@ -92,7 +93,31 @@ def main():
         return None
 
     lvl4 = {n: level4(n) for n in towers}
-    from noninterlacing.fibers import CyclotomicField, tower_levels
+
+    # level-2 elements of the fields F_pq met in the towers: how many lie in F_p F_q?
+    from noninterlacing.poly import parse_rational_poly
+
+    pq = {}
+    for n in sorted(towers):
+        Kn = None
+        for name, tw, st, secs in towers[n]:
+            T = json.load(open(os.path.join(RES, name)))
+            for k, m in enumerate(tw, start=1):
+                fac = {p: a for p, a in factorint(m).items() if p != 2}
+                stage = T["stages"][k]
+                if len(fac) != 2 or m in pq or stage["count"] == 0:
+                    continue
+                Kn = Kn or CyclotomicField(n)
+                if stage["subgroup"] != Kn.fixer(m):
+                    continue
+                q1, q2 = (p ** a for p, a in sorted(fac.items()))
+                Hpq = sorted(set(Kn.fixer(q1)) & set(Kn.fixer(q2)))
+                inside = 0
+                for x in map(parse_rational_poly, stage["reps"]):
+                    if all(Kn.act(h, x) == x for h in Hpq):
+                        inside += Kn.orbit_size(x, stage["subgroup"])
+                prod = Interlacing(real_cyclotomic(q1)).count(1) * Interlacing(real_cyclotomic(q2)).count(1)
+                pq[m] = (q1, q2, stage["count"], inside, prod)
     from noninterlacing.pari import from_pari, pari, to_pari
 
     K21 = CyclotomicField(21)
@@ -333,6 +358,22 @@ def main():
           f"{'yes' if ok.get(5) else '?'} | {m_fib.get(n, '?')} | {semi} |")
     w("")
     w("So `m(Ψ_n) ≤ 2` fails; whether §4's bound `2^{b-1} = 4` is ever attained is open.")
+    w("")
+    w("**Level-2 elements of `F_pq`.** The fields `F_pq` in the towers have `m = 2`. Their level-2")
+    w("elements include the compositum products `μ_p μ_q` (level 1 in `F_p F_q`, of index 2):")
+    w("")
+    w("| field | level-2 elements | lying in `F_p F_q` | `I_1(Ψ_p) I_1(Ψ_q)` | `E_2` |")
+    w("|---|---|---|---|---|")
+    for m in sorted(pq):
+        q1, q2, cnt, inside, prod = pq[m]
+        w(f"| `F_{m}` | {cnt} | {inside} | {prod} | `10^{{{expected_count_log10(real_cyclotomic(m), 2):.1f}}}` |")
+    w("")
+    only = [m for m in sorted(pq) if pq[m][2] == pq[m][3]]
+    w("The elements lying in `F_p F_q` are exactly the level-1 elements of `F_p F_q`, and their number")
+    w("equals the number of products in every case: the products are all of them. "
+      + (f"In {', '.join(f'`F_{m}`' for m in only)} they are the only level-2 elements, "
+         "although `E_2` predicts more" if only else "")
+      + "; few fibres then lead to the top field, which keeps those towers cheap.")
     w("")
     w("**Volume heuristic.** `E_j = j^{d-1} √|disc| / (d-1)!` is the volume of the trace-`j` simplex")
     w("in lattice units (`kronecker.expected_count_log10`). It predicts the counts above well")

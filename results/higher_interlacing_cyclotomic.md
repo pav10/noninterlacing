@@ -167,6 +167,17 @@ central elements of `F_91` for 273, `fibers.central_search`), level 4 from the c
 
 So `m(Ψ_n) ≤ 2` fails; whether §4's bound `2^{b-1} = 4` is ever attained is open.
 
+**Level-2 elements of `F_pq`.** The fields `F_pq` in the towers have `m = 2`. Their level-2
+elements include the compositum products `μ_p μ_q` (level 1 in `F_p F_q`, of index 2):
+
+| field | level-2 elements | lying in `F_p F_q` | `I_1(Ψ_p) I_1(Ψ_q)` | `E_2` |
+|---|---|---|---|---|
+| `F_77` | 285 | 15 | 15 | `10^{2.4}` |
+| `F_91` | 18 | 18 | 18 | `10^{1.6}` |
+
+The elements lying in `F_p F_q` are exactly the level-1 elements of `F_p F_q`, and their number
+equals the number of products in every case: the products are all of them. In `F_91` they are the only level-2 elements, although `E_2` predicts more; few fibres then lead to the top field, which keeps those towers cheap.
+
 **Volume heuristic.** `E_j = j^{d-1} √|disc| / (d-1)!` is the volume of the trace-`j` simplex
 in lattice units (`kronecker.expected_count_log10`). It predicts the counts above well
 (`F_7F_11`: `E_2 ≈ 5.6·10^3` vs 6570; `F_77`: `E_2 ≈ 255` vs 285), but structure beats it in both
