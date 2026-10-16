@@ -82,3 +82,14 @@ def test_parse_rational_poly_round_trip():
     K = CyclotomicField(21)
     for x in K.codifferent(K.fixer(7)) + K.codifferent([1]):
         assert parse_rational_poly(str(x)) == x
+
+
+@needs_pari
+def test_lp_and_fincke_pohst_fibres_agree():
+    K = CyclotomicField(35)
+    H7 = K.fixer(7)
+    H57 = sorted(set(H7) & set(K.fixer(5)))
+    for nu in K.fibre(H7, K.G, fmpq_poly([3])).points[:6]:
+        a = sorted(map(str, K.fibre(H57, H7, nu, method="fp").points))
+        b = sorted(map(str, K.fibre(H57, H7, nu, method="lp").points))
+        assert a == b

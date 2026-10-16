@@ -291,7 +291,7 @@ class CyclotomicField:
     # --------------------------------------------------------- fibres
     def fibre(self, H_small: list, H_big: list, nu: fmpq_poly, prec: int = 384,  # = cached precision
               margin: float = 1e-6, scale: float = 1.0, limit: Optional[int] = None,
-              method: str = "fp", time_limit: float = 600.0) -> FibreResult:
+              method: str = "auto", time_limit: float = 600.0) -> FibreResult:
         """All ``mu in O_{K^{H_small}}^vee``, ``mu >> 0`` with ``Tr(mu) = nu`` in ``K^{H_big}``.
 
         ``scale < 1`` shrinks the search ball around the centre of the fibre (the points
@@ -364,8 +364,15 @@ class CyclotomicField:
                                       f"target {float(np.max(np.abs(cv))):.3g}, basis {float(np.max(np.abs(B))):.3g}")
             if method == "milp":
                 pts = _milp_point(B, cv, -1.0 / t + 1e-7, time_limit)
-            else:
+            elif method == "lp":
+                pts = _lp_enumerate(B, cv, -1.0 / t - margin, res)
+            elif method == "fp":
                 pts = _fincke_pohst(B, cv, bound * (1 + margin) + margin, res)
+            else:  # Fincke-Pohst while cheap, LP-pruned search if it runs past its node budget
+                try:
+                    pts = list(_fincke_pohst(B, cv, bound * (1 + margin) + margin, res, budget=50000))
+                except _Budget:
+                    pts = _lp_enumerate(B, cv, -1.0 / t - margin, res)
         for zp in pts:
             if m:
                 # float pre-test of positivity (u > -1/t); only clear violations are dropped
@@ -461,8 +468,56 @@ def _milp_point(B: np.ndarray, c: np.ndarray, lower: float, time_limit: float) -
     return [[int(round(v)) for v in r.x]] if r.x is not None else []
 
 
-def _fincke_pohst(B: np.ndarray, c: np.ndarray, r2: float, res: FibreResult):
-    """Yield all integer ``z`` with ``|| B z + c ||^2 <= r2`` (Schnorr--Euchner)."""
+def _lp_enumerate(B: np.ndarray, c: np.ndarray, lower: float, res: FibreResult):
+    """Yield all integer ``z`` with ``B z + c >= lower``: depth-first, each range from two LPs.
+
+    Every coordinate range is the exact projection of the (relaxed) polytope, so no node is
+    wasted on parts of the ball outside it; ``lower`` already carries the safety margin.
+    """
+    from scipy.optimize import linprog
+
+    m = B.shape[1]
+    z = [0] * m
+
+    def rng(i):
+        # variables z_0..z_i free, z_{i+1}.. fixed: A x <= b with A = -B[:, :i+1]
+        A = -B[:, :i + 1]
+        b = c - lower + B[:, i + 1:] @ np.array(z[i + 1:], dtype=float)
+        e = np.zeros(i + 1)
+        e[i] = 1.0
+        lo = linprog(e, A_ub=A, b_ub=b, bounds=[(None, None)] * (i + 1), method="highs")
+        if lo.status != 0:
+            return None
+        hi = linprog(-e, A_ub=A, b_ub=b, bounds=[(None, None)] * (i + 1), method="highs")
+        if hi.status != 0:
+            return None
+        return math.ceil(lo.fun - 1e-6), math.floor(-hi.fun + 1e-6)
+
+    def rec(i):
+        res.nodes += 1
+        r = rng(i)
+        if r is None:
+            return
+        for k in range(r[0], r[1] + 1):
+            z[i] = k
+            if i == 0:
+                yield list(z)
+            else:
+                yield from rec(i - 1)
+        z[i] = 0
+
+    yield from rec(m - 1)
+
+
+class _Budget(Exception):
+    pass
+
+
+def _fincke_pohst(B: np.ndarray, c: np.ndarray, r2: float, res: FibreResult, budget: Optional[int] = None):
+    """Yield all integer ``z`` with ``|| B z + c ||^2 <= r2`` (Schnorr--Euchner).
+
+    With ``budget``, raise :class:`_Budget` once that many nodes have been visited."""
+    start = res.nodes
     Q, Rm = np.linalg.qr(B)  # B = Q Rm, Rm upper triangular m x m
     m = Rm.shape[0]
     qc = Q.T @ c
@@ -475,6 +530,8 @@ def _fincke_pohst(B: np.ndarray, c: np.ndarray, r2: float, res: FibreResult):
 
     def rec(i: int, partial: float):
         res.nodes += 1
+        if budget is not None and res.nodes - start > budget:
+            raise _Budget
         s = qc[i] + sum(Rm[i, j] * z[j] for j in range(i + 1, m))
         rii = Rm[i, i]
         centre = -s / rii
