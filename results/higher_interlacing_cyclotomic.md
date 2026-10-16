@@ -149,9 +149,11 @@ and the engine counts 6570 elements of trace 2 in `F_7F_11` (through PARI's `pol
 `n = 231` all three index-2 subfields and the index-3 subfield have `m = 2`. Counts of trace-2
 elements up each tower (degree: count / Galois orbits):
 
-* `fibre_231_level2.json` (tower `[11, 7, 77]`, 803 s): 1: 1/1, 5: 80/16, 15: 6570/438, 30: 285/10, 60: 0/0
-* `fibre_231_level2_via21.json` (tower `[11, 7, 21]`, 364 s): 1: 1/1, 5: 80/16, 15: 6570/438, 30: 24345/812, 60: 0/0
-* `fibre_273_level2.json` (tower `[13, 7, 91]`, 320 s): 1: 1/1, 6: 156/27, 18: 10512/585, 36: 18/1, 72: 0/0
+* `fibre_231_level2.json` (tower `[11, 7, 77]`, 28 s): 1: 1/1, 5: 80/16, 15: 6570/438, 30: 285/10, 60: 0/0
+* `fibre_231_level2_via21.json` (tower `[11, 7, 21]`, 309 s): 1: 1/1, 5: 80/16, 15: 6570/438, 30: 24345/812, 60: 0/0
+* `fibre_231_level2_via33.json` (tower `[11, 7, 33]`, 166 s): 1: 1/1, 5: 80/16, 15: 6570/438, 30: 9165/306, 60: 0/0
+* `fibre_273_level2.json` (tower `[13, 7, 91]`, 183 s): 1: 1/1, 6: 156/27, 18: 10512/585, 36: 18/1, 72: 0/0
+* `fibre_385_level2.json` (tower `[11, 7, 77, 5]`, 190 s): 1: 1/1, 5: 80/16, 15: 6570/438, 30: 285/10, 60: 570/10, 120: 0/0
 
 **Levels 3, 4, 5.** Levels 3 and 5 from MILP (directly for 231; in the fibres over the most
 central elements of `F_91` for 273, `fibers.central_search`), level 4 from the compositum
@@ -161,6 +163,7 @@ central elements of `F_91` for 273, `fibers.central_search`), level 4 from the c
 |---|---|---|---|---|---|---|---|
 | 231 | 60 | empty | yes | Ψ_11 ⊗ Ψ_21 | yes | 3 | <3,4,5> |
 | 273 | 72 | empty | yes | Ψ_13 ⊗ Ψ_21 | yes | 3 | <3,4,5> |
+| 385 | 120 | empty | ? (`E_3 ≈ 10^{-10.0}`) | Ψ_11 ⊗ Ψ_35 | ? | 3–4 | ? |
 
 So `m(Ψ_n) ≤ 2` fails; whether §4's bound `2^{b-1} = 4` is ever attained is open.
 
@@ -180,7 +183,7 @@ directions: composita give `m(Ψ_143) = 2` with `E_2 ≈ 10^{-3.6}`, and `I_1(Ψ
 | 231 | 60 | -23.7, -6.0, 4.4, 11.8, 17.5 | 3 | 4 |
 | 273 | 72 | -31.2, -9.9, 2.6, 11.5, 18.4 | 3 | 4 |
 | 357 | 96 | -47.4, -18.8, -2.1, 9.8, 19.0 | ? | 4 |
-| 385 | 120 | -66.8, -31.0, -10.0, 4.8, 16.4 | ? | 4 |
+| 385 | 120 | -66.8, -31.0, -10.0, 4.8, 16.4 | 3–4 | 4 |
 | 399 | 108 | -56.0, -23.8, -4.9, 8.5, 18.8 | ? | 4 |
 | 429 | 120 | -64.9, -29.1, -8.2, 6.7, 18.2 | ? | 4 |
 | 455 | 144 | -85.6, -42.6, -17.4, 0.5, 14.3 | ? | 4 |

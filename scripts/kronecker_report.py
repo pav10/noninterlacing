@@ -314,6 +314,11 @@ def main():
     w("| n | degree | level 2 | level 3 | level 4 | level 5 | m | S |")
     w("|---|---|---|---|---|---|---|---|")
     m_fib = {}
+
+    def e3(n):
+        x = expected_count_log10(real_cyclotomic(n), 3)
+        return f"? (`E_3 ≈ 10^{{{x:.1f}}}`)"
+
     for n in sorted(towers):
         ok = psi.get(n, {})
         l4 = lvl4[n]
@@ -323,7 +328,7 @@ def main():
             m_fib[n] = "3–4" if l4 and l4[2] else "≥ 3"
         semi = "<3,4,5>" if lvl2_empty[n] and ok.get(3) and ok.get(5) and l4 and l4[2] else "?"
         w(f"| {n} | {real_cyclotomic(n).degree()} | {'empty' if lvl2_empty[n] else 'NOT EMPTY'} | "
-          f"{'yes' if ok.get(3) else ('no witness found' if 3 not in ok else 'FAILED')} | "
+          f"{'yes' if ok.get(3) else ('FAILED' if 3 in ok else e3(n))} | "
           + (f"Ψ_{l4[0]} ⊗ Ψ_{l4[1]}" if l4 and l4[2] else "?") + " | "
           f"{'yes' if ok.get(5) else '?'} | {m_fib.get(n, '?')} | {semi} |")
     w("")
