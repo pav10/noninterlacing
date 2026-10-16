@@ -42,7 +42,7 @@ Consequences that the program uses and reports:
 ```bash
 pip install -e .            # numpy, scipy, python-flint
 pip install cypari2         # optional: maximal orders, subfields, zeta values (PARI/GP)
-python -m pytest tests      # 47 tests, ~1.5 min
+python -m pytest tests      # 51 tests, ~1.5 min
 ```
 
 ## Command line
@@ -172,12 +172,18 @@ Full details are in [`results/paper_verification.md`](results/paper_verification
     `m(Ψ_n) ≤ 2 m(Ψ_{n_1}) m(Ψ_{n_2})`. `F_{n_1}F_{n_2}` has index 2 in `F_n`, its
     ring of integers is `O_{F_{n_1}} ⊗ O_{F_{n_2}}`, and the product of two witnesses is a
     witness. Hence `m(Ψ_n) = 2` whenever `n` has two odd prime factors (other than
-    `{3, 5}`) or three including 3 and 5. The first open case is `n = 231 = 3·7·11`,
-    where only `2 ≤ m ≤ 4` is known.
+    `{3, 5}`) or three including 3 and 5.
+  * **`m(Ψ_231) = 3`** (`231 = 3·7·11`, degree 60), the first real cyclotomic field
+    that is not 2-interlacing. Level 2 is empty, which takes a new method, below. Levels 3
+    and 5 come from MILP witnesses, level 4 from a compositum, so `S(Ψ_231) = <3,4,5>`.
+    The method: the relative trace maps level-`j` elements of a field onto level-`j`
+    elements of each subfield. So level 2 can be enumerated up a tower
+    `F_11 ⊂ F_7F_11 ⊂ F_77 ⊂ F_231` (80, 6570, 285 and 0 elements), one fibre per
+    Galois orbit (`noninterlacing/fibers.py`). The engine confirms the 6570.
   * Abelian fields: trace-down gives `m(O_K) ≤ m(Ψ_n)` for a real abelian field `K` of
     conductor `n`. So no real abelian field of conductor < 231 has `m ≥ 3`, and `K` is
     interlacing whenever `Ψ_n` is.
-  * Every non-interlacing `Ψ_n` in the table (58 conductors) has `S = <2,3>`.
+  * Every `Ψ_n` with `m = 2` in the table (58 conductors) has `S = <2,3>`.
 
 * **Confirmed:** `I(m_β) = 0` (box of 22,680 points); Theorem 3.1 (i)–(v) for
   `N = 2..30` (total reality from `N = 2`, irreducibility, `I(f_N) = 0`, span,
@@ -202,7 +208,8 @@ Full details are in [`results/paper_verification.md`](results/paper_verification
     `x → ±x + n`) contains exactly one non-interlacing class, `F_21`.
   * A table of `m(F_n)` for the real cyclotomic fields with `n ≤ 400` and degree ≤ 60
     ([`results/cyclotomic_levels.json`](results/cyclotomic_levels.json)). 155 of the
-    156 fields are decided, 9 of them by the compositum bound; only `n = 231` is open.
+    156 fields are decided, 9 of them by the compositum bound and `n = 231` (`m = 3`)
+    by fibres.
   * All 141 real abelian fields of degree 6–24 and conductor ≤ 113
     ([`results/abelian_levels.json`](results/abelian_levels.json)): 126 have `m = 1` and
     15 have `m = 2`. Four of them are decided by trace-down from `Q(ζ_p)^+`
@@ -237,8 +244,9 @@ trace-one `δ` supports the sail only along a lower-dimensional face through 1.
 | `cyclotomic.py`, `families.py` | real cyclotomic bases, admissibility, compositum witnesses, `D`, `f_N`, towers |
 | `siegel.py` | modular forms, Siegel coefficients, `ζ_K(−1)` check |
 | `search.py`, `symmetric.py`, `sailsdata.py` | census/random search, Lemma 4.1, sails bridge |
-| `kronecker.py` | cyclotomic polynomials: McKee–Smyth pairs, components, AM–GM bound, level-`j` disc polynomials |
+| `kronecker.py` | cyclotomic polynomials: McKee–Smyth pairs, components, AM–GM bound, volume heuristic, level-`j` disc polynomials |
 | `bruteforce.py` | reference methods: bounding-box scan, LP-bounded coefficient search |
 | `paper.py`, `cli.py` | verification report, command line |
 | `jobs.py` | one computation in a child process with memory and wall-clock limits (used by the table scripts) |
-| `scripts/` | `sextic_census.py`, `cyclotomic_levels.py`, `abelian_levels.py`, `span_census.py`, `kronecker_census.py`, `kronecker_report.py` (produce `results/`) |
+| `fibers.py` | real cyclotomic fields: Galois action, subfield codifferents, fibres of the relative trace, level-`j` elements up a tower |
+| `scripts/` | `sextic_census.py`, `cyclotomic_levels.py`, `abelian_levels.py`, `span_census.py`, `kronecker_census.py`, `fibre_levels.py`, `kronecker_report.py` (produce `results/`) |

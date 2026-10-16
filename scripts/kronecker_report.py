@@ -11,11 +11,16 @@ import os
 
 import random
 
+from flint import fmpz_poly
+
 from noninterlacing.cyclotomic import compositum_splits, compositum_witness, factorint, psi_interlacing_predicted
 from noninterlacing.interlace import Interlacing
 from noninterlacing.kronecker import (check_disc_polynomial, components, convolve_counts,
-                                      cyclotomic_products, label, product_poly, reflected_index)
-from noninterlacing.poly import real_cyclotomic
+                                      cyclotomic_products, expected_count_log10, label, product_poly,
+                                      reflected_index)
+from noninterlacing.orders import Order
+from noninterlacing.poly import poly, real_cyclotomic
+from noninterlacing.realroots import interlaces
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RES = os.path.join(HERE, "results")
@@ -60,6 +65,33 @@ def main():
               and not compositum_splits(n)][:4]
     psi_m = collections.Counter(r["m"] for r in psi_rows)
     undecided = [r["n"] for r in C if r["m"] is None]
+    # Psi_231 (section 5): fibre towers, witnesses, volume heuristic
+    import glob
+
+    towers = []
+    for path in sorted(glob.glob(os.path.join(RES, "fibre_231_level2*.json"))):
+        T = json.load(open(path))
+        towers.append((os.path.basename(path), T["tower"], [(s["degree"], s["count"], s["orbits"]) for s in T["stages"]],
+                       T["seconds"]))
+    P231 = json.load(open(os.path.join(RES, "psi231.json")))
+    f231 = real_cyclotomic(231)
+    w231 = {int(j): interlaces(f231, poly(g)) and int(poly(g).leading_coefficient()) == int(j)
+            for j, g in P231["interlacers"].items()}
+    g4 = compositum_witness(231, 11, 21, None, Interlacing(real_cyclotomic(21)).find(2))
+    w231[4] = int(g4.leading_coefficient()) == 4
+    from noninterlacing.fibers import CyclotomicField, tower_levels
+    from noninterlacing.pari import from_pari, pari, to_pari
+
+    K21 = CyclotomicField(21)
+    fib_ok = all(tower_levels(K21, [K21.G, K21.fixer(7), [1]], j)[-1].count == Interlacing(real_cyclotomic(21)).count(j)
+                 for j in (1, 2, 3))
+    Pp = pari()
+    g711 = from_pari(Pp.polredabs(Pp.polcompositum(to_pari(real_cyclotomic(7)), to_pari(real_cyclotomic(11)))[0]))
+    g711 = fmpz_poly([int(c) for c in g711.numer().coeffs()])
+    eng711 = Order.maximal(g711).count(2)
+    heur_n = [21, 33, 77, 143, 165, 231, 273, 357, 385, 399, 429, 455]
+    heur = {n: [expected_count_log10(real_cyclotomic(n), j) for j in range(1, 6)] for n in heur_n}
+    m_known = {r["n"]: r["m"] for r in C}
     max_m = {d: max(r["m"] for r in K if r["degree"] == d) for d in by_d}
 
     # --- verifications recomputed here ---------------------------------
@@ -240,7 +272,53 @@ def main():
           f"({'ok' if ab_ok else 'VIOLATED'}), with equality for {ab_tight}; {ab_td} fields, where the")
         w("direct search ran out of time, are decided by trace-down from `F_p`.")
     w("")
-    w("## 5. The AM–GM lower bound")
+    w("## 5. `Ψ_231`: the first `Ψ_n` with `m = 3`")
+    w("")
+    w("**Fibres of the relative trace.** For subfields `F' ⊂ F''` of `F_n` the relative trace maps")
+    w("the totally positive elements of `O_{F''}^∨` of trace `j` onto totally positive elements of")
+    w("`O_{F'}^∨` of trace `j` (`Tr_{F'}(Tr(μ) x) = Tr_{F''}(μ x)` for `x ∈ O_{F'}`). So the level-`j`")
+    w("elements of `F''` are the union of the fibres `{μ ∈ O_{F''}^∨ : Tr_{F''/F'} μ = ν, μ ≫ 0}` over")
+    w("the level-`j` elements `ν` of `F'`, and conjugate `ν` have conjugate fibres. A fibre is a coset")
+    w("of the lattice `ker Tr` inside a product of `[F':Q]` simplices; `noninterlacing/fibers.py`")
+    w("enumerates it (Fincke–Pohst over the circumscribed ball on an LLL-reduced basis, float with a")
+    w("safety margin; every candidate is decided by certified `arb` signs or Sturm sequences).")
+    w("Going up a tower `Q ⊂ F_1 ⊂ … ⊂ F_n` one fibre per Galois orbit gives every level-`j` element.")
+    w(f"*Verified*: the towers reproduce the engine's counts for `Ψ_21`, `j = 1, 2, 3` ({'ok' if fib_ok else 'MISMATCH'}),")
+    w(f"and the engine counts {eng711} elements of trace 2 in `F_7F_11` (through PARI's `polcompositum`).")
+    w("")
+    w("**Level 2 of `F_231` is empty.** `F_231` (degree 60) has three subfields of index 2,")
+    w("`F_77`, `F_7F_33`, `F_11F_21`, all with `m = 2`, so §4 only gives `m ≤ 4`, and its subfield of")
+    w("index 3 (degree 20) also has `m = 2`. Counts of trace-2 elements up "
+      + (f"{len(towers)} towers" if len(towers) > 1 else "the tower"))
+    w("(degree: count / Galois orbits):")
+    w("")
+    for name, tw, st, secs in towers:
+        w(f"* `{name}` (tower `{tw}`, {secs:.0f} s): " + ", ".join(f"{d}: {c}/{o}" for d, c, o in st))
+    w("")
+    w(f"**Levels 3, 4, 5 are attained**: level 3 and 5 interlacers from MILP feasibility "
+      f"(`results/psi231.json`), level 4 from the compositum `Ψ_11 ⊗ Ψ_21`; all checked exactly: "
+      f"{'ok' if all(w231.values()) else w231}. Hence")
+    w("")
+    w("    m(Ψ_231) = 3,   S(Ψ_231) = <3, 4, 5>.")
+    w("")
+    w("So `m(Ψ_n) ≤ 2` fails, and §4's bound `2^{b-1} = 4` is not attained here.")
+    w("")
+    w("**Volume heuristic.** `E_j = j^{d-1} √|disc| / (d-1)!` is the volume of the trace-`j` simplex")
+    w("in lattice units (`kronecker.expected_count_log10`). It predicts the counts above well")
+    w("(`F_7F_11`: `E_2 ≈ 5.6·10^3` vs 6570; `F_77`: `E_2 ≈ 255` vs 285), but structure beats it in both")
+    w("directions: composita give `m(Ψ_143) = 2` with `E_2 ≈ 10^{-3.6}`, and `I_1(Ψ_21) = 0` with")
+    w("`E_1 ≈ 5.6`. `log10 E_j` for `j = 1..5`, with the known `m` and the §4 bound:")
+    w("")
+    w("| n | degree | log10 E_1 … E_5 | m | §4 bound |")
+    w("|---|---|---|---|---|")
+    for n in heur_n:
+        odd = [p for p in factorint(n) if p != 2]
+        b = len(odd) - (1 if 3 in odd and 5 in odd else 0)
+        bnd = 1 if psi_interlacing_predicted(n) else 2 ** (b - 1)
+        w(f"| {n} | {real_cyclotomic(n).degree()} | " + ", ".join(f"{x:.1f}" for x in heur[n])
+          + f" | {m_known.get(n) or '?'} | {bnd} |")
+    w("")
+    w("## 6. The AM–GM lower bound")
     w("")
     w("For a level-`j` interlacer and an irreducible factor `f_i` of degree `e_i`, the component")
     w("`μ_i = g(α_i)/f'(α_i)` is totally positive with `|N(g(α_i))| ≥ 1`, so")
@@ -251,7 +329,7 @@ def main():
     w(f"violated ({'ok' if amgm_ok else 'VIOLATED'}), and equal to `m(f)` for {amgm_tight} of {len(K)} census")
     w("polynomials; it misses the additivity of §3 (e.g. it gives 2 for `Ψ_21 Ψ_33`, whose level is 4).")
     w("")
-    w("## 6. Data")
+    w("## 7. Data")
     w("")
     w(f"Census of all squarefree cyclotomic polynomials of degree ≤ {dmax} up to `x → -x`")
     w("(`results/kronecker_census.json`). Number of polynomials with `m(f) = k`:")
@@ -267,16 +345,17 @@ def main():
     w(f"* Connected index sets ({len(conn)} polynomials): `m` distribution {dict(sorted(conn_m.items()))}.")
     w(f"* Irreducible `Ψ_n` (`results/cyclotomic_levels.json`, {len(psi_rows)} fields, conductor ≤")
     w(f"  {max(r['n'] for r in C)}, degree ≤ 60): `m` distribution {dict(sorted(psi_m.items()))};")
-    w(f"  all {len(psi3)} non-interlacing `Ψ_n` have a level-3 interlacer: "
-      f"{all(psi3.values())}, so `S(Ψ_n) = <2,3>` for each."
+    w(f"  all {len(psi3)} `Ψ_n` with `m = 2` have a level-3 interlacer: "
+      f"{all(psi3.values())}, so `S(Ψ_n) = <2,3>` for each; `S(Ψ_231) = <3,4,5>` (§5)."
       + (f" Of these, {len(by_comp)} are decided by §4 rather than by the engine." if by_comp else "")
       + (f" Undecided: n = {undecided}." if undecided else ""))
     w("")
-    w("## 7. Open questions suggested by the data")
+    w("## 8. Open questions suggested by the data")
     w("")
-    w("* Is `m(Ψ_n) ≤ 2` for every `n` (equivalently `m(O_{F_n}) ≤ 2`)? §4 proves it when `n` has")
-    w(f"  at most two odd prime factors, or exactly three including 3 and 5; open from `n = {open_n[0]}`")
-    w(f"  (degree {real_cyclotomic(open_n[0]).degree()}, `2 ≤ m ≤ 4`) on, where §4 gives only `m ≤ 2^{{b-1}}`.")
+    w("* `m(Ψ_n) ≤ 2` holds when `n` has at most two odd prime factors, or three including 3 and 5")
+    w("  (§4), and fails for `n = 231` (§5). Is `m(Ψ_n)` bounded? Is §4's `2^{b-1}` attained? The")
+    w(f"  heuristic of §5 predicts `m = 4` for `n = 357, 385, 399, 429` (`E_3 ≪ 1`); the next case after")
+    w(f"  231 without a split is `n = {open_n[1]}`.")
     w("* Is `m ≤ 3` on connected index sets? Which connected sets reach 3?")
     w("* Is `S(f)` always an interval for cyclotomic `f` (also when no factor is 1-interlaced)?")
     with open(os.path.join(RES, "higher_interlacing_cyclotomic.md"), "w") as fh:

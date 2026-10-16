@@ -33,7 +33,7 @@ with the McKee–Smyth prediction: **no disagreement**.
 single-factor sporadic members `Φ_9, Φ_12, Φ_15, Φ_18, Φ_20, Φ_24, Φ_30` add only
 `2^a 3^b 5^c`.) For squarefree `n` this is Yatsyna's theorem (exceptions 15 and 30 are
 exactly the `{3,5}` case). *Verified* against the generated pairs for all `n < 400` of
-degree ≤ 60, and against the computed `m(Ψ_n)` for 146 conductors: no disagreement.
+degree ≤ 60, and against the computed `m(Ψ_n)` for 147 conductors: no disagreement.
 
 ## 2. Level j: Schur-stable polynomials with leading coefficient j+1
 
@@ -131,7 +131,55 @@ conductor has at most two odd prime factors or is `{3, 5, p}`-type.
 *Verified* on `results/abelian_levels.json` (141 fields, degree 6–24, conductor ≤ 113): `m(O_K) ≤ m(Ψ_n)` for every decided field (ok), with equality for 101; 4 fields, where the
 direct search ran out of time, are decided by trace-down from `F_p`.
 
-## 5. The AM–GM lower bound
+## 5. `Ψ_231`: the first `Ψ_n` with `m = 3`
+
+**Fibres of the relative trace.** For subfields `F' ⊂ F''` of `F_n` the relative trace maps
+the totally positive elements of `O_{F''}^∨` of trace `j` onto totally positive elements of
+`O_{F'}^∨` of trace `j` (`Tr_{F'}(Tr(μ) x) = Tr_{F''}(μ x)` for `x ∈ O_{F'}`). So the level-`j`
+elements of `F''` are the union of the fibres `{μ ∈ O_{F''}^∨ : Tr_{F''/F'} μ = ν, μ ≫ 0}` over
+the level-`j` elements `ν` of `F'`, and conjugate `ν` have conjugate fibres. A fibre is a coset
+of the lattice `ker Tr` inside a product of `[F':Q]` simplices; `noninterlacing/fibers.py`
+enumerates it (Fincke–Pohst over the circumscribed ball on an LLL-reduced basis, float with a
+safety margin; every candidate is decided by certified `arb` signs or Sturm sequences).
+Going up a tower `Q ⊂ F_1 ⊂ … ⊂ F_n` one fibre per Galois orbit gives every level-`j` element.
+*Verified*: the towers reproduce the engine's counts for `Ψ_21`, `j = 1, 2, 3` (ok),
+and the engine counts 6570 elements of trace 2 in `F_7F_11` (through PARI's `polcompositum`).
+
+**Level 2 of `F_231` is empty.** `F_231` (degree 60) has three subfields of index 2,
+`F_77`, `F_7F_33`, `F_11F_21`, all with `m = 2`, so §4 only gives `m ≤ 4`, and its subfield of
+index 3 (degree 20) also has `m = 2`. Counts of trace-2 elements up the tower
+(degree: count / Galois orbits):
+
+* `fibre_231_level2.json` (tower `[11, 7, 77]`, 803 s): 1: 1/1, 5: 80/16, 15: 6570/438, 30: 285/10, 60: 0/0
+
+**Levels 3, 4, 5 are attained**: level 3 and 5 interlacers from MILP feasibility (`results/psi231.json`), level 4 from the compositum `Ψ_11 ⊗ Ψ_21`; all checked exactly: ok. Hence
+
+    m(Ψ_231) = 3,   S(Ψ_231) = <3, 4, 5>.
+
+So `m(Ψ_n) ≤ 2` fails, and §4's bound `2^{b-1} = 4` is not attained here.
+
+**Volume heuristic.** `E_j = j^{d-1} √|disc| / (d-1)!` is the volume of the trace-`j` simplex
+in lattice units (`kronecker.expected_count_log10`). It predicts the counts above well
+(`F_7F_11`: `E_2 ≈ 5.6·10^3` vs 6570; `F_77`: `E_2 ≈ 255` vs 285), but structure beats it in both
+directions: composita give `m(Ψ_143) = 2` with `E_2 ≈ 10^{-3.6}`, and `I_1(Ψ_21) = 0` with
+`E_1 ≈ 5.6`. `log10 E_j` for `j = 1..5`, with the known `m` and the §4 bound:
+
+| n | degree | log10 E_1 … E_5 | m | §4 bound |
+|---|---|---|---|---|
+| 21 | 6 | 0.7, 2.3, 3.1, 3.8, 4.2 | 2 | 2 |
+| 33 | 10 | 0.3, 3.0, 4.6, 5.7, 6.6 | 2 | 2 |
+| 77 | 30 | -6.3, 2.4, 7.5, 11.1, 13.9 | 2 | 2 |
+| 143 | 60 | -21.4, -3.6, 6.8, 14.1, 19.8 | 2 | 2 |
+| 165 | 40 | -12.3, -0.6, 6.3, 11.2, 15.0 | 2 | 2 |
+| 231 | 60 | -23.7, -6.0, 4.4, 11.8, 17.5 | 3 | 4 |
+| 273 | 72 | -31.2, -9.9, 2.6, 11.5, 18.4 | ? | 4 |
+| 357 | 96 | -47.4, -18.8, -2.1, 9.8, 19.0 | ? | 4 |
+| 385 | 120 | -66.8, -31.0, -10.0, 4.8, 16.4 | ? | 4 |
+| 399 | 108 | -56.0, -23.8, -4.9, 8.5, 18.8 | ? | 4 |
+| 429 | 120 | -64.9, -29.1, -8.2, 6.7, 18.2 | ? | 4 |
+| 455 | 144 | -85.6, -42.6, -17.4, 0.5, 14.3 | ? | 4 |
+
+## 6. The AM–GM lower bound
 
 For a level-`j` interlacer and an irreducible factor `f_i` of degree `e_i`, the component
 `μ_i = g(α_i)/f'(α_i)` is totally positive with `|N(g(α_i))| ≥ 1`, so
@@ -142,7 +190,7 @@ For irreducible `f` this is Yatsyna's `|disc f| ≥ d^d` for interlacing `f`. *V
 violated (ok), and equal to `m(f)` for 6440 of 9363 census
 polynomials; it misses the additivity of §3 (e.g. it gives 2 for `Ψ_21 Ψ_33`, whose level is 4).
 
-## 6. Data
+## 7. Data
 
 Census of all squarefree cyclotomic polynomials of degree ≤ 12 up to `x → -x`
 (`results/kronecker_census.json`). Number of polynomials with `m(f) = k`:
@@ -165,14 +213,15 @@ Census of all squarefree cyclotomic polynomials of degree ≤ 12 up to `x → -x
 * Every level set is an interval `{0} ∪ [m, ∞)`: **True** (for `f` with a
   1-interlaced factor this follows from `S(f) + S(h) ⊆ S(f)`).
 * Connected index sets (2569 polynomials): `m` distribution {1: 358, 2: 1864, 3: 347}.
-* Irreducible `Ψ_n` (`results/cyclotomic_levels.json`, 155 fields, conductor ≤
-  396, degree ≤ 60): `m` distribution {1: 97, 2: 58};
-  all 58 non-interlacing `Ψ_n` have a level-3 interlacer: True, so `S(Ψ_n) = <2,3>` for each. Of these, 9 are decided by §4 rather than by the engine. Undecided: n = [231].
+* Irreducible `Ψ_n` (`results/cyclotomic_levels.json`, 156 fields, conductor ≤
+  396, degree ≤ 60): `m` distribution {1: 97, 2: 58, 3: 1};
+  all 58 `Ψ_n` with `m = 2` have a level-3 interlacer: True, so `S(Ψ_n) = <2,3>` for each; `S(Ψ_231) = <3,4,5>` (§5). Of these, 9 are decided by §4 rather than by the engine.
 
-## 7. Open questions suggested by the data
+## 8. Open questions suggested by the data
 
-* Is `m(Ψ_n) ≤ 2` for every `n` (equivalently `m(O_{F_n}) ≤ 2`)? §4 proves it when `n` has
-  at most two odd prime factors, or exactly three including 3 and 5; open from `n = 231`
-  (degree 60, `2 ≤ m ≤ 4`) on, where §4 gives only `m ≤ 2^{b-1}`.
+* `m(Ψ_n) ≤ 2` holds when `n` has at most two odd prime factors, or three including 3 and 5
+  (§4), and fails for `n = 231` (§5). Is `m(Ψ_n)` bounded? Is §4's `2^{b-1}` attained? The
+  heuristic of §5 predicts `m = 4` for `n = 357, 385, 399, 429` (`E_3 ≪ 1`); the next case after
+  231 without a split is `n = 273`.
 * Is `m ≤ 3` on connected index sets? Which connected sets reach 3?
 * Is `S(f)` always an interval for cyclotomic `f` (also when no factor is 1-interlaced)?
