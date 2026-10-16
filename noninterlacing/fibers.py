@@ -497,7 +497,8 @@ class Stage:
     seconds: float = 0.0
 
 
-def tower_levels(K: CyclotomicField, chain: list, j: int, log=None) -> list:
+def tower_levels(K: CyclotomicField, chain: list, j: int, log=None, start: Optional[list] = None,
+                 on_stage=None) -> list:
     """Level-``j`` elements up the tower ``K^{chain[0]} subset K^{chain[1]} subset ...``.
 
     ``chain`` is a decreasing list of subgroups starting with ``G`` (the field ``Q``);
@@ -506,8 +507,10 @@ def tower_levels(K: CyclotomicField, chain: list, j: int, log=None) -> list:
     """
     if sorted(chain[0]) != K.G:
         raise ValueError("the chain must start at G (the field Q)")
-    stages = [Stage(chain[0], 1, [fmpq_poly([j])], 1)]
-    for H_big, H_small in zip(chain, chain[1:]):
+    stages = list(start) if start else [Stage(chain[0], 1, [fmpq_poly([j])], 1)]
+    if [s.H for s in stages] != chain[:len(stages)]:
+        raise ValueError("resumed stages do not match the chain")
+    for H_big, H_small in list(zip(chain, chain[1:]))[len(stages) - 1:]:
         t0 = time.time()
         found, cand = {}, 0
         for nu in stages[-1].reps:
@@ -519,6 +522,8 @@ def tower_levels(K: CyclotomicField, chain: list, j: int, log=None) -> list:
         count = sum(K.orbit_size(mu, H_small) for mu in reps)
         st = Stage(H_small, K.d // len(H_small), reps, count, cand, round(time.time() - t0, 2))
         stages.append(st)
+        if on_stage:
+            on_stage(stages)
         if log:
             log(f"degree {st.degree}: {count} elements of trace {j} in {len(reps)} orbits "
                 f"({cand} candidates, {st.seconds} s)")
