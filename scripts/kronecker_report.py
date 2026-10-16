@@ -98,8 +98,8 @@ def main():
     from noninterlacing.poly import parse_rational_poly
 
     pq = {}
+    fields = {}
     for n in sorted(towers):
-        Kn = None
         for name, tw, st, secs in towers[n]:
             T = json.load(open(os.path.join(RES, name)))
             for k, m in enumerate(tw, start=1):
@@ -107,7 +107,8 @@ def main():
                 stage = T["stages"][k]
                 if len(fac) != 2 or m in pq or stage["count"] == 0:
                     continue
-                Kn = Kn or CyclotomicField(n)
+                amb = stage.get("ambient", n)  # the field the stage was computed in
+                Kn = fields.setdefault(amb, CyclotomicField(amb))
                 if stage["subgroup"] != Kn.fixer(m):
                     continue
                 q1, q2 = (p ** a for p, a in sorted(fac.items()))

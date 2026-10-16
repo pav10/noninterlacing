@@ -143,6 +143,19 @@ class CyclotomicField:
         w = fmpq_mat(self.act_matrix(a)) * v
         return fmpq_poly([w[i, 0] for i in range(self.d)])
 
+    def embed(self, x: fmpq_poly, m: int) -> fmpq_poly:
+        """An element ``x(alpha_m)`` of ``F_m = Q(zeta_m)^+`` (``m | n``) in the coordinates of ``K``.
+
+        ``alpha_m = 2cos(2 pi/m) = C_{n/m}(alpha)``; substitution is exact.
+        """
+        if self.n % m:
+            raise ValueError("m must divide n")
+        C = self.cheb(self.n // m)
+        out = fmpq_poly([0])
+        for c in reversed(fmpq_poly(x).coeffs()):
+            out = (out * C + c) % self.F
+        return out
+
     def trace(self, H: list, x) -> fmpq_poly:
         out = fmpq_poly([0])
         for h in H:

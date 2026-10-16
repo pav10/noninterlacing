@@ -11,6 +11,7 @@ element per Galois orbit are written to OUT.json at the end.  Each finished
 stage is also saved to OUT.json.partial, from which a rerun resumes.
 """
 import json
+import math
 import os
 import sys
 import time
@@ -41,14 +42,24 @@ def _load_partial(path):
             for r in rows]
 
 
-def main(n, j, ms, out):
-    K = CyclotomicField(n)
+def _chain(K, ms):
     chain, fix = [K.G], set(K.G)
     for m in ms:
         fix &= set(K.fixer(m))
         chain.append(sorted(fix))
     if chain[-1] != [1]:
         chain.append([1])
+    return chain
+
+
+def main(n, j, ms, out):
+    """The stages below ``F_L`` (``L = lcm(ms)``) are computed inside ``F_L``, which is much
+    cheaper than inside ``F_n``; only the last step works in ``F_n``."""
+    L = math.lcm(*ms)
+    K = CyclotomicField(n)
+    small = L != n and CyclotomicField(L)
+    K0 = small or K
+    chain = _chain(K0, ms)
     t0 = time.time()
     log = []
 
@@ -60,11 +71,26 @@ def main(n, j, ms, out):
     start = _load_partial(part) if os.path.exists(part) else None
     if start:
         note(f"resuming after degree {start[-1].degree}")
-    stages = tower_levels(K, chain, j, log=note, start=start, on_stage=lambda st: _save_partial(part, st))
-    rows = [{"degree": s.degree, "subgroup": s.H, "count": s.count, "orbits": len(s.reps),
+    stages = tower_levels(K0, chain, j, log=note, start=start, on_stage=lambda st: _save_partial(part, st))
+    if small:  # last step F_L -> F_n, in the coordinates of F_n
+        H = K.fixer(L)
+        reps = [K.embed(x, L) for x in stages[-1].reps]
+        t1, found, cand = time.time(), {}, 0
+        for nu in reps:
+            fr = K.fibre([1], H, nu)
+            cand += fr.candidates
+            for mu in fr.points:
+                found.setdefault(K.orbit_key(mu, [1]), mu)
+        top = list(found.values())
+        st = Stage([1], K.d, top, sum(K.orbit_size(mu, [1]) for mu in top), cand, round(time.time() - t1, 2))
+        stages = stages + [st]
+        note(f"degree {st.degree}: {st.count} elements of trace {j} in {len(top)} orbits "
+             f"({cand} candidates, {st.seconds} s)")
+    amb = [L if small and i < len(stages) - 1 else n for i in range(len(stages))]
+    rows = [{"degree": s.degree, "ambient": a, "subgroup": s.H, "count": s.count, "orbits": len(s.reps),
              "candidates": s.candidates, "seconds": s.seconds,
              "reps": [str(x) for x in s.reps] if s.degree < K.d or s.count else []}
-            for s in stages]
+            for s, a in zip(stages, amb)]
     res = {"n": n, "level": j, "tower": ms, "stages": rows, "seconds": round(time.time() - t0, 1)}
     if out:
         json.dump(res, open(out, "w"), indent=1)
