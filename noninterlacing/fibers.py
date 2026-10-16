@@ -177,10 +177,22 @@ class CyclotomicField:
             return 2 * (2 * arb.pi() * k / self.n).cos()
 
     def values(self, x: fmpq_poly, ks: list, prec: int) -> list:
+        """``sigma_k(x)`` for ``k`` in ``ks`` as ``arb`` balls of relative accuracy ``~2^-(prec-16)``.
+
+        Elements of subfields written in the power basis of ``alpha`` can have huge
+        coefficients and cancel heavily, so the working precision is raised until every
+        ball is that accurate.
+        """
         num = arb_poly([int(c) for c in x.numer().coeffs()])
         q = int(x.denom())
-        with precision(prec):
-            return [num(self.root(k, prec)) / q for k in ks]
+        bits = max([abs(int(c)).bit_length() for c in x.numer().coeffs()] + [1])
+        work = max(prec, bits + 2 * self.d) + 32
+        while True:
+            with precision(work):
+                vals = [num(self.root(k, work)) / q for k in ks]
+            if all(_accurate(v, prec - 16) for v in vals):
+                return vals
+            work *= 2
 
     def is_totally_positive(self, x: fmpq_poly, H: Optional[list] = None, prec: int = 256) -> bool:
         """Exact: certified ``arb`` signs at the embeddings of ``K^H``, Sturm only if a ball meets 0."""
@@ -329,6 +341,9 @@ class CyclotomicField:
                     c = [c[r] + sum((newcols[kk][r] * kb[kk] for kk in range(m) if kb[kk]), arb(0))
                          for r in range(len(rows))]
                     mu0 = mu0 + _comb(kb, lam_red)
+            if not all(_accurate(x, 64, absolute=True) for col in newcols for x in col) or \
+                    not all(_accurate(x, 64, absolute=True) for x in c):
+                raise ArithmeticError("fibre data not accurate enough for the float search")
             B = np.array([[float(newcols[kk][r].mid()) for kk in range(m)] for r in range(len(rows))])
             cv = np.array([float(x.mid()) for x in c])
             if float(np.max(np.abs(cv))) > 1e6 or float(np.max(np.abs(B))) > 1e9:
@@ -356,6 +371,15 @@ class CyclotomicField:
                     break
         res.seconds = time.time() - t0
         return res
+
+
+def _accurate(v: arb, bits: int, absolute: bool = False) -> bool:
+    """Radius of ``v`` below ``2^-bits`` (times ``max(1, |v|)`` unless ``absolute``)."""
+    r = float(v.rad())
+    if not math.isfinite(r) or not math.isfinite(float(v.mid())):
+        return False
+    scale = 1.0 if absolute else max(1.0, abs(float(v.mid())))
+    return r <= scale * 2.0 ** -bits
 
 
 def _coords(x: fmpq_poly, C: fmpq_mat, rows: list, Cinv: fmpq_mat):

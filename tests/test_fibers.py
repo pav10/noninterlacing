@@ -66,3 +66,11 @@ def test_central_search_finds_witness():
     K = CyclotomicField(21)
     g = central_search(K, K.fixer(7), 2, 0.3)
     assert g is not None and int(g.leading_coefficient()) == 2 and interlaces(K.f, g)
+
+
+def test_values_survive_cancellation():
+    # 10^40 Psi_n(x) + 1 is 1 at every embedding but cancels catastrophically at fixed precision
+    K = CyclotomicField(105)
+    x = fmpq_poly(K.f) * 10**40 + 1
+    for v in K.values(x, K.G, 128):
+        assert abs(float(v.mid()) - 1) < 1e-30 and float(v.rad()) < 2.0 ** -100
