@@ -65,20 +65,33 @@ def main():
               and not compositum_splits(n)][:4]
     psi_m = collections.Counter(r["m"] for r in psi_rows)
     undecided = [r["n"] for r in C if r["m"] is None]
-    # Psi_231 (section 5): fibre towers, witnesses, volume heuristic
+    # section 5: fibre towers, witnesses, volume heuristic
     import glob
 
-    towers = []
-    for path in sorted(glob.glob(os.path.join(RES, "fibre_231_level2*.json"))):
+    towers = collections.defaultdict(list)  # n -> [(file, tower, [(degree, count, orbits)], seconds)]
+    for path in sorted(glob.glob(os.path.join(RES, "fibre_*_level2*.json"))):
         T = json.load(open(path))
-        towers.append((os.path.basename(path), T["tower"], [(s["degree"], s["count"], s["orbits"]) for s in T["stages"]],
-                       T["seconds"]))
-    P231 = json.load(open(os.path.join(RES, "psi231.json")))
-    f231 = real_cyclotomic(231)
-    w231 = {int(j): interlaces(f231, poly(g)) and int(poly(g).leading_coefficient()) == int(j)
-            for j, g in P231["interlacers"].items()}
-    g4 = compositum_witness(231, 11, 21, None, Interlacing(real_cyclotomic(21)).find(2))
-    w231[4] = int(g4.leading_coefficient()) == 4
+        towers[T["n"]].append((os.path.basename(path), T["tower"],
+                               [(s["degree"], s["count"], s["orbits"]) for s in T["stages"]], T["seconds"]))
+    lvl2_empty = {n: all(st[-1][1] == 0 for _, _, st, _ in tw) for n, tw in towers.items()}
+    psi = {}  # n -> {level: checked}
+    for path in sorted(glob.glob(os.path.join(RES, "psi[0-9]*.json"))):
+        Pn = json.load(open(path))
+        fn = real_cyclotomic(Pn["n"])
+        psi[Pn["n"]] = {int(j): interlaces(fn, poly(g)) and int(poly(g).leading_coefficient()) == int(j)
+                        for j, g in Pn["interlacers"].items()}
+
+    def level4(n):
+        """Level-4 interlacer from Psi_q (q a prime power, interlacing) x Psi_{n/q} (m = 2)."""
+        for p, a in sorted(factorint(n).items(), reverse=True):
+            q = p ** a
+            if p > 2 and psi_interlacing_predicted(n // q) is False and compositum_splits(n // q):
+                g2 = Interlacing(real_cyclotomic(n // q)).find(2)
+                g = compositum_witness(n, q, n // q, None, g2)
+                return q, n // q, int(g.leading_coefficient()) == 4
+        return None
+
+    lvl4 = {n: level4(n) for n in towers}
     from noninterlacing.fibers import CyclotomicField, tower_levels
     from noninterlacing.pari import from_pari, pari, to_pari
 
@@ -272,7 +285,7 @@ def main():
           f"({'ok' if ab_ok else 'VIOLATED'}), with equality for {ab_tight}; {ab_td} fields, where the")
         w("direct search ran out of time, are decided by trace-down from `F_p`.")
     w("")
-    w("## 5. `Ψ_231`: the first `Ψ_n` with `m = 3`")
+    w("## 5. Three odd primes: `m(Ψ_n) = 3`")
     w("")
     w("**Fibres of the relative trace.** For subfields `F' ⊂ F''` of `F_n` the relative trace maps")
     w("the totally positive elements of `O_{F''}^∨` of trace `j` onto totally positive elements of")
@@ -286,22 +299,35 @@ def main():
     w(f"*Verified*: the towers reproduce the engine's counts for `Ψ_21`, `j = 1, 2, 3` ({'ok' if fib_ok else 'MISMATCH'}),")
     w(f"and the engine counts {eng711} elements of trace 2 in `F_7F_11` (through PARI's `polcompositum`).")
     w("")
-    w("**Level 2 of `F_231` is empty.** `F_231` (degree 60) has three subfields of index 2,")
-    w("`F_77`, `F_7F_33`, `F_11F_21`, all with `m = 2`, so §4 only gives `m ≤ 4`, and its subfield of")
-    w("index 3 (degree 20) also has `m = 2`. Counts of trace-2 elements up "
-      + (f"{len(towers)} towers" if len(towers) > 1 else "the tower"))
-    w("(degree: count / Galois orbits):")
+    w("**Level 2.** For `n` with three odd primes (not 3 and 5 together) §4 gives only `m ≤ 4`; for")
+    w("`n = 231` all three index-2 subfields and the index-3 subfield have `m = 2`. Counts of trace-2")
+    w("elements up each tower (degree: count / Galois orbits):")
     w("")
-    for name, tw, st, secs in towers:
-        w(f"* `{name}` (tower `{tw}`, {secs:.0f} s): " + ", ".join(f"{d}: {c}/{o}" for d, c, o in st))
+    for n in sorted(towers):
+        for name, tw, st, secs in towers[n]:
+            w(f"* `{name}` (tower `{tw}`, {secs:.0f} s): " + ", ".join(f"{d}: {c}/{o}" for d, c, o in st))
     w("")
-    w(f"**Levels 3, 4, 5 are attained**: level 3 and 5 interlacers from MILP feasibility "
-      f"(`results/psi231.json`), level 4 from the compositum `Ψ_11 ⊗ Ψ_21`; all checked exactly: "
-      f"{'ok' if all(w231.values()) else w231}. Hence")
+    w("**Levels 3, 4, 5.** Levels 3 and 5 from MILP (directly for 231; in the fibres over the most")
+    w("central elements of `F_91` for 273, `fibers.central_search`), level 4 from the compositum")
+    w("`Ψ_q ⊗ Ψ_{n/q}` (`q` the largest prime power, `m(Ψ_{n/q}) = 2`); all checked exactly:")
     w("")
-    w("    m(Ψ_231) = 3,   S(Ψ_231) = <3, 4, 5>.")
+    w("| n | degree | level 2 | level 3 | level 4 | level 5 | m | S |")
+    w("|---|---|---|---|---|---|---|---|")
+    m_fib = {}
+    for n in sorted(towers):
+        ok = psi.get(n, {})
+        l4 = lvl4[n]
+        if lvl2_empty[n] and ok.get(3):
+            m_fib[n] = "3"
+        elif lvl2_empty[n]:
+            m_fib[n] = "3–4" if l4 and l4[2] else "≥ 3"
+        semi = "<3,4,5>" if lvl2_empty[n] and ok.get(3) and ok.get(5) and l4 and l4[2] else "?"
+        w(f"| {n} | {real_cyclotomic(n).degree()} | {'empty' if lvl2_empty[n] else 'NOT EMPTY'} | "
+          f"{'yes' if ok.get(3) else ('no witness found' if 3 not in ok else 'FAILED')} | "
+          + (f"Ψ_{l4[0]} ⊗ Ψ_{l4[1]}" if l4 and l4[2] else "?") + " | "
+          f"{'yes' if ok.get(5) else '?'} | {m_fib.get(n, '?')} | {semi} |")
     w("")
-    w("So `m(Ψ_n) ≤ 2` fails, and §4's bound `2^{b-1} = 4` is not attained here.")
+    w("So `m(Ψ_n) ≤ 2` fails; whether §4's bound `2^{b-1} = 4` is ever attained is open.")
     w("")
     w("**Volume heuristic.** `E_j = j^{d-1} √|disc| / (d-1)!` is the volume of the trace-`j` simplex")
     w("in lattice units (`kronecker.expected_count_log10`). It predicts the counts above well")
@@ -316,7 +342,7 @@ def main():
         b = len(odd) - (1 if 3 in odd and 5 in odd else 0)
         bnd = 1 if psi_interlacing_predicted(n) else 2 ** (b - 1)
         w(f"| {n} | {real_cyclotomic(n).degree()} | " + ", ".join(f"{x:.1f}" for x in heur[n])
-          + f" | {m_known.get(n) or '?'} | {bnd} |")
+          + f" | {m_known.get(n) or m_fib.get(n) or '?'} | {bnd} |")
     w("")
     w("## 6. The AM–GM lower bound")
     w("")

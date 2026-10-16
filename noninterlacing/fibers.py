@@ -265,13 +265,16 @@ class CyclotomicField:
 
     # --------------------------------------------------------- fibres
     def fibre(self, H_small: list, H_big: list, nu: fmpq_poly, prec: int = 384,  # = cached precision
-              margin: float = 1e-6, scale: float = 1.0, limit: Optional[int] = None) -> FibreResult:
+              margin: float = 1e-6, scale: float = 1.0, limit: Optional[int] = None,
+              method: str = "fp", time_limit: float = 600.0) -> FibreResult:
         """All ``mu in O_{K^{H_small}}^vee``, ``mu >> 0`` with ``Tr(mu) = nu`` in ``K^{H_big}``.
 
         ``scale < 1`` shrinks the search ball around the centre of the fibre (the points
         with all conjugates over each ``tau`` close to ``tau(nu)/t``): the result is then a
         subset, useful for finding witnesses, not for proving emptiness.  ``limit`` stops
-        after that many points.
+        after that many points.  ``method="milp"`` looks for one point with HiGHS (for
+        fibres with many points, where the circumscribed ball is far too large); it finds
+        witnesses but proves nothing when it finds none.
         """
         from .pari import pari
 
@@ -331,7 +334,10 @@ class CyclotomicField:
             if float(np.max(np.abs(cv))) > 1e6 or float(np.max(np.abs(B))) > 1e9:
                 raise ArithmeticError(f"fibre lattice badly scaled for the float search: "
                                       f"target {float(np.max(np.abs(cv))):.3g}, basis {float(np.max(np.abs(B))):.3g}")
-            pts = _fincke_pohst(B, cv, bound * (1 + margin) + margin, res)
+            if method == "milp":
+                pts = _milp_point(B, cv, -1.0 / t + 1e-7, time_limit)
+            else:
+                pts = _fincke_pohst(B, cv, bound * (1 + margin) + margin, res)
         for zp in pts:
             if m:
                 # float pre-test of positivity (u > -1/t); only clear violations are dropped
@@ -402,6 +408,20 @@ def _comb(z, W) -> fmpq_poly:
         if c:
             out += int(c) * w
     return out
+
+
+def _milp_point(B: np.ndarray, c: np.ndarray, lower: float, time_limit: float) -> list:
+    """At most one integer ``z`` with ``B z + c >= lower`` (HiGHS feasibility; floats)."""
+    from scipy.optimize import Bounds, LinearConstraint, milp
+
+    from .simplex import _Silence
+
+    m = B.shape[1]
+    with _Silence():
+        r = milp(np.zeros(m), constraints=[LinearConstraint(B, lower - c, np.inf)],
+                 integrality=np.ones(m), bounds=Bounds(-np.inf, np.inf),
+                 options={"disp": False, "time_limit": time_limit})
+    return [[int(round(v)) for v in r.x]] if r.x is not None else []
 
 
 def _fincke_pohst(B: np.ndarray, c: np.ndarray, r2: float, res: FibreResult):
@@ -479,4 +499,46 @@ def tower_levels(K: CyclotomicField, chain: list, j: int, log=None) -> list:
             log(f"degree {st.degree}: {count} elements of trace {j} in {len(reps)} orbits "
                 f"({cand} candidates, {st.seconds} s)")
     return stages
+
+
+def interlacer_from_element(K: CyclotomicField, mu: fmpq_poly) -> fmpz_poly:
+    """``g = mu Psi_n'(alpha) mod Psi_n`` for ``mu in O_K^vee``, checked to be an interlacer of ``Psi_n``."""
+    from .realroots import interlaces
+
+    g = fmpq_poly(mu) * fmpq_poly(K.f.derivative()) % K.F
+    if g.denom() != 1:
+        raise ArithmeticError("mu is not in O_K^vee")
+    gz = fmpz_poly([int(c) for c in g.numer().coeffs()])
+    if int(gz.leading_coefficient()) <= 0 or not interlaces(K.f, gz):
+        raise ArithmeticError("mu is not totally positive")
+    return gz
+
+
+def central_search(K: CyclotomicField, H: list, j: int, scale: float, time_limit: float = 300.0,
+                   max_orbits: Optional[int] = None, log=None) -> Optional[fmpz_poly]:
+    """Look for a level-``j`` interlacer of ``Psi_n`` in the fibres over central elements of ``K^H``.
+
+    The fibre over ``nu`` has volume proportional to ``prod tau(nu)``, largest for ``nu``
+    near the centre of the trace-``j`` simplex of ``K^H``.  This takes the elements of
+    ``K^H`` within ``scale`` of the centre (:meth:`CyclotomicField.fibre` over ``Q``), one per
+    Galois orbit, most central first, and searches each fibre with HiGHS.  A result is a
+    checked interlacer; ``None`` proves nothing.
+    """
+    import math
+
+    cen = K.fibre(H, K.G, fmpq_poly([j]), scale=scale, limit=5000)
+    taus = K.cosets(H)
+    reps = {}
+    for nu in cen.points:
+        reps.setdefault(K.orbit_key(nu, H), nu)
+    order = sorted(reps.values(), key=lambda nu: -sum(math.log(float(v.mid())) for v in K.values(nu, taus, 128)))
+    if log:
+        log(f"{len(cen.points)} central elements of trace {j} in {len(order)} orbits")
+    for i, nu in enumerate(order[:max_orbits]):
+        fr = K.fibre([1], H, nu, limit=1, method="milp", time_limit=time_limit)
+        if log:
+            log(f"orbit {i}: {len(fr.points)} point(s), {fr.seconds:.1f} s")
+        if fr.points:
+            return interlacer_from_element(K, fr.points[0])
+    return None
 

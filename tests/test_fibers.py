@@ -49,10 +49,20 @@ def test_fibre_over_non_positive_target_is_empty():
     assert K.fibre([1], H7, nu).points == []
 
 
-def test_psi231_witnesses():
-    # m(Psi_231) = 3: level 2 is empty (fibres; too slow for the test suite), levels 3 and 5 are attained
-    w = json.load(open(os.path.join(RESULTS, "psi231.json")))
-    f = real_cyclotomic(231)
-    for j, s in w["interlacers"].items():
-        g = poly(s)
-        assert int(g.leading_coefficient()) == int(j) and interlaces(f, g)
+def test_psi231_psi273_witnesses():
+    # m = 3 for n = 231, 273: level 2 is empty (fibres; too slow for the test suite), levels 3, 5 attained
+    for n in (231, 273):
+        w = json.load(open(os.path.join(RESULTS, f"psi{n}.json")))
+        f = real_cyclotomic(n)
+        for j, s in w["interlacers"].items():
+            g = poly(s)
+            assert int(g.leading_coefficient()) == int(j) and interlaces(f, g), (n, j)
+
+
+@needs_pari
+def test_central_search_finds_witness():
+    from noninterlacing.fibers import central_search
+
+    K = CyclotomicField(21)
+    g = central_search(K, K.fixer(7), 2, 0.3)
+    assert g is not None and int(g.leading_coefficient()) == 2 and interlaces(K.f, g)

@@ -42,7 +42,7 @@ Consequences that the program uses and reports:
 ```bash
 pip install -e .            # numpy, scipy, python-flint
 pip install cypari2         # optional: maximal orders, subfields, zeta values (PARI/GP)
-python -m pytest tests      # 51 tests, ~1.5 min
+python -m pytest tests      # 52 tests, ~1.5 min
 ```
 
 ## Command line
@@ -173,14 +173,20 @@ Full details are in [`results/paper_verification.md`](results/paper_verification
     ring of integers is `O_{F_{n_1}} ⊗ O_{F_{n_2}}`, and the product of two witnesses is a
     witness. Hence `m(Ψ_n) = 2` whenever `n` has two odd prime factors (other than
     `{3, 5}`) or three including 3 and 5.
-  * **`m(Ψ_231) = 3`** (`231 = 3·7·11`, degree 60), the first real cyclotomic field
-    that is not 2-interlacing. Level 2 is empty, which takes a new method, below. Levels 3
-    and 5 come from MILP witnesses, level 4 from a compositum, so `S(Ψ_231) = <3,4,5>`.
-    The method: the relative trace maps level-`j` elements of a field onto level-`j`
-    elements of each subfield. So level 2 can be enumerated up a tower
-    `F_11 ⊂ F_7F_11 ⊂ F_77 ⊂ F_231` (80, 6570, 285 and 0 elements), one fibre per
-    Galois orbit (`noninterlacing/fibers.py`). The engine confirms the 6570, and the
-    tower through `F_11F_21` (24345 elements in degree 30, 812 fibres) also ends with 0.
+  * **`m(Ψ_231) = m(Ψ_273) = 3`** (`231 = 3·7·11`, `273 = 3·7·13`; degrees 60 and 72). These
+    are the first real cyclotomic fields shown not to be 2-interlacing, and both have
+    `S = <3,4,5>`.
+    * Level 2 is empty. Proving it takes a new method: the relative trace maps level-`j`
+      elements of a field onto level-`j` elements of each subfield. So level 2 can be
+      enumerated up a tower such as `F_11 ⊂ F_7F_11 ⊂ F_77 ⊂ F_231` (80, 6570, 285 and 0
+      elements), one fibre per Galois orbit (`noninterlacing/fibers.py`).
+    * Cross-checks: the engine confirms the 6570, and the tower through `F_11F_21`
+      (24345 elements in degree 30, 812 fibres) also ends with 0. For 273:
+      `F_13 ⊂ F_7F_13 ⊂ F_91 ⊂ F_273` has 156, 10512, 18 and 0.
+    * Levels 3 and 5 come from MILP witnesses, level 4 from a compositum. For 273 the plain
+      MILP fails, and the witnesses come from `fibers.central_search`. It searches the
+      fibres over the most central elements of a subfield, whose volume `∏ τ(ν)` is
+      largest.
   * Abelian fields: trace-down gives `m(O_K) ≤ m(Ψ_n)` for a real abelian field `K` of
     conductor `n`. So no real abelian field of conductor < 231 has `m ≥ 3`, and `K` is
     interlacing whenever `Ψ_n` is.
@@ -250,4 +256,4 @@ trace-one `δ` supports the sail only along a lower-dimensional face through 1.
 | `paper.py`, `cli.py` | verification report, command line |
 | `jobs.py` | one computation in a child process with memory and wall-clock limits (used by the table scripts) |
 | `fibers.py` | real cyclotomic fields: Galois action, subfield codifferents, fibres of the relative trace, level-`j` elements up a tower |
-| `scripts/` | `sextic_census.py`, `cyclotomic_levels.py`, `abelian_levels.py`, `span_census.py`, `kronecker_census.py`, `fibre_levels.py`, `kronecker_report.py` (produce `results/`) |
+| `scripts/` | `sextic_census.py`, `cyclotomic_levels.py`, `abelian_levels.py`, `span_census.py`, `kronecker_census.py`, `fibre_levels.py`, `central_search.py`, `kronecker_report.py` (produce `results/`) |

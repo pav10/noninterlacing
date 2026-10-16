@@ -131,7 +131,7 @@ conductor has at most two odd prime factors or is `{3, 5, p}`-type.
 *Verified* on `results/abelian_levels.json` (141 fields, degree 6–24, conductor ≤ 113): `m(O_K) ≤ m(Ψ_n)` for every decided field (ok), with equality for 101; 4 fields, where the
 direct search ran out of time, are decided by trace-down from `F_p`.
 
-## 5. `Ψ_231`: the first `Ψ_n` with `m = 3`
+## 5. Three odd primes: `m(Ψ_n) = 3`
 
 **Fibres of the relative trace.** For subfields `F' ⊂ F''` of `F_n` the relative trace maps
 the totally positive elements of `O_{F''}^∨` of trace `j` onto totally positive elements of
@@ -145,19 +145,24 @@ Going up a tower `Q ⊂ F_1 ⊂ … ⊂ F_n` one fibre per Galois orbit gives ev
 *Verified*: the towers reproduce the engine's counts for `Ψ_21`, `j = 1, 2, 3` (ok),
 and the engine counts 6570 elements of trace 2 in `F_7F_11` (through PARI's `polcompositum`).
 
-**Level 2 of `F_231` is empty.** `F_231` (degree 60) has three subfields of index 2,
-`F_77`, `F_7F_33`, `F_11F_21`, all with `m = 2`, so §4 only gives `m ≤ 4`, and its subfield of
-index 3 (degree 20) also has `m = 2`. Counts of trace-2 elements up 2 towers
-(degree: count / Galois orbits):
+**Level 2.** For `n` with three odd primes (not 3 and 5 together) §4 gives only `m ≤ 4`; for
+`n = 231` all three index-2 subfields and the index-3 subfield have `m = 2`. Counts of trace-2
+elements up each tower (degree: count / Galois orbits):
 
 * `fibre_231_level2.json` (tower `[11, 7, 77]`, 803 s): 1: 1/1, 5: 80/16, 15: 6570/438, 30: 285/10, 60: 0/0
 * `fibre_231_level2_via21.json` (tower `[11, 7, 21]`, 364 s): 1: 1/1, 5: 80/16, 15: 6570/438, 30: 24345/812, 60: 0/0
+* `fibre_273_level2.json` (tower `[13, 7, 91]`, 320 s): 1: 1/1, 6: 156/27, 18: 10512/585, 36: 18/1, 72: 0/0
 
-**Levels 3, 4, 5 are attained**: level 3 and 5 interlacers from MILP feasibility (`results/psi231.json`), level 4 from the compositum `Ψ_11 ⊗ Ψ_21`; all checked exactly: ok. Hence
+**Levels 3, 4, 5.** Levels 3 and 5 from MILP (directly for 231; in the fibres over the most
+central elements of `F_91` for 273, `fibers.central_search`), level 4 from the compositum
+`Ψ_q ⊗ Ψ_{n/q}` (`q` the largest prime power, `m(Ψ_{n/q}) = 2`); all checked exactly:
 
-    m(Ψ_231) = 3,   S(Ψ_231) = <3, 4, 5>.
+| n | degree | level 2 | level 3 | level 4 | level 5 | m | S |
+|---|---|---|---|---|---|---|---|
+| 231 | 60 | empty | yes | Ψ_11 ⊗ Ψ_21 | yes | 3 | <3,4,5> |
+| 273 | 72 | empty | yes | Ψ_13 ⊗ Ψ_21 | yes | 3 | <3,4,5> |
 
-So `m(Ψ_n) ≤ 2` fails, and §4's bound `2^{b-1} = 4` is not attained here.
+So `m(Ψ_n) ≤ 2` fails; whether §4's bound `2^{b-1} = 4` is ever attained is open.
 
 **Volume heuristic.** `E_j = j^{d-1} √|disc| / (d-1)!` is the volume of the trace-`j` simplex
 in lattice units (`kronecker.expected_count_log10`). It predicts the counts above well
@@ -173,7 +178,7 @@ directions: composita give `m(Ψ_143) = 2` with `E_2 ≈ 10^{-3.6}`, and `I_1(Ψ
 | 143 | 60 | -21.4, -3.6, 6.8, 14.1, 19.8 | 2 | 2 |
 | 165 | 40 | -12.3, -0.6, 6.3, 11.2, 15.0 | 2 | 2 |
 | 231 | 60 | -23.7, -6.0, 4.4, 11.8, 17.5 | 3 | 4 |
-| 273 | 72 | -31.2, -9.9, 2.6, 11.5, 18.4 | ? | 4 |
+| 273 | 72 | -31.2, -9.9, 2.6, 11.5, 18.4 | 3 | 4 |
 | 357 | 96 | -47.4, -18.8, -2.1, 9.8, 19.0 | ? | 4 |
 | 385 | 120 | -66.8, -31.0, -10.0, 4.8, 16.4 | ? | 4 |
 | 399 | 108 | -56.0, -23.8, -4.9, 8.5, 18.8 | ? | 4 |
