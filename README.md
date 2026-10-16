@@ -184,9 +184,12 @@ Full details are in [`results/paper_verification.md`](results/paper_verification
       (24345 elements in degree 30, 812 fibres) also ends with 0. For 273:
       `F_13 ⊂ F_7F_13 ⊂ F_91 ⊂ F_273` has 156, 10512, 18 and 0. A third tower for 231,
       through `F_7F_33`, also ends with 0.
-    * `Ψ_385` (`5·7·11`, degree 120): level 2 is empty as well (80, 6570, 285, 570, 0 up
-      `F_11 ⊂ F_7F_11 ⊂ F_77 ⊂ F_5F_77 ⊂ F_385`), so `3 ≤ m(Ψ_385) ≤ 4`. The volume
-      heuristic gives `E_3 ≈ 10^-10`, suggesting `m(Ψ_385) = 4`, the §4 bound; unproved.
+    * Level 2 is also empty for `Ψ_357`, `Ψ_385` and `Ψ_399` (degrees 96, 120 and 108),
+      so `3 ≤ m ≤ 4` for each. For example, `F_17 ⊂ F_7F_17 ⊂ F_119 ⊂ F_357` has 492,
+      18516, 24 and 0 elements. Here the volume heuristic gives `E_3 ≈ 10^-2`, `10^-10` and
+      `10^-5`, suggesting `m = 4` (the §4 bound); unproved.
+    * In `F_91`, `F_119` and `F_133` the only level-2 elements are the compositum products
+      `μ_p μ_q`.
     * Levels 3 and 5 come from MILP witnesses, level 4 from a compositum. For 273 the plain
       MILP fails, and the witnesses come from `fibers.central_search`. It searches the
       fibres over the most central elements of a subfield, whose volume `∏ τ(ν)` is

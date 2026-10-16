@@ -153,7 +153,9 @@ elements up each tower (degree: count / Galois orbits):
 * `fibre_231_level2_via21.json` (tower `[11, 7, 21]`, 309 s): 1: 1/1, 5: 80/16, 15: 6570/438, 30: 24345/812, 60: 0/0
 * `fibre_231_level2_via33.json` (tower `[11, 7, 33]`, 166 s): 1: 1/1, 5: 80/16, 15: 6570/438, 30: 9165/306, 60: 0/0
 * `fibre_273_level2.json` (tower `[13, 7, 91]`, 183 s): 1: 1/1, 6: 156/27, 18: 10512/585, 36: 18/1, 72: 0/0
+* `fibre_357_level2.json` (tower `[17, 7, 119]`, 992 s): 1: 1/1, 8: 492/63, 24: 18516/773, 48: 24/1, 96: 0/0
 * `fibre_385_level2.json` (tower `[11, 7, 77, 5]`, 190 s): 1: 1/1, 5: 80/16, 15: 6570/438, 30: 285/10, 60: 570/10, 120: 0/0
+* `fibre_399_level2.json` (tower `[19, 7, 133]`, 2117 s): 1: 1/1, 9: 810/90, 27: 20682/766, 54: 27/1, 108: 0/0
 
 **Levels 3, 4, 5.** Levels 3 and 5 from MILP (directly for 231; in the fibres over the most
 central elements of `F_91` for 273, `fibers.central_search`), level 4 from the compositum
@@ -163,7 +165,9 @@ central elements of `F_91` for 273, `fibers.central_search`), level 4 from the c
 |---|---|---|---|---|---|---|---|
 | 231 | 60 | empty | yes | Ψ_11 ⊗ Ψ_21 | yes | 3 | <3,4,5> |
 | 273 | 72 | empty | yes | Ψ_13 ⊗ Ψ_21 | yes | 3 | <3,4,5> |
+| 357 | 96 | empty | ? (`E_3 ≈ 10^{-2.1}`) | Ψ_17 ⊗ Ψ_21 | ? | 3–4 | ? |
 | 385 | 120 | empty | ? (`E_3 ≈ 10^{-10.0}`) | Ψ_11 ⊗ Ψ_35 | ? | 3–4 | ? |
+| 399 | 108 | empty | ? (`E_3 ≈ 10^{-4.9}`) | Ψ_19 ⊗ Ψ_21 | ? | 3–4 | ? |
 
 So `m(Ψ_n) ≤ 2` fails; whether §4's bound `2^{b-1} = 4` is ever attained is open.
 
@@ -174,9 +178,11 @@ elements include the compositum products `μ_p μ_q` (level 1 in `F_p F_q`, of i
 |---|---|---|---|---|
 | `F_77` | 285 | 15 | 15 | `10^{2.4}` |
 | `F_91` | 18 | 18 | 18 | `10^{1.6}` |
+| `F_119` | 24 | 24 | 24 | `10^{-0.7}` |
+| `F_133` | 27 | 27 | 27 | `10^{-2.1}` |
 
 The elements lying in `F_p F_q` are exactly the level-1 elements of `F_p F_q`, and their number
-equals the number of products in every case: the products are all of them. In `F_91` they are the only level-2 elements, although `E_2` predicts more; few fibres then lead to the top field, which keeps those towers cheap.
+equals the number of products in every case: the products are all of them. In `F_91`, `F_119`, `F_133` they are the only level-2 elements, although `E_2` predicts more; few fibres then lead to the top field, which keeps those towers cheap.
 
 **Volume heuristic.** `E_j = j^{d-1} √|disc| / (d-1)!` is the volume of the trace-`j` simplex
 in lattice units (`kronecker.expected_count_log10`). It predicts the counts above well
@@ -193,9 +199,9 @@ directions: composita give `m(Ψ_143) = 2` with `E_2 ≈ 10^{-3.6}`, and `I_1(Ψ
 | 165 | 40 | -12.3, -0.6, 6.3, 11.2, 15.0 | 2 | 2 |
 | 231 | 60 | -23.7, -6.0, 4.4, 11.8, 17.5 | 3 | 4 |
 | 273 | 72 | -31.2, -9.9, 2.6, 11.5, 18.4 | 3 | 4 |
-| 357 | 96 | -47.4, -18.8, -2.1, 9.8, 19.0 | ? | 4 |
+| 357 | 96 | -47.4, -18.8, -2.1, 9.8, 19.0 | 3–4 | 4 |
 | 385 | 120 | -66.8, -31.0, -10.0, 4.8, 16.4 | 3–4 | 4 |
-| 399 | 108 | -56.0, -23.8, -4.9, 8.5, 18.8 | ? | 4 |
+| 399 | 108 | -56.0, -23.8, -4.9, 8.5, 18.8 | 3–4 | 4 |
 | 429 | 120 | -64.9, -29.1, -8.2, 6.7, 18.2 | ? | 4 |
 | 455 | 144 | -85.6, -42.6, -17.4, 0.5, 14.3 | ? | 4 |
 
