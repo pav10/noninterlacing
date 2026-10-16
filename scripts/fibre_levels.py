@@ -2,6 +2,8 @@
 
 Usage: python scripts/fibre_levels.py N J M1,M2,... [OUT.json]
 
+An entry P:E stands for the subfield of degree E of F_P (P prime).
+
 The tower is Q subset F_{M1} subset F_{M1} F_{M2} subset ... subset F_n, where the
 k-th field is the compositum of F_{M1}, ..., F_{Mk} (F_m = Q(zeta_m)^+, m | N),
 followed by F_N itself.  Example: 231 2 11,7,77 uses
@@ -45,7 +47,7 @@ def _load_partial(path):
 def _chain(K, ms):
     chain, fix = [K.G], set(K.G)
     for m in ms:
-        fix &= set(K.fixer(m))
+        fix &= set(K.tower_fixer(str(m)))
         chain.append(sorted(fix))
     if chain[-1] != [1]:
         chain.append([1])
@@ -55,7 +57,7 @@ def _chain(K, ms):
 def main(n, j, ms, out):
     """The stages below ``F_L`` (``L = lcm(ms)``) are computed inside ``F_L``, which is much
     cheaper than inside ``F_n``; only the last step works in ``F_n``."""
-    L = math.lcm(*ms)
+    L = math.lcm(*(int(str(m).split(":")[0]) for m in ms))
     K = CyclotomicField(n)
     small = L != n and CyclotomicField(L)
     K0 = small or K
@@ -101,4 +103,4 @@ def main(n, j, ms, out):
 
 if __name__ == "__main__":
     out = sys.argv[4] if len(sys.argv) > 4 else None
-    main(int(sys.argv[1]), int(sys.argv[2]), [int(x) for x in sys.argv[3].split(",")], out)
+    main(int(sys.argv[1]), int(sys.argv[2]), [x if ":" in x else int(x) for x in sys.argv[3].split(",")], out)

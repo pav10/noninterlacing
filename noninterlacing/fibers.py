@@ -106,6 +106,24 @@ class CyclotomicField:
             raise ValueError("m must divide n")
         return [a for a in self.G if a % m in (1, m - 1) or m <= 2]
 
+    def subfield_fixer(self, p: int, e: int) -> list:
+        """The subgroup fixing the subfield of degree ``e`` of ``F_p`` (``p`` an odd prime, ``p | n``).
+
+        ``Gal(F_p/Q) = (Z/p)^*/{+-1}`` is cyclic of order ``h = (p-1)/2``; its subfield of
+        degree ``e`` is fixed by the subgroup of index ``e``, the ``a`` with ``a^(h/e) = +-1 mod p``.
+        """
+        h = (p - 1) // 2
+        if self.n % p or h % e:
+            raise ValueError("need p | n and e | (p-1)/2")
+        return [a for a in self.G if pow(a, h // e, p) in (1, p - 1)]
+
+    def tower_fixer(self, spec: str) -> list:
+        """``"m"`` -> fixer of ``F_m``; ``"p:e"`` -> fixer of the degree-``e`` subfield of ``F_p``."""
+        if ":" in spec:
+            p, e = map(int, spec.split(":"))
+            return self.subfield_fixer(p, e)
+        return self.fixer(int(spec))
+
     def cosets(self, H: list, within: Optional[list] = None) -> list:
         """Representatives of ``within / H`` (``within`` defaults to ``G``)."""
         Hs = set(H)

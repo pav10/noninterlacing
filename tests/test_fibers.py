@@ -93,3 +93,12 @@ def test_lp_and_fincke_pohst_fibres_agree():
         a = sorted(map(str, K.fibre(H57, H7, nu, method="fp").points))
         b = sorted(map(str, K.fibre(H57, H7, nu, method="lp").points))
         assert a == b
+
+
+@needs_pari
+def test_subfield_fixers_and_towers_through_them():
+    K = CyclotomicField(39)
+    assert [len(K.G) // len(K.subfield_fixer(13, e)) for e in (1, 2, 3, 6)] == [1, 2, 3, 6]
+    chain = [K.G, K.subfield_fixer(13, 2), K.fixer(13), [1]]
+    assert [s.count for s in tower_levels(K, chain, 2)] == [1, 7, 156, 2214]
+
