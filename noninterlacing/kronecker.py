@@ -367,6 +367,22 @@ def amgm_lower_bound(f: fmpz_poly) -> tuple:
     return max(1, math.ceil(total - 1e-12)), total
 
 
+def expected_count_log10(f: fmpz_poly, j: int) -> float:
+    """``log10`` of the volume heuristic ``E_j(f) = j^(d-1) sqrt|disc f| / (d-1)!``.
+
+    ``E_j`` is the volume of the trace-``j`` simplex in units of the covolume of
+    ``Z[alpha]^vee`` (``vol P_1(f) = sqrt|disc f|/(d-1)!``), i.e. the expected number
+    of level-``j`` interlacers if lattice points were spread uniformly.  Structured
+    witnesses (McKee--Smyth pairs, composita, lifts) can beat it, and arithmetic
+    obstructions (``I_1(Psi_21) = 0`` with ``E_1 = 5.6``) can fall short of it.
+    """
+    import math
+
+    d = f.degree()
+    return ((d - 1) * math.log10(j) + 0.5 * math.log10(abs(int(f.discriminant())))
+            - math.lgamma(d) / math.log(10))
+
+
 def circle_lift(indices, g: fmpz_poly) -> tuple:
     """``(F, G)`` on the unit circle for ``f = prod Psi_n`` and an interlacer ``g``.
 

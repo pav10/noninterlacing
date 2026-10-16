@@ -291,6 +291,11 @@ class CyclotomicField:
             cv = np.array([float(x.mid()) for x in c])
             pts = _fincke_pohst(B, cv, bound * (1 + margin) + margin, res)
         for zp in pts:
+            if m:
+                # float pre-test of positivity (u > -1/t); only clear violations are dropped
+                u = B @ np.array(zp, dtype=float) + cv
+                if float(u.min()) < -1.0 / t - margin:
+                    continue
             z = [sum(U[cc][kk] * zp[kk] for kk in range(m)) for cc in range(m)] if m else []
             mu = mu0
             for cz, x in zip(z, lam):
@@ -311,17 +316,16 @@ def _comb(z, W) -> fmpq_poly:
     return out
 
 
-def _fincke_pohst(B: np.ndarray, c: np.ndarray, r2: float, res: FibreResult) -> list:
-    """All integer ``z`` with ``|| B z + c ||^2 <= r2`` (Schnorr--Euchner)."""
+def _fincke_pohst(B: np.ndarray, c: np.ndarray, r2: float, res: FibreResult):
+    """Yield all integer ``z`` with ``|| B z + c ||^2 <= r2`` (Schnorr--Euchner)."""
     Q, Rm = np.linalg.qr(B)  # B = Q Rm, Rm upper triangular m x m
     m = Rm.shape[0]
     qc = Q.T @ c
     rest = float(c @ c - qc @ qc)
     r2 = r2 - max(rest, 0.0)
     if r2 < 0:
-        return []
+        return
     # || Rm z + qc ||^2 : coordinate i depends on z_i..z_{m-1}
-    out = []
     z = [0] * m
 
     def rec(i: int, partial: float):
@@ -341,13 +345,12 @@ def _fincke_pohst(B: np.ndarray, c: np.ndarray, r2: float, res: FibreResult) -> 
                 continue
             z[i] = k
             if i == 0:
-                out.append(list(z))
+                yield list(z)
             else:
-                rec(i - 1, p)
+                yield from rec(i - 1, p)
         z[i] = 0
 
-    rec(m - 1, 0.0)
-    return out
+    yield from rec(m - 1, 0.0)
 
 
 @dataclass
