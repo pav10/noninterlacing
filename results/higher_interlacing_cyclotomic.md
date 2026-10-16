@@ -156,6 +156,7 @@ elements up each tower (degree: count / Galois orbits):
 * `fibre_357_level2.json` (tower `[17, 7, 119]`, 992 s): 1: 1/1, 8: 492/63, 24: 18516/773, 48: 24/1, 96: 0/0
 * `fibre_385_level2.json` (tower `[11, 7, 77, 5]`, 190 s): 1: 1/1, 5: 80/16, 15: 6570/438, 30: 285/10, 60: 570/10, 120: 0/0
 * `fibre_399_level2.json` (tower `[19, 7, 133]`, 2117 s): 1: 1/1, 9: 810/90, 27: 20682/766, 54: 27/1, 108: 0/0
+* `fibre_429_level2.json` (tower `[11, '13:3', 13, 143]`, 918 s): 1: 1/1, 5: 80/16, 15: 124155/8277, 30: 22380/747, 60: 30/1, 120: 0/0
 
 **Levels 3, 4, 5.** Levels 3 and 5 from MILP (directly for 231; in the fibres over the most
 central elements of `F_91` for 273, `fibers.central_search`), level 4 from the compositum
@@ -168,6 +169,7 @@ central elements of `F_91` for 273, `fibers.central_search`), level 4 from the c
 | 357 | 96 | empty | ? (`E_3 ≈ 10^{-2.1}`) | Ψ_17 ⊗ Ψ_21 | ? | 3–4 | ? |
 | 385 | 120 | empty | ? (`E_3 ≈ 10^{-10.0}`) | Ψ_11 ⊗ Ψ_35 | ? | 3–4 | ? |
 | 399 | 108 | empty | ? (`E_3 ≈ 10^{-4.9}`) | Ψ_19 ⊗ Ψ_21 | ? | 3–4 | ? |
+| 429 | 120 | empty | ? (`E_3 ≈ 10^{-8.2}`) | Ψ_13 ⊗ Ψ_33 | ? | 3–4 | ? |
 
 So `m(Ψ_n) ≤ 2` fails; whether §4's bound `2^{b-1} = 4` is ever attained is open.
 
@@ -180,9 +182,10 @@ elements include the compositum products `μ_p μ_q` (level 1 in `F_p F_q`, of i
 | `F_91` | 18 | 18 | 18 | `10^{1.6}` |
 | `F_119` | 24 | 24 | 24 | `10^{-0.7}` |
 | `F_133` | 27 | 27 | 27 | `10^{-2.1}` |
+| `F_143` | 30 | 30 | 30 | `10^{-3.6}` |
 
 The elements lying in `F_p F_q` are exactly the level-1 elements of `F_p F_q`, and their number
-equals the number of products in every case: the products are all of them. In `F_91`, `F_119`, `F_133` they are the only level-2 elements, although `E_2` predicts more; few fibres then lead to the top field, which keeps those towers cheap.
+equals the number of products in every case: the products are all of them. In `F_91`, `F_119`, `F_133`, `F_143` they are the only level-2 elements, although `E_2` predicts more; few fibres then lead to the top field, which keeps those towers cheap.
 
 **Volume heuristic.** `E_j = j^{d-1} √|disc| / (d-1)!` is the volume of the trace-`j` simplex
 in lattice units (`kronecker.expected_count_log10`). It predicts the counts above well
@@ -202,7 +205,7 @@ directions: composita give `m(Ψ_143) = 2` with `E_2 ≈ 10^{-3.6}`, and `I_1(Ψ
 | 357 | 96 | -47.4, -18.8, -2.1, 9.8, 19.0 | 3–4 | 4 |
 | 385 | 120 | -66.8, -31.0, -10.0, 4.8, 16.4 | 3–4 | 4 |
 | 399 | 108 | -56.0, -23.8, -4.9, 8.5, 18.8 | 3–4 | 4 |
-| 429 | 120 | -64.9, -29.1, -8.2, 6.7, 18.2 | ? | 4 |
+| 429 | 120 | -64.9, -29.1, -8.2, 6.7, 18.2 | 3–4 | 4 |
 | 455 | 144 | -85.6, -42.6, -17.4, 0.5, 14.3 | ? | 4 |
 
 ## 6. The AM–GM lower bound

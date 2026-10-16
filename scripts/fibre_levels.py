@@ -23,6 +23,9 @@ from flint import fmpq, fmpq_poly
 from noninterlacing.fibers import CyclotomicField, Stage, tower_levels
 
 
+MAX_REPS = 2000  # orbit representatives are kept in OUT.json only for stages with at most this many
+
+
 def _enc(x):
     return [f"{c.p}/{c.q}" for c in (fmpq(x[i]) for i in range(x.degree() + 1))]
 
@@ -91,7 +94,8 @@ def main(n, j, ms, out):
     amb = [L if small and i < len(stages) - 1 else n for i in range(len(stages))]
     rows = [{"degree": s.degree, "ambient": a, "subgroup": s.H, "count": s.count, "orbits": len(s.reps),
              "candidates": s.candidates, "seconds": s.seconds,
-             "reps": [str(x) for x in s.reps] if s.degree < K.d or s.count else []}
+             "reps": [str(x) for x in s.reps] if len(s.reps) <= MAX_REPS else [],
+             **({"reps_omitted": True} if len(s.reps) > MAX_REPS else {})}
             for s, a in zip(stages, amb)]
     res = {"n": n, "level": j, "tower": ms, "stages": rows, "seconds": round(time.time() - t0, 1)}
     if out:

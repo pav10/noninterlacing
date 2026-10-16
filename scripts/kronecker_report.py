@@ -103,6 +103,8 @@ def main():
         for name, tw, st, secs in towers[n]:
             T = json.load(open(os.path.join(RES, name)))
             for k, m in enumerate(tw, start=1):
+                if isinstance(m, str):  # "p:e", a subfield of F_p: not a field F_m
+                    continue
                 fac = {p: a for p, a in factorint(m).items() if p != 2}
                 stage = T["stages"][k]
                 if len(fac) != 2 or m in pq or stage["count"] == 0:
