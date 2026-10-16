@@ -42,7 +42,7 @@ Consequences that the program uses and reports:
 ```bash
 pip install -e .            # numpy, scipy, python-flint
 pip install cypari2         # optional: maximal orders, subfields, zeta values (PARI/GP)
-python -m pytest tests      # 52 tests, ~1.5 min
+python -m pytest tests      # 56 tests, ~1.5 min
 ```
 
 ## Command line
