@@ -147,10 +147,11 @@ and the engine counts 6570 elements of trace 2 in `F_7F_11` (through PARI's `pol
 
 **Level 2 of `F_231` is empty.** `F_231` (degree 60) has three subfields of index 2,
 `F_77`, `F_7F_33`, `F_11F_21`, all with `m = 2`, so §4 only gives `m ≤ 4`, and its subfield of
-index 3 (degree 20) also has `m = 2`. Counts of trace-2 elements up the tower
+index 3 (degree 20) also has `m = 2`. Counts of trace-2 elements up 2 towers
 (degree: count / Galois orbits):
 
 * `fibre_231_level2.json` (tower `[11, 7, 77]`, 803 s): 1: 1/1, 5: 80/16, 15: 6570/438, 30: 285/10, 60: 0/0
+* `fibre_231_level2_via21.json` (tower `[11, 7, 21]`, 364 s): 1: 1/1, 5: 80/16, 15: 6570/438, 30: 24345/812, 60: 0/0
 
 **Levels 3, 4, 5 are attained**: level 3 and 5 interlacers from MILP feasibility (`results/psi231.json`), level 4 from the compositum `Ψ_11 ⊗ Ψ_21`; all checked exactly: ok. Hence
 

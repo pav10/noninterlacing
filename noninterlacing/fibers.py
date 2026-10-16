@@ -35,7 +35,7 @@ from typing import Iterable, Optional
 import numpy as np
 from flint import arb, arb_poly, ctx, fmpq, fmpq_mat, fmpq_poly, fmpz_mat, fmpz_poly
 
-from .lattice import lll_columns
+from .lattice import arb_to_scaled_int, lll_columns
 from .poly import chebyshev_C, real_cyclotomic
 from .realroots import is_totally_positive_exact
 
@@ -77,6 +77,7 @@ class CyclotomicField:
         self._cheb = {}
         self._mats = {}
         self._fibre_cache = {}
+        self._codiff = {}
 
     # ------------------------------------------------------------ the group
     def rep(self, a: int) -> int:
@@ -158,13 +159,17 @@ class CyclotomicField:
         """A Z-basis of ``O_{K^H}^vee = Tr_H(O_K^vee)`` (rank ``d/|H|``)."""
         from .orders import _zbasis
 
-        if len(H) == 1:
-            return list(self.codifferent_K)
-        imgs = [self.trace(H, b) for b in self.codifferent_K]
-        basis = _zbasis(imgs, self.d, allow_deficient=True)
-        if len(basis) * len(H) != self.d:
-            raise ArithmeticError("codifferent rank mismatch")
-        return basis
+        key = tuple(H)
+        if key not in self._codiff:
+            if len(H) == 1:  # an HNF/LLL-reduced basis: alpha^i/Psi'(alpha) has huge coefficients
+                basis = _zbasis(list(self.codifferent_K), self.d)
+            else:
+                imgs = [self.trace(H, b) for b in self.codifferent_K]
+                basis = _zbasis(imgs, self.d, allow_deficient=True)
+            if len(basis) * len(H) != self.d:
+                raise ArithmeticError("codifferent rank mismatch")
+            self._codiff[key] = basis
+        return self._codiff[key]
 
     # ------------------------------------------------------- numerics
     def root(self, k: int, prec: int) -> arb:
@@ -188,31 +193,46 @@ class CyclotomicField:
         return is_totally_positive_exact(fmpz_poly([int(c) for c in x.numer().coeffs()]), self.f)
 
     def _fibre_data(self, H_small: list, H_big: list):
+        """Lattice data of ``Tr: O_{F''}^vee -> O_{F'}^vee`` in the bases ``W``, ``W1`` (cached)."""
         key = (tuple(H_small), tuple(H_big))
         if key not in self._fibre_cache:
             from .pari import pari
 
             P = pari()
             W = self.codifferent(H_small)
+            W1 = self.codifferent(H_big)
             R = self.cosets(H_small, within=H_big)
             taus = self.cosets(H_big)
-            if len(taus) * len(R) != len(W):
+            e1, e2 = len(W1), len(W)
+            if len(taus) != e1 or e1 * len(R) != e2:
                 raise ArithmeticError("index mismatch")
-            TW = [self.trace(R, w) for w in W]
-            den = 1
-            for x in TW:
-                den = den * int(x.denom()) // gcd(den, int(x.denom()))
-            M = [[int(TW[c][r] * den) for c in range(len(W))] for r in range(self.d)]
-            Mp = P.matrix(self.d, len(W), [x for row in M for x in row])
-            Kb = P.matkerint(Mp)
-            m = int(P.matsize(Kb)[1])
-            if m != len(W) - len(taus):
-                raise ArithmeticError("kernel rank mismatch")
-            kern = [[int(Kb[r, c]) for r in range(len(W))] for c in range(m)]
+            # coordinates with respect to W1: x = sum y_i W1_i  <=>  y = Cinv x[rows1]
+            C = fmpq_mat([[W1[c][r] for c in range(e1)] for r in range(self.d)])
+            rows1 = _pivot_rows(C)
+            Cinv = fmpq_mat([[C[r, c] for c in range(e1)] for r in rows1]).inv()
+            coords = lambda x: _coords(x, C, rows1, Cinv)
+            Tm = []
+            for w in W:
+                y = coords(self.trace(R, w))
+                if y is None:
+                    raise ArithmeticError("Tr(O_F''^vee) is not inside O_F'^vee")
+                Tm.append(y)
+            Tp = P.matrix(e1, e2, [Tm[c][r] for r in range(e1) for c in range(e2)])
+            HU = P.mathnf(Tp, 1)  # Tp * U = [0 | H]; Tr is onto O_F'^vee, so H = 1
+            Hm, Um = HU[0], HU[1]
+            if [[int(Hm[r, c]) for c in range(e1)] for r in range(e1)] != [[int(r == c) for c in range(e1)] for r in range(e1)]:
+                raise ArithmeticError("the relative trace is not onto O_F'^vee")
+            m = e2 - e1
+            Ulast = fmpz_mat([[int(Um[r, m + c]) for c in range(e1)] for r in range(e2)])
+            kz = fmpz_mat([[int(Um[r, c]) for r in range(e2)] for c in range(m)]).lll() if m else None
+            kern = [[int(kz[i, r]) for r in range(e2)] for i in range(m)]
+            Kz = fmpz_mat(kern) if m else None
+            kred = (Kz, (fmpq_mat(Kz) * fmpq_mat(Kz.transpose())).inv()) if m else None
+            solver = (C, rows1, Cinv, Ulast, kred)
             lam = [_comb(col, W) for col in kern]
             ks = [self.mul(k, r) for k in taus for r in R]
             lam_vals = [self.values(x, ks, 384) for x in lam]
-            self._fibre_cache[key] = (W, R, taus, den, Mp, lam, lam_vals)
+            self._fibre_cache[key] = (W, R, taus, solver, lam, lam_vals)
         return self._fibre_cache[key]
 
     def orbit_key(self, x: fmpq_poly, H: list) -> tuple:
@@ -245,27 +265,37 @@ class CyclotomicField:
 
     # --------------------------------------------------------- fibres
     def fibre(self, H_small: list, H_big: list, nu: fmpq_poly, prec: int = 384,  # = cached precision
-              margin: float = 1e-6) -> FibreResult:
-        """All ``mu in O_{K^{H_small}}^vee``, ``mu >> 0`` with ``Tr(mu) = nu`` in ``K^{H_big}``."""
+              margin: float = 1e-6, scale: float = 1.0, limit: Optional[int] = None) -> FibreResult:
+        """All ``mu in O_{K^{H_small}}^vee``, ``mu >> 0`` with ``Tr(mu) = nu`` in ``K^{H_big}``.
+
+        ``scale < 1`` shrinks the search ball around the centre of the fibre (the points
+        with all conjugates over each ``tau`` close to ``tau(nu)/t``): the result is then a
+        subset, useful for finding witnesses, not for proving emptiness.  ``limit`` stops
+        after that many points.
+        """
         from .pari import pari
 
         t0 = time.time()
         res = FibreResult()
         P = pari()
-        W, R, taus, den, Mp, lam, lam_vals = self._fibre_data(H_small, H_big)
+        W, R, taus, solver, lam, lam_vals = self._fibre_data(H_small, H_big)
         t, e1, m = len(R), len(taus), len(lam)
         res.rank = m
         nu = fmpq_poly(nu) % self.F
         nu_vals = self.values(nu, taus, prec)
         if not all(v > 0 for v in nu_vals):
             return res  # nu not totally positive: empty fibre
-        if (nu * den).denom() != 1:
-            return res  # nu is not in Tr(O_{F''}^vee): empty fibre
-        rhs = [int(nu[r] * den) for r in range(self.d)]
-        sol = P.matsolvemod(Mp, 0, P.Col(rhs))
-        if str(P.type(sol)) == "t_INT":
-            return res  # nu is not in Tr(O_{F''}^vee): empty fibre
-        mu0 = _comb([int(x) for x in sol], W)
+        C, rows1, Cinv, Ulast, kred = solver
+        y = _coords(nu, C, rows1, Cinv)
+        if y is None:
+            return res  # nu is not in O_{F'}^vee = Tr(O_{F''}^vee): empty fibre
+        z0 = Ulast * fmpz_mat(e1, 1, y)
+        if m:  # reduce z0 modulo the kernel (exact Babai in coefficient space) to keep mu0 small
+            Kz, KKinv = kred
+            w = KKinv * (fmpq_mat(Kz) * fmpq_mat(z0))
+            kk = fmpz_mat(m, 1, [_round_q(w[i, 0]) for i in range(m)])
+            z0 = z0 - Kz.transpose() * kk
+        mu0 = _comb([int(z0[i, 0]) for i in range(len(W))], W)
         # weighted coordinates u_(tau, r) = (sigma_{tau r}(mu) - tau(nu)/t) / tau(nu)
         rows = [(k, r, i) for i, k in enumerate(taus) for r in R]
         ks = [self.mul(k, r) for (k, r, i) in rows]
@@ -276,7 +306,7 @@ class CyclotomicField:
                 cols.append([v * inv_nu[i] for v, (k, r, i) in zip(vals, rows)])
             v0 = self.values(mu0, ks, prec)
             c = [(v - nu_vals[i] / t) * inv_nu[i] for v, (k, r, i) in zip(v0, rows)]
-        bound = e1 * (t - 1) / t
+        bound = scale * e1 * (t - 1) / t
         if m == 0:
             pts = [[]]
             U = []
@@ -287,8 +317,20 @@ class CyclotomicField:
                 for kk in range(m):
                     newcols.append([sum((cols[cc][r] * U[cc][kk] for cc in range(m) if U[cc][kk]),
                                         arb(0)) for r in range(len(rows))])
+                # Babai: move mu0 next to the centre so that the float search sees a small target
+                lam_red = [_comb([U[cc][kk] for cc in range(m)], lam) for kk in range(m)]
+                for _ in range(4):
+                    kb = _babai(newcols, c, prec)
+                    if not any(kb):
+                        break
+                    c = [c[r] + sum((newcols[kk][r] * kb[kk] for kk in range(m) if kb[kk]), arb(0))
+                         for r in range(len(rows))]
+                    mu0 = mu0 + _comb(kb, lam_red)
             B = np.array([[float(newcols[kk][r].mid()) for kk in range(m)] for r in range(len(rows))])
             cv = np.array([float(x.mid()) for x in c])
+            if float(np.max(np.abs(cv))) > 1e6 or float(np.max(np.abs(B))) > 1e9:
+                raise ArithmeticError(f"fibre lattice badly scaled for the float search: "
+                                      f"target {float(np.max(np.abs(cv))):.3g}, basis {float(np.max(np.abs(B))):.3g}")
             pts = _fincke_pohst(B, cv, bound * (1 + margin) + margin, res)
         for zp in pts:
             if m:
@@ -304,8 +346,54 @@ class CyclotomicField:
             res.candidates += 1
             if self.is_totally_positive(mu, H_small):
                 res.points.append(mu)
+                if limit is not None and len(res.points) >= limit:
+                    break
         res.seconds = time.time() - t0
         return res
+
+
+def _coords(x: fmpq_poly, C: fmpq_mat, rows: list, Cinv: fmpq_mat):
+    """Integer coordinates of ``x`` in the basis whose coordinate columns are ``C``, or ``None``."""
+    e = C.ncols()
+    y = Cinv * fmpq_mat(e, 1, [x[r] for r in rows])
+    if any(y[i, 0].q != 1 for i in range(e)):
+        return None
+    yz = [int(y[i, 0].p) for i in range(e)]
+    for r in range(C.nrows()):
+        if sum((C[r, i] * yz[i] for i in range(e) if yz[i]), fmpq(0)) != x[r]:
+            return None
+    return yz
+
+
+def _round_q(q: fmpq) -> int:
+    p, d = int(q.p), int(q.q)
+    return (2 * p + d) // (2 * d)
+
+
+def _pivot_rows(H) -> list:
+    """Indices of rows of a full-column-rank matrix forming an invertible square block."""
+    rows = []
+    for r in range(H.nrows()):
+        cand = rows + [r]
+        M = fmpq_mat([[H[i, c] for c in range(H.ncols())] for i in cand])
+        if M.rank() == len(cand):
+            rows = cand
+            if len(rows) == H.ncols():
+                return rows
+    raise ArithmeticError("matrix does not have full column rank")
+
+
+def _babai(cols: list, c: list, prec: int) -> list:
+    """Integer ``k`` rounding the least-squares solution of ``sum_k cols[k] k ~ -c`` (``arb``)."""
+    from flint import arb_mat
+
+    m, N = len(cols), len(c)
+    with precision(prec):
+        B = arb_mat(N, m, [cols[k][r] for r in range(N) for k in range(m)])
+        cv = arb_mat(N, 1, [c[r] for r in range(N)])
+        G = B.transpose() * B
+        w = G.solve(-(B.transpose() * cv))
+        return [arb_to_scaled_int(w[k, 0], 0) for k in range(m)]  # exact rounding of the midpoint
 
 
 def _comb(z, W) -> fmpq_poly:

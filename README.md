@@ -179,7 +179,8 @@ Full details are in [`results/paper_verification.md`](results/paper_verification
     The method: the relative trace maps level-`j` elements of a field onto level-`j`
     elements of each subfield. So level 2 can be enumerated up a tower
     `F_11 ⊂ F_7F_11 ⊂ F_77 ⊂ F_231` (80, 6570, 285 and 0 elements), one fibre per
-    Galois orbit (`noninterlacing/fibers.py`). The engine confirms the 6570.
+    Galois orbit (`noninterlacing/fibers.py`). The engine confirms the 6570, and the
+    tower through `F_11F_21` (24345 elements in degree 30, 812 fibres) also ends with 0.
   * Abelian fields: trace-down gives `m(O_K) ≤ m(Ψ_n)` for a real abelian field `K` of
     conductor `n`. So no real abelian field of conductor < 231 has `m ≥ 3`, and `K` is
     interlacing whenever `Ψ_n` is.
