@@ -2,7 +2,7 @@
  "n": 399,
  "degree": 108,
  "m": 3,
- "semigroup": "contains 3, 4",
+ "semigroup": "contains 3, 4 and every j >= 6; level 5 undecided (not searched to completion)",
  "level1": "empty: McKee-Smyth (three odd prime factors)",
  "level2": "empty: fibres of the relative trace, results/fibre_399_level2.json",
  "level3": "lift of a level-1 element of a diagonal index-3 subfield (results/subfields_399_index3.json)",
