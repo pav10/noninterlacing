@@ -102,3 +102,17 @@ def test_subfield_fixers_and_towers_through_them():
     chain = [K.G, K.subfield_fixer(13, 2), K.fixer(13), [1]]
     assert [s.count for s in tower_levels(K, chain, 2)] == [1, 7, 156, 2214]
 
+
+
+@needs_pari
+def test_subfield_chains_find_interlacing_subfields():
+    # the three index-2 subfields of F_65 (degree 12) are interlacing (abelian table), so m(Psi_65) <= 2 by lifting
+    from noninterlacing.fibers import subfield_chain, subgroups_of_prime_order
+
+    K = CyclotomicField(65)
+    subs = subgroups_of_prime_order(K, 2)
+    assert len(subs) == 3
+    for H in subs:
+        chain = subfield_chain(K, H)
+        assert chain[0] == K.G and chain[-1] == sorted(H)
+        assert tower_levels(K, chain, 1)[-1].count > 0
