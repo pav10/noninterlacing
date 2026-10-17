@@ -94,6 +94,17 @@ def main():
 
     lvl4 = {n: level4(n) for n in towers}
 
+    # subfields of index 2 and 3 (scripts/subfield_levels.py): interlacing ones give lifts
+    subf = collections.defaultdict(dict)  # n -> index -> rows
+    for path in sorted(glob.glob(os.path.join(RES, "subfields_*_index*.json"))):
+        Sx = json.load(open(path))
+        for row in Sx["subfields"]:
+            if row.get("lifted_interlacer"):
+                g = poly(row["lifted_interlacer"])
+                row["lift_ok"] = int(g.leading_coefficient()) == Sx["index"] and \
+                    interlaces(real_cyclotomic(Sx["n"]), g)
+        subf[Sx["n"]][Sx["index"]] = Sx["subfields"]
+
     # level-2 elements of the fields F_pq met in the towers: how many lie in F_p F_q?
     from noninterlacing.poly import parse_rational_poly
 
@@ -336,7 +347,8 @@ def main():
             w(f"* `{name}` (tower `{tw}`, {secs:.0f} s): " + ", ".join(f"{d}: {c}/{o}" for d, c, o in st))
     w("")
     w("**Levels 3, 4, 5.** Levels 3 and 5 from MILP (directly for 231; in the fibres over the most")
-    w("central elements of `F_91` for 273, `fibers.central_search`), level 4 from the compositum")
+    w("central elements of `F_91` for 273, `fibers.central_search`); level 3 for 399 by lifting from a")
+    w("diagonal index-3 subfield (below); level 4 from the compositum")
     w("`Ψ_q ⊗ Ψ_{n/q}` (`q` the largest prime power, `m(Ψ_{n/q}) = 2`); all checked exactly:")
     w("")
     w("| n | degree | level 2 | level 3 | level 4 | level 5 | m | S |")
@@ -362,6 +374,51 @@ def main():
     w("")
     w("So `m(Ψ_n) ≤ 2` fails; whether §4's bound `2^{b-1} = 4` is ever attained is open.")
     w("")
+    if subf:
+        w("**Lifts from subfields of index 2 and 3.** A level-1 element of a subfield of index `r`")
+        w("is a level-`r` element of `F_n`. All subfields of index 2 and 3 (`scripts/subfield_levels.py`,")
+        w("level-1 elements counted by fibre towers; `H` acts on the prime factors as listed):")
+        w("")
+        w("| n | index 2: interlacing / all | index 3: action of `H` on the primes → level-1 elements |")
+        w("|---|---|---|")
+        for n in sorted(subf):
+            i2 = subf[n].get(2, [])
+            i3 = subf[n].get(3, [])
+
+            def act(row):
+                moved = [q for q, v in row["action"].items() if any(x not in (1, int(q) - 1) for x in v)]
+                return "×".join(moved) if moved else "—"
+
+            c3 = "; ".join(f"{act(r)}: {r['level_j_elements']}" + (" (lift ok)" if r.get("lift_ok") else "")
+                           for r in i3) or "none"
+            w(f"| {n} | {sum(r['level_j_elements'] > 0 for r in i2)} / {len(i2)} | {c3} |")
+        w("")
+        w("Only *diagonal* index-3 subfields (`H` of order 3 moving two prime factors `p, q`, which needs")
+        w("`3 | (p-1)/2` and `3 | (q-1)/2`) are interlacing, and they give `m(Ψ_273) = m(Ψ_399) = 3`. For")
+        w("399 one of the two has 36 level-1 elements (one Galois orbit) although the volume heuristic")
+        w("gives `E_1 ≈ 0.05` for it: structure again beats the heuristic. Where the 3-part of the Galois")
+        w("group is cyclic (231, 357, 385, 429) the index-3 subfield contains some `F_pq` and is not")
+        w("interlacing.")
+        w("")
+        w("**Conjecture (a level-`j` form of Yatsyna's Theorem 1.2).** Let `b(n)` be the number of odd")
+        w("primes dividing `n`, with 3 and 5 counted once when `15 | n`. Then `m(Ψ_n) ≥ b(n)`: `Ψ_n` is not")
+        w("`(b-1)`-interlacing.")
+        w("")
+        w("* `b = 2` is a theorem: §1 (McKee–Smyth), and for squarefree `n` Yatsyna's Theorem 1.2, which")
+        w("  extends `tr(γ x y)` to the hermitian form `tr(γ x x̄)` on `Z[ζ_n]` and uses Bayer-Fluckiger's")
+        w("  Corollary 2.2 (a `Φ_n`-lattice with `n` squarefree, `n ≠ p, 2p`, `φ(n) > 8`, has no vector of")
+        w("  norm 2; the vector 1 has norm `2 tr γ`). For `j ≥ 2` that argument would need the analogue for")
+        w("  norm `2j`, where the root-system classification is not available.")
+        w("* `b = 3`: true for every `n < 455`, i.e. 231, 273, 357, 385, 399, 429 (level 2 empty above).")
+        w("* 3 and 5 must be merged: `n = 15p` has three distinct primes but `m(Ψ_15p) = 2` (`Ψ_15 ⊗ Ψ_p`),")
+        w("  so “`j+1` distinct primes ⇒ not `j`-interlacing” fails for infinitely many `n`; Yatsyna's")
+        w("  exception `n = 30` is the `j = 1` trace of this.")
+        w("* §4 gives `m ≤ 2^{b-1}`. For `b = 3` the level is 3 for 231 (many random level-3 elements),")
+        w("  273 and 399 (diagonal subfields), and 3 or 4 for 357, 385, 429, where no subfield of index")
+        w("  ≤ 3 is interlacing and `E_3 ≪ 1`. So `m(Ψ_n) = 2^{b-1}` for large `n` is plausible only")
+        w("  when no small-index subfield is interlacing; the 399 example shows such subfields can occur")
+        w("  even where the heuristic says they should not.")
+        w("")
     w("**Level-2 elements of `F_pq`.** The fields `F_pq` in the towers have `m = 2`. Their level-2")
     w("elements include the compositum products `μ_p μ_q` (level 1 in `F_p F_q`, of index 2):")
     w("")
@@ -428,9 +485,9 @@ def main():
     w("## 8. Open questions suggested by the data")
     w("")
     w("* `m(Ψ_n) ≤ 2` holds when `n` has at most two odd prime factors, or three including 3 and 5")
-    w("  (§4), and fails for `n = 231` (§5). Is `m(Ψ_n)` bounded? Is §4's `2^{b-1}` attained? The")
-    w(f"  heuristic of §5 predicts `m = 4` for `n = 357, 385, 399, 429` (`E_3 ≪ 1`); the next case after")
-    w(f"  231 without a split is `n = {open_n[1]}`.")
+    w("  (§4), and fails for 231, 273, 357, 385, 399, 429 (§5). Is `m(Ψ_n) ≥ b(n)` always (the")
+    w("  conjecture of §5)? Is `m(Ψ_n)` unbounded? Is §4's `2^{b-1}` ever attained for `b = 3`, e.g.")
+    w("  `m(Ψ_357) = 4`? Which subfields of `F_n` are interlacing?")
     w("* Is `m ≤ 3` on connected index sets? Which connected sets reach 3?")
     w("* Is `S(f)` always an interval for cyclotomic `f` (also when no factor is 1-interlaced)?")
     with open(os.path.join(RES, "higher_interlacing_cyclotomic.md"), "w") as fh:

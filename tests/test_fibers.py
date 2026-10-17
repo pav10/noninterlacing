@@ -49,9 +49,9 @@ def test_fibre_over_non_positive_target_is_empty():
     assert K.fibre([1], H7, nu).points == []
 
 
-def test_psi231_psi273_witnesses():
-    # m = 3 for n = 231, 273: level 2 is empty (fibres; too slow for the test suite), levels 3, 5 attained
-    for n in (231, 273):
+def test_psi231_psi273_psi399_witnesses():
+    # m = 3 for n = 231, 273, 399: level 2 is empty (fibres; too slow for the test suite), level 3 attained
+    for n in (231, 273, 399):
         w = json.load(open(os.path.join(RESULTS, f"psi{n}.json")))
         f = real_cyclotomic(n)
         for j, s in w["interlacers"].items():

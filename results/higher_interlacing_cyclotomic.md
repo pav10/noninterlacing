@@ -159,7 +159,8 @@ elements up each tower (degree: count / Galois orbits):
 * `fibre_429_level2.json` (tower `[11, '13:3', 13, 143]`, 918 s): 1: 1/1, 5: 80/16, 15: 124155/8277, 30: 22380/747, 60: 30/1, 120: 0/0
 
 **Levels 3, 4, 5.** Levels 3 and 5 from MILP (directly for 231; in the fibres over the most
-central elements of `F_91` for 273, `fibers.central_search`), level 4 from the compositum
+central elements of `F_91` for 273, `fibers.central_search`); level 3 for 399 by lifting from a
+diagonal index-3 subfield (below); level 4 from the compositum
 `Ψ_q ⊗ Ψ_{n/q}` (`q` the largest prime power, `m(Ψ_{n/q}) = 2`); all checked exactly:
 
 | n | degree | level 2 | level 3 | level 4 | level 5 | m | S |
@@ -168,10 +169,49 @@ central elements of `F_91` for 273, `fibers.central_search`), level 4 from the c
 | 273 | 72 | empty | yes | Ψ_13 ⊗ Ψ_21 | yes | 3 | <3,4,5> |
 | 357 | 96 | empty | ? (`E_3 ≈ 10^{-2.1}`) | Ψ_17 ⊗ Ψ_21 | ? | 3–4 | ? |
 | 385 | 120 | empty | ? (`E_3 ≈ 10^{-10.0}`) | Ψ_11 ⊗ Ψ_35 | ? | 3–4 | ? |
-| 399 | 108 | empty | ? (`E_3 ≈ 10^{-4.9}`) | Ψ_19 ⊗ Ψ_21 | ? | 3–4 | ? |
+| 399 | 108 | empty | yes | Ψ_19 ⊗ Ψ_21 | ? | 3 | ? |
 | 429 | 120 | empty | ? (`E_3 ≈ 10^{-8.2}`) | Ψ_13 ⊗ Ψ_33 | ? | 3–4 | ? |
 
 So `m(Ψ_n) ≤ 2` fails; whether §4's bound `2^{b-1} = 4` is ever attained is open.
+
+**Lifts from subfields of index 2 and 3.** A level-1 element of a subfield of index `r`
+is a level-`r` element of `F_n`. All subfields of index 2 and 3 (`scripts/subfield_levels.py`,
+level-1 elements counted by fibre towers; `H` acts on the prime factors as listed):
+
+| n | index 2: interlacing / all | index 3: action of `H` on the primes → level-1 elements |
+|---|---|---|
+| 231 | 0 / 3 | 7: 0 |
+| 273 | 0 / 3 | 7×13: 24 (lift ok); 13: 0; 7: 0; 7×13: 24 (lift ok) |
+| 357 | 0 / 3 | 7: 0 |
+| 385 | 0 / 3 | 7: 0 |
+| 399 | 0 / 3 | 7: 0; 19: 0; 7×19: 0; 7×19: 36 (lift ok) |
+| 429 | 0 / 3 | 13: 0 |
+
+Only *diagonal* index-3 subfields (`H` of order 3 moving two prime factors `p, q`, which needs
+`3 | (p-1)/2` and `3 | (q-1)/2`) are interlacing, and they give `m(Ψ_273) = m(Ψ_399) = 3`. For
+399 one of the two has 36 level-1 elements (one Galois orbit) although the volume heuristic
+gives `E_1 ≈ 0.05` for it: structure again beats the heuristic. Where the 3-part of the Galois
+group is cyclic (231, 357, 385, 429) the index-3 subfield contains some `F_pq` and is not
+interlacing.
+
+**Conjecture (a level-`j` form of Yatsyna's Theorem 1.2).** Let `b(n)` be the number of odd
+primes dividing `n`, with 3 and 5 counted once when `15 | n`. Then `m(Ψ_n) ≥ b(n)`: `Ψ_n` is not
+`(b-1)`-interlacing.
+
+* `b = 2` is a theorem: §1 (McKee–Smyth), and for squarefree `n` Yatsyna's Theorem 1.2, which
+  extends `tr(γ x y)` to the hermitian form `tr(γ x x̄)` on `Z[ζ_n]` and uses Bayer-Fluckiger's
+  Corollary 2.2 (a `Φ_n`-lattice with `n` squarefree, `n ≠ p, 2p`, `φ(n) > 8`, has no vector of
+  norm 2; the vector 1 has norm `2 tr γ`). For `j ≥ 2` that argument would need the analogue for
+  norm `2j`, where the root-system classification is not available.
+* `b = 3`: true for every `n < 455`, i.e. 231, 273, 357, 385, 399, 429 (level 2 empty above).
+* 3 and 5 must be merged: `n = 15p` has three distinct primes but `m(Ψ_15p) = 2` (`Ψ_15 ⊗ Ψ_p`),
+  so “`j+1` distinct primes ⇒ not `j`-interlacing” fails for infinitely many `n`; Yatsyna's
+  exception `n = 30` is the `j = 1` trace of this.
+* §4 gives `m ≤ 2^{b-1}`. For `b = 3` the level is 3 for 231 (many random level-3 elements),
+  273 and 399 (diagonal subfields), and 3 or 4 for 357, 385, 429, where no subfield of index
+  ≤ 3 is interlacing and `E_3 ≪ 1`. So `m(Ψ_n) = 2^{b-1}` for large `n` is plausible only
+  when no small-index subfield is interlacing; the 399 example shows such subfields can occur
+  even where the heuristic says they should not.
 
 **Level-2 elements of `F_pq`.** The fields `F_pq` in the towers have `m = 2`. Their level-2
 elements include the compositum products `μ_p μ_q` (level 1 in `F_p F_q`, of index 2):
@@ -204,7 +244,7 @@ directions: composita give `m(Ψ_143) = 2` with `E_2 ≈ 10^{-3.6}`, and `I_1(Ψ
 | 273 | 72 | -31.2, -9.9, 2.6, 11.5, 18.4 | 3 | 4 |
 | 357 | 96 | -47.4, -18.8, -2.1, 9.8, 19.0 | 3–4 | 4 |
 | 385 | 120 | -66.8, -31.0, -10.0, 4.8, 16.4 | 3–4 | 4 |
-| 399 | 108 | -56.0, -23.8, -4.9, 8.5, 18.8 | 3–4 | 4 |
+| 399 | 108 | -56.0, -23.8, -4.9, 8.5, 18.8 | 3 | 4 |
 | 429 | 120 | -64.9, -29.1, -8.2, 6.7, 18.2 | 3–4 | 4 |
 | 455 | 144 | -85.6, -42.6, -17.4, 0.5, 14.3 | ? | 4 |
 
@@ -249,8 +289,8 @@ Census of all squarefree cyclotomic polynomials of degree ≤ 12 up to `x → -x
 ## 8. Open questions suggested by the data
 
 * `m(Ψ_n) ≤ 2` holds when `n` has at most two odd prime factors, or three including 3 and 5
-  (§4), and fails for `n = 231` (§5). Is `m(Ψ_n)` bounded? Is §4's `2^{b-1}` attained? The
-  heuristic of §5 predicts `m = 4` for `n = 357, 385, 399, 429` (`E_3 ≪ 1`); the next case after
-  231 without a split is `n = 273`.
+  (§4), and fails for 231, 273, 357, 385, 399, 429 (§5). Is `m(Ψ_n) ≥ b(n)` always (the
+  conjecture of §5)? Is `m(Ψ_n)` unbounded? Is §4's `2^{b-1}` ever attained for `b = 3`, e.g.
+  `m(Ψ_357) = 4`? Which subfields of `F_n` are interlacing?
 * Is `m ≤ 3` on connected index sets? Which connected sets reach 3?
 * Is `S(f)` always an interval for cyclotomic `f` (also when no factor is 1-interlaced)?
