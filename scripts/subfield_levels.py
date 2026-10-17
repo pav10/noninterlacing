@@ -22,7 +22,7 @@ def main(n, r, j, out):
     rows = []
     for H in subgroups_of_prime_order(K, r):
         qs = [p ** a for p, a in factorint(n).items()]
-        acts = {q: sorted({min(h % q, q - h % q) for h in H}) for q in qs}
+        acts = {q: sorted({h % q for h in H}) for q in qs}  # residues (elements are taken in [1, n/2])
         chain = subfield_chain(K, H)
         t = time.time()
         st = tower_levels(K, chain, j)
