@@ -139,6 +139,11 @@ def parse_poly(text: str, var: str | None = None) -> fmpz_poly:
     return fmpz_poly([int(c) for c in q.numer().coeffs()])
 
 
+def parse_rational_poly(text: str, var: str | None = None) -> fmpq_poly:
+    """Parse a polynomial with rational coefficients (e.g. ``str`` of an ``fmpq_poly``)."""
+    return _Parser(text, var).parse()
+
+
 def poly(p: PolyLike) -> fmpz_poly:
     """Coerce a polynomial-like object to :class:`fmpz_poly`."""
     if isinstance(p, fmpz_poly):
