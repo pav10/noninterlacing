@@ -1,0 +1,52 @@
+[
+ {
+  "field": "F_15",
+  "degree": 4,
+  "level2": 50,
+  "product": 2,
+  "tau=0": 12,
+  "tau=1": 12,
+  "other": 24,
+  "seconds": 2.0
+ },
+ {
+  "field": "F_21",
+  "degree": 6,
+  "level2": 141,
+  "product": 3,
+  "tau=0": 18,
+  "tau=1": 18,
+  "other": 102,
+  "seconds": 0.1
+ },
+ {
+  "field": "F_33",
+  "degree": 10,
+  "level2": 935,
+  "product": 5,
+  "tau=0": 20,
+  "tau=1": 30,
+  "other": 880,
+  "seconds": 0.3
+ },
+ {
+  "field": "F_35",
+  "degree": 12,
+  "level2": 1470,
+  "product": 6,
+  "tau=0": 36,
+  "tau=1": 84,
+  "other": 1344,
+  "seconds": 10.7
+ },
+ {
+  "field": "F_39",
+  "degree": 12,
+  "level2": 2214,
+  "product": 6,
+  "tau=0": 48,
+  "tau=1": 24,
+  "other": 2136,
+  "seconds": 0.9
+ }
+]

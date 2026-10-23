@@ -42,7 +42,7 @@ Consequences that the program uses and reports:
 ```bash
 pip install -e .            # numpy, scipy, python-flint
 pip install cypari2         # optional: maximal orders, subfields, zeta values (PARI/GP)
-python -m pytest tests      # 57 tests, ~1.5 min
+python -m pytest tests      # 61 tests, ~1.5 min
 ```
 
 ## Command line
@@ -199,6 +199,13 @@ Full details are in [`results/paper_verification.md`](results/paper_verification
       true for every `n < 455` with `b = 3`. Without merging 3 and 5 it fails: `m(Ψ_15p) = 2`.
     * In `F_91`, `F_119`, `F_133` and `F_143` the only level-2 elements are the compositum
       products `μ_p μ_q`.
+    * A parity lemma ([`notes/parity.tex`](notes/parity.tex), PDF alongside): for three
+      coprime blocks the traces of a codifferent element to the three `F_{n_i n_j}` satisfy a
+      congruence mod 2, so they are never all products. Hence `m(Ψ_pqr) ≥ 3` whenever
+      `F_pq`, `F_pr`, `F_qr` have only products at level 2 (rigid), which reduces part of
+      the conjecture to two primes. No small `F_pq` is rigid
+      ([`results/parity_level2.json`](results/parity_level2.json)), so this proves no new case
+      yet.
     * Levels 3 and 5 come from MILP witnesses, level 4 from a compositum. For 273 the plain
       MILP fails, and the witnesses come from `fibers.central_search`. It searches the
       fibres over the most central elements of a subfield, whose volume `∏ τ(ν)` is
@@ -272,4 +279,5 @@ trace-one `δ` supports the sail only along a lower-dimensional face through 1.
 | `paper.py`, `cli.py` | verification report, command line |
 | `jobs.py` | one computation in a child process with memory and wall-clock limits (used by the table scripts) |
 | `fibers.py` | real cyclotomic fields: Galois action, subfield codifferents, fibres of the relative trace, level-`j` elements up a tower |
-| `scripts/` | `sextic_census.py`, `cyclotomic_levels.py`, `abelian_levels.py`, `span_census.py`, `kronecker_census.py`, `fibre_levels.py`, `central_search.py`, `subfield_levels.py`, `kronecker_report.py` (produce `results/`) |
+| `parity.py` | arrays `Tr(δ ζ_n^x)` of codifferent elements, the three-block parity identity, corner parity, level-2 census of `F_pq` |
+| `scripts/` | `sextic_census.py`, `cyclotomic_levels.py`, `abelian_levels.py`, `span_census.py`, `kronecker_census.py`, `fibre_levels.py`, `central_search.py`, `subfield_levels.py`, `kronecker_report.py`, `parity_table.py` (produce `results/`) |
