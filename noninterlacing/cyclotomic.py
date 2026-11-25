@@ -74,6 +74,31 @@ def canonical_conductor(n: int) -> int:
     return n // 2 if n % 4 == 2 else n
 
 
+def real_cyclotomic_discriminant_factors(n: int) -> dict[int, int]:
+    """Prime exponents of the discriminant of `real_cyclotomic(n)`.
+
+    The reciprocal lift has discriminant of absolute value
+    `abs(Psi_n(2) * Psi_n(-2)) * disc(Psi_n)**2`.
+    For a canonical prime-power conductor the endpoint product contributes
+    one factor of the prime (odd) or two (prime 2). For the other canonical
+    conductors both endpoint values are units.
+    """
+    if n < 1:
+        raise ValueError("n must be positive")
+    n = canonical_conductor(n)
+    if n == 1:
+        return {}
+    primes = factorint(n)
+    phi = math.prod((p - 1) * p ** (a - 1) for p, a in primes.items())
+    factors = {}
+    for p, a in primes.items():
+        endpoint_exponent = (2 if p == 2 else 1) if len(primes) == 1 else 0
+        exponent = (phi * a - phi // (p - 1) - endpoint_exponent) // 2
+        if exponent:
+            factors[p] = exponent
+    return factors
+
+
 def chebyshev_composition(n: int, k: int) -> fmpz_poly:
     """``m_{beta_n}(C_k(x))``; equals ``m_{beta_{nk}}`` when irreducible."""
     return real_cyclotomic(n)(chebyshev_C(k))

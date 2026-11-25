@@ -1,10 +1,11 @@
 import random
 from fractions import Fraction
+from math import prod
 
 import pytest
 
 from noninterlacing.cyclotomic import (chebyshev_composition, is_admissible, odd_degree_conductors,
-                                       reachable_degrees)
+                                       reachable_degrees, real_cyclotomic_discriminant_factors)
 from noninterlacing.families import check_main_theorem
 from noninterlacing.poly import is_irreducible, poly, real_cyclotomic
 from noninterlacing.search import totally_real_census
@@ -44,6 +45,15 @@ def test_cyclotomic_helpers():
     D = reachable_degrees(250)
     assert all(x % 2 == 0 for x in D) and not {202, 206, 214, 218} & D and 12 in D and 8 not in D
     assert {27, 49, 81, 121} <= set(odd_degree_conductors(130))
+
+
+def test_real_cyclotomic_discriminant():
+    for n in (1, 2, 3, 4, 8, 9, 16, 18, 21, 24, 42, 105):
+        factors = real_cyclotomic_discriminant_factors(n)
+        assert prod(p**e for p, e in factors.items()) == real_cyclotomic(n).discriminant()
+
+    factors = real_cyclotomic_discriminant_factors(15015)
+    assert prod(p**e for p, e in factors.items()) < 2880**2880
 
 
 def _brute_census(d, S, coeff_bound):
